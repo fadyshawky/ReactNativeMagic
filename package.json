@@ -1,0 +1,15 @@
+{
+  "name": "reactnativemagic",
+  "version": "1.0.0",
+  "description": "react native template with ready components, hooks, react navigation, redux, typescript, etc.",
+  "keywords": [
+    "\"react-native\""
+  ],
+  "license": "MIT",
+  "author": "Fady Shawky",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "exit 0"
+  }
+}
