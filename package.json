@@ -1,13 +1,18 @@
 {
   "name": "reactnativemagic",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "react native template with ready components, hooks, react navigation, redux, typescript, etc.",
   "keywords": [
     "react-native",
     "typescript",
     "jest",
     "template",
-    "boilerplate"
+    "boilerplate",
+    "react-native-template",
+    "redux",
+    "react-navigation",
+    "state-management",
+    "bottom-sheet"
   ],
   "license": "MIT",
   "author": "Fady Shawky",
