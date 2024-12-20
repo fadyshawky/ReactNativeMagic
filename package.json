@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "react native template with ready components, hooks, react navigation, redux, typescript, etc.",
   "keywords": [
-    "\"react-native\""
+    "react-native",
+    "typescript",
+    "jest",
+    "template",
+    "boilerplate"
   ],
   "license": "MIT",
   "author": "Fady Shawky",
@@ -11,5 +15,17 @@
   "main": "index.js",
   "scripts": {
     "test": "exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fadyshawky/ReactNativeMagic.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fadyshawky/ReactNativeMagic/issues"
+  },
+  "homepage": "https://github.com/fadyshawky/ReactNativeMagic#readme",
+  "funding": {
+    "type": "buymeacoffee",
+    "url": "https://buymeacoffee.com/fadytshawke"
   }
 }
