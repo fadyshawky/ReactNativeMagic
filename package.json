@@ -14,7 +14,6 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "postinstall": "npm install --legacy-peer-deps",
     "test": "exit 0"
   },
   "repository": {
