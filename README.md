@@ -13,9 +13,8 @@ A modern, production-ready React Native template with best practices, common dep
 ## Installation
 
 ```bash
-npx react-native init YourAppName --template reactnativemagic
+npx @react-native-community/cli init YourAppName --template @fadyshawky/react-native-magic
 cd YourAppName
-npm install --legacy-peer-deps
 ```
 
 For iOS, install pods:
