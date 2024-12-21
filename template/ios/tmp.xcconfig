@@ -1,2 +1,5 @@
 API_BASE_URL=https:/$()/dev-api.example.com
 API_KEY=dev_key
+ANDROID_APP_ID=com.reactnativemagic.development
+ANDROID_VERSION_CODE=1
+ANDROID_VERSION_NAME=1.0.0

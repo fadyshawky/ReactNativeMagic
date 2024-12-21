@@ -1,5 +1,5 @@
 {
-  "name": "reactnativemagic",
+  "name": "@fadyshawky/react-native-magic",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -13,6 +13,9 @@
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
+    "start:development": "ENVFILE=.env.development react-native start --reset-cache",
+    "start:production": "ENVFILE=.env.production react-native start --reset-cache",
+    "start:staging": "ENVFILE=.env.staging react-native start --reset-cache",
     "test": "jest"
   },
   "dependencies": {
