@@ -1,7 +1,6 @@
-import moment from 'moment';
-import {handleFetchJsonResponse} from '../../api/responseHandlers';
-import {get, post, put} from '../../api/serverHeaders';
 import {createAsyncThunk} from '@reduxjs/toolkit';
+import {handleFetchJsonResponse} from '../../api/responseHandlers';
+import {post} from '../../api/serverHeaders';
 
 export const userLogin = createAsyncThunk(
   'user/login',
