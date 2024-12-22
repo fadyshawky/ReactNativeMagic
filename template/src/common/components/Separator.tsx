@@ -1,12 +1,8 @@
 import React, {FC, useMemo} from 'react';
 import {StyleSheet, View, ViewStyle} from 'react-native';
-import {
-  PlatformColorsAndroid,
-  PlatformColorsIOS,
-} from '../../core/theme/colors';
+import {Colors} from '../../core/theme/colors';
 import {hairlineWidth} from '../../core/theme/commonConsts';
 import {CommonSizes} from '../../core/theme/commonSizes';
-import {platformNativeColor} from '../helpers/colorHelpers';
 
 interface IProps {
   isFull?: boolean;
@@ -22,10 +18,7 @@ export const Separator: FC<IProps> = ({isFull = true}) => {
 
 const sharedStyle: ViewStyle = {
   height: hairlineWidth,
-  backgroundColor: platformNativeColor(
-    PlatformColorsIOS.separator,
-    PlatformColorsAndroid.divider,
-  ),
+  backgroundColor: Colors.gray,
 };
 
 const styles = StyleSheet.create({

@@ -43,75 +43,46 @@ export enum Colors {
   yellow5 = '#FFFDF8',
 }
 
-export enum PlatformColorsIOS {
-  /* Label Colors */
-  label = 'label',
-  secondaryLabel = 'secondaryLabel',
-  tertiaryLabel = 'tertiaryLabel',
-  quaternaryLabel = 'quaternaryLabel',
-
-  /* Fill Colors */
-  systemFill = 'systemFill',
-  secondarySystemFill = 'secondarySystemFill',
-  tertiarySystemFill = 'tertiarySystemFill',
-  quaternarySystemFill = 'quaternarySystemFill',
-
-  /* Text Colors */
-  placeholderText = 'placeholderText',
-
-  /* Standard Content Background Colors */
-  systemBackground = 'systemBackground',
-  secondarySystemBackground = 'secondarySystemBackground',
-  tertiarySystemBackground = 'tertiarySystemBackground',
-
-  /* Grouped Content Background Colors */
-  systemGroupedBackground = 'systemGroupedBackground',
-  secondarySystemGroupedBackground = 'secondarySystemGroupedBackground',
-  tertiarySystemGroupedBackground = 'tertiarySystemGroupedBackground',
-
-  /* Separator Colors */
-  separator = 'separator',
-  opaqueSeparator = 'opaqueSeparator',
-
-  /* Link Color */
-  link = 'link',
-
-  /* Nonadaptable Colors */
-  darkText = 'darkText',
-  lightText = 'lightText',
-
-  /* Standard Colors */
-  /* Adaptable Colors */
-  systemBlue = 'systemBlue',
-  systemGreen = 'systemGreen',
-  systemIndigo = 'systemIndigo',
-  systemOrange = 'systemOrange',
-  systemPink = 'systemPink',
-  systemPurple = 'systemPurple',
-  systemRed = 'systemRed',
-  systemTeal = 'systemTeal',
-  systemYellow = 'systemYellow',
-
-  /* Adaptable Gray Colors */
-  systemGray = 'systemGray',
-  systemGray2 = 'systemGray2',
-  systemGray3 = 'systemGray3',
-  systemGray4 = 'systemGray4',
-  systemGray5 = 'systemGray5',
-  systemGray6 = 'systemGray6',
-}
-
-export enum PlatformColorsAndroid {
-  primary = '@color/primary',
-  primaryDark = '@color/primaryDark',
-  primaryLight = '@color/primaryLight',
-  background = '@color/background',
-  primaryText = '@color/primaryText',
-  primaryTextOpacity = '@color/primaryTextOpacity',
-  secondaryText = '@color/secondaryText',
-  onPrimaryText = '@color/onPrimaryText',
-  onPrimaryTextOpacity = '@color/onPrimaryTextOpacity',
-  divider = '@color/divider',
-  navigation = '@color/navigation',
-  statusbar = '@color/statusbar',
+export enum NewColors {
+  violetLight = '#F3F2FF',
+  violetLightHover = '#E6E6FF',
+  violetLightActive = '#C1C0FE',
+  violetNormal = '#8481FD',
+  violetNormalHover = '#5250D9',
+  violetNormalActive = '#3331B8',
+  violetDark = '#262626',
+  violetDarkHover = '#1A1994',
+  violetDarkActive = '#111066',
+  violetDarker = '#000033',
+  blueLight = '#F6FCFF',
+  blueLightHover = '#E9F8FF',
+  blueLightActive = '#C1E5FF',
+  blueNormal = '#52BDFF',
+  blueNormalHover = '#3399D9',
+  blueNormalActive = '#1A7DB3',
+  blueDarker = '#262626',
+  greyLight = '#F9FCFF',
+  greyLightHover = '#E0E0E0',
+  greyLightActive = '#BDBDBD',
+  greyNormal = '#929292',
+  greyNormalHover = '#666666',
+  greyNormalActive = '#4D4D4D',
+  greyDarker = '#262626',
+  orandeLight = '#FFFAF8',
+  orandeLightHover = '#FDECE1',
+  orandeLightActive = '#FBCEB4',
+  orandeNormal = '#F2565E',
+  orandeNormalHover = '#CE3C3E',
+  orandeNormalActive = '#AD3335',
+  orandeDarker = '#262626',
+  lightBlueLight = '#FEF7F7',
+  lightBlueLightHover = '#FCDDDF',
+  lightBlueLightActive = '#F9AAAF',
+  lightBlueNormal = '#CE3C3E',
+  lightBlueNormalHover = '#AD3335',
+  lightBlueNormalActive = '#8C292B',
+  lightBlueDarker = '#262626',
+  red = '#FFFCF1',
+  green = '#F4FDFB',
+  background = '#FAFAFA',
 }

@@ -7,9 +7,8 @@ import {
   PressableStateCallbackType,
   ViewStyle,
 } from 'react-native';
-import {Colors, PlatformColorsIOS} from '../../core/theme/colors';
+import {Colors} from '../../core/theme/colors';
 import {isAndroid} from '../../core/theme/commonConsts';
-import {platformMixedColor} from '../helpers/colorHelpers';
 
 interface IProps extends PressableProps {
   style?: ViewStyle | ViewStyle[];
@@ -17,15 +16,7 @@ interface IProps extends PressableProps {
 }
 
 export const TouchablePlatform: FC<IProps> = memo(
-  ({
-    children,
-    highlightColor = platformMixedColor(
-      PlatformColorsIOS.secondarySystemFill,
-      Colors.white,
-    ),
-    style,
-    ...props
-  }) => {
+  ({children, highlightColor = Colors.white, style, ...props}) => {
     const pressableStyle = useCallback(
       (state: PressableStateCallbackType) => {
         if (isAndroid) {

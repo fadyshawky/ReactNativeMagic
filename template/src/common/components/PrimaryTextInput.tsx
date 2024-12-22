@@ -21,15 +21,10 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {
-  Colors,
-  PlatformColorsAndroid,
-  PlatformColorsIOS,
-} from '../../core/theme/colors';
+import {Colors} from '../../core/theme/colors';
 import {isIos} from '../../core/theme/commonConsts';
 import {CommonSizes} from '../../core/theme/commonSizes';
 import {CommonStyles} from '../../core/theme/commonStyles';
-import {platformMixedColor, platformNativeColor} from '../helpers/colorHelpers';
 import {localization} from '../localization/localization';
 
 interface IProps extends TextInputProps {
@@ -65,10 +60,7 @@ export const PrimaryTextInput: FC<IProps> = memo(
     disableFullscreenUI = true,
     enablesReturnKeyAutomatically = true,
     underlineColorAndroid = Colors.transparent,
-    placeholderTextColor = platformNativeColor(
-      PlatformColorsIOS.placeholderText,
-      PlatformColorsAndroid.secondaryText,
-    ),
+    placeholderTextColor = Colors.gray,
     editable = true,
     clearButtonMode = 'while-editing',
     label,
@@ -200,10 +192,7 @@ function getInputContainerStyle(
   }
 }
 
-const selectionColor = platformNativeColor(
-  PlatformColorsIOS.systemBlue,
-  PlatformColorsAndroid.primary,
-);
+const selectionColor = Colors.primary100;
 
 const commonInputContainer: TextStyle = {
   flexDirection: 'row',
@@ -279,7 +268,7 @@ const styles = StyleSheet.create({
   } as TextStyle,
   error: {
     ...CommonStyles.normalText,
-    color: platformMixedColor(PlatformColorsIOS.systemRed, Colors.red),
+    color: Colors.red,
     fontSize: CommonSizes.font.small,
     lineHeight: CommonSizes.lineHeight.small,
     paddingTop: CommonSizes.spacing.extraSmall,

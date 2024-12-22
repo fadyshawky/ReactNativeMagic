@@ -8,11 +8,9 @@ import {
   TouchableOpacity,
   ViewStyle,
 } from 'react-native';
-import {ImageResources} from '../ImageResources.g';
 import {Image as CropperImage} from 'react-native-image-crop-picker';
+import {Colors} from '../../core/theme/colors';
 import {CommonSizes} from '../../core/theme/commonSizes';
-import {Colors, PlatformColorsIOS} from '../../core/theme/colors';
-import {platformMixedColor} from '../helpers/colorHelpers';
 
 interface IProps {
   onPress?: () => void;
@@ -26,7 +24,7 @@ interface IProps {
 
 export const PhotoTakingButton: FC<IProps> = memo(
   ({
-    icon = ImageResources.camera,
+    icon,
     onPress,
     backgroundImage,
     style,
@@ -36,7 +34,7 @@ export const PhotoTakingButton: FC<IProps> = memo(
   }) => {
     return (
       <TouchableOpacity
-        style={[styles.button, style] as ViewStyle}
+        style={[styles.button, style]}
         onPress={onPress}
         disabled={disabled}>
         <BackgroundComponent image={backgroundImage} style={imageStyle}>
@@ -78,7 +76,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: CommonSizes.borderRadius.small,
     borderWidth: 1,
-    borderColor: platformMixedColor(PlatformColorsIOS.systemFill, Colors.gray),
+    borderColor: Colors.gray,
   } as ViewStyle,
   image: {
     height: 120,
@@ -93,7 +91,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     resizeMode: 'contain',
-    tintColor: platformMixedColor(PlatformColorsIOS.label, Colors.black),
+    tintColor: Colors.black,
     opacity: 0.8,
   } as ImageStyle,
 });

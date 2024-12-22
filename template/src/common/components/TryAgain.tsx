@@ -6,13 +6,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  PlatformColorsAndroid,
-  PlatformColorsIOS,
-} from '../../core/theme/colors';
+import {Colors} from '../../core/theme/colors';
 import {CommonSizes} from '../../core/theme/commonSizes';
 import {CommonStyles} from '../../core/theme/commonStyles';
-import {platformNativeColor} from '../helpers/colorHelpers';
 import {localization} from '../localization/localization';
 
 interface IProps {
@@ -46,10 +42,7 @@ const styles = StyleSheet.create({
   } as TextStyle,
   description: {
     ...CommonStyles.normalText,
-    color: platformNativeColor(
-      PlatformColorsIOS.systemBlue,
-      PlatformColorsAndroid.primary,
-    ),
+    color: Colors.primary100,
     textAlign: 'center',
     textDecorationLine: 'underline',
   } as TextStyle,
