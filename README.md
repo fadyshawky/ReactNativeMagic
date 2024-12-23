@@ -249,11 +249,9 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Support
 
-If you find this template helpful, consider buying me a coffee! ☕️
+If you find this template helpful, consider buying me a beer! 🍺
 
-<a href="https://www.buymeacoffee.com/fadytshawke" target="_blank">
-  <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="60px" width="217px">
-</a>
+<a href="https://www.buymeacoffee.com/fadytshawke"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a beer&emoji=🍺&slug=fadytshawke&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" /></a>
 
 ## Author
 

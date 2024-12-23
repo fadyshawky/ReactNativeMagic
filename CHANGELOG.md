@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.5] - 2024-12-23
+
+### Fixed
+- Resolved Android build configuration issues
+- Fixed package dependencies setup and initialization
+- Optimized Gradle build settings for Android
+- Fixed iOS permissions configuration
+
 ## [1.0.4] - 2024-12-22
 
 ### Fixed

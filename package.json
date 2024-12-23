@@ -1,6 +1,6 @@
 {
   "name": "@fadyshawky/react-native-magic",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "react native template with ready components, hooks, react navigation, redux, typescript, etc.",
   "keywords": [
     "react-native-magic",
@@ -65,8 +65,6 @@
     "react-native-orientation-locker": "^1.7.0",
     "react-native-pager-view": "^6.6.1",
     "react-native-permissions": "^5.2.1",
-    "react-native-reanimated": "^3.16.6",
-    "react-native-reanimated-carousel": "^3.5.1",
     "react-native-safe-area-context": "^5.0.0",
     "react-native-screens": "^4.4.0",
     "react-native-sfsymbols": "^1.2.2",
