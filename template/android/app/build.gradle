@@ -3,12 +3,25 @@ apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
 project.ext.envConfigFiles = [
-    debug: ".env.debug",
-    release: ".env.production",
-    // Add other env files as needed
+   production: ".env.production",
+   staging: ".env.staging",
+   development: ".env.development"
 ]
-
-apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+apply from: project(":react-native-config").projectDir.getPath() + "/dotenv.gradle"
+ project.ext.react = [
+        root: "../../",
+        bundleAssetName: "index.android.bundle",
+        entryFile: "index.js",
+        cliPath: "node_modules/haul/bin/cli.js",
+        devDisabledInAppDev: true,
+        devDisabledInAppTest: true,
+        devDisabledInRelease: true,
+        bundleInAppDev: true,
+        bundleInAppTest: true,
+        bundleInRelease: true,
+        enableHermes: true,
+        enableVmCleanup: false,
+]
 
 /**
  * This is the configuration block to customize your React Native Android app.
@@ -83,16 +96,47 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-    compileSdk rootProject.ext.compileSdkVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
+    flavorDimensions "default"
+    productFlavors {
+        production {
+            minSdkVersion rootProject.ext.minSdkVersion
+            applicationId project.env.get("APP_ID")
+            targetSdkVersion rootProject.ext.targetSdkVersion
+        }
+        staging {
+            minSdkVersion rootProject.ext.minSdkVersion
+            applicationId project.env.get("APP_ID")
+            targetSdkVersion rootProject.ext.targetSdkVersion
+        }
+        development {
+            minSdkVersion rootProject.ext.minSdkVersion
+            applicationId project.env.get("APP_ID")
+            targetSdkVersion rootProject.ext.targetSdkVersion
+        }
+    }
 
     namespace "com.reactnativemagic"
     defaultConfig {
         applicationId  project.env.get("ANDROID_APP_ID")
         minSdkVersion rootProject.ext.minSdkVersion
+        multiDexEnabled true
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode  project.env.get("ANDROID_VERSION_CODE").toInteger()
         versionName  project.env.get("ANDROID_VERSION_NAME")
         resValue "string", "build_config_package", project.env.get("ANDROID_APP_ID")
+
+        ndk {
+            abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+        }
+
+        externalNativeBuild {
+            cmake {
+                version "3.22.1" // Use the version you see in SDK Manager
+                cppFlags ""
+            }
+        }
     }
     signingConfigs {
         debug {
@@ -114,6 +158,27 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+
+                // For each separate APK per architecture, set a unique version code as described here:
+                // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
+                
+
+                def projectName = project.env.get("PROJECT_NAME")
+                def SEP = "_"
+                
+                def newApkName = projectName + SEP + project.env.get("ENV") + SEP + project.env.get("ANDROID_VERSION_NAME") + SEP + project.env.get("ANDROID_VERSION_CODE") + ".apk"
+                
+
+                println "Naming File ... " + newApkName                        
+                
+                outputFileName = new File(newApkName)
+                output.outputFileName = outputFileName
+                
+            }
+        }  
 }
 
 dependencies {

@@ -4,11 +4,6 @@
  *
  * @format
  */
-import '@fontsource/poppins/300.css'; // Light
-import '@fontsource/poppins/400.css'; // Regular
-import '@fontsource/poppins/500.css'; // Medium
-import '@fontsource/poppins/600.css'; // SemiBold
-import '@fontsource/poppins/700.css'; // Bold
 import React from 'react';
 import {LogBox, SafeAreaView, StatusBar} from 'react-native';
 import {SheetProvider} from 'react-native-actions-sheet';

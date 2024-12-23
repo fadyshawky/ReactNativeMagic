@@ -19,9 +19,6 @@ export const userLogin = createAsyncThunk(
         data,
       });
 
-      if (response.data?.user?.roleName !== 'Parent') {
-        return rejectWithValue('Not Authorized');
-      }
       return handleFetchJsonResponse(response);
     } catch (e: any) {
       return rejectWithValue(e?.response);

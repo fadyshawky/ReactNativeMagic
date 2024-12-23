@@ -5,7 +5,6 @@ import {
   NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
 import React from 'react';
-import {ImageResources} from '../common/ImageResources.g';
 import {localization} from '../common/localization/localization';
 import {Main} from '../screens/main/Main';
 import {Profile} from '../screens/profile/Profile';

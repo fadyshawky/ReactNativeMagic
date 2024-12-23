@@ -1,7 +1,6 @@
 import React from 'react';
 import {ImageBackground, StyleSheet, ViewStyle} from 'react-native';
 import {CommonStyles} from '../../core/theme/commonStyles';
-import {ImageResources} from '../ImageResources.g';
 
 interface BackgroundType {
   children: React.ReactNode;

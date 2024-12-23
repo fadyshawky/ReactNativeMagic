@@ -1,13 +1,12 @@
 import React, {FC, memo, useCallback} from 'react';
+import {ImageStyle, ImageURISource, ViewStyle} from 'react-native';
 import ImagePicker, {
   Image as CropperImage,
   Options,
 } from 'react-native-image-crop-picker';
-import {ImageStyle, ImageURISource, ViewStyle} from 'react-native';
-import {ImageResources} from '../ImageResources.g';
-import {PhotoTakingButton} from './PhotoTakingButton';
-import {localization} from '../localization/localization';
 import {showActionSheet} from '../helpers/dialogsHelpers';
+import {localization} from '../localization/localization';
+import {PhotoTakingButton} from './PhotoTakingButton';
 
 interface IProps {
   onImagePicked: (image: CropperImage) => void;
@@ -27,7 +26,7 @@ export const ImageCropPickerButton: FC<IProps> = memo(
     onImagePicked,
     onRemoveImage,
     image,
-    icon = ImageResources.camera,
+    icon,
     style,
     iconStyle,
     imageStyle,

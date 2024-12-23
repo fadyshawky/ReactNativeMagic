@@ -1,4 +1,3 @@
-import {useNavigation} from '@react-navigation/native';
 import {toLower} from 'lodash';
 import React, {useRef, useState} from 'react';
 import {
@@ -77,11 +76,6 @@ export function Login(): JSX.Element {
         containerStyle={CommonStyles.textInputContainer}
         label={localization.login.Password}
         placeholder={localization.login.EnterPassword}
-      />
-      <PrimaryButton
-        label={localization.login.forgetPassword}
-        type={ButtonType.borderless}
-        style={{alignSelf: 'flex-end'}}
       />
       <PrimaryButton
         isLoading={loading}

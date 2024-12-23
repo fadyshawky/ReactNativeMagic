@@ -1,10 +1,8 @@
-import React from 'react';
-import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
-import {CommonStyles, screenWidth} from '../core/theme/commonStyles';
-import {BottomTabHeaderProps} from '@react-navigation/bottom-tabs';
-import {ImageResources} from '../common/ImageResources.g';
-import {CommonSizes} from '../core/theme/commonSizes';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import React from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {CommonSizes} from '../core/theme/commonSizes';
+import {CommonStyles, screenWidth} from '../core/theme/commonStyles';
 import {RootStackParamList} from './types';
 
 export function Header({title}: {title: string}) {
