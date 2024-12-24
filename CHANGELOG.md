@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.6] - 2024-12-24
+
+### Added
+- Added missing password reset handlers (`resetPasswordErrorHandler` and `resetPasswordLoadingHandler`) to user slice
+- Added password reset flow with the following states:
+  - Loading state during password reset request
+  - Error handling for failed password reset attempts
+  - Success handling for completed password reset
+- Added complete user registration flow:
+  - User input validation
+  - Registration request handling
+  - Success state with automatic login
+  - Error handling for failed registration attempts
+  - Loading states during registration process
+
 ## [1.0.5] - 2024-12-23
 
 ### Fixed

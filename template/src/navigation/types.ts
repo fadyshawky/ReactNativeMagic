@@ -1,5 +1,11 @@
 export type RootStackParamList = {
   Home: undefined;
   Details: {id: string};
-  // ... add other screens as needed
+  Login: undefined;
+  Registration: undefined;
+  ForgotPassword: undefined;
+  Main: undefined;
+  Profile: undefined;
+  Settings: undefined;
+  Splash: undefined;
 };

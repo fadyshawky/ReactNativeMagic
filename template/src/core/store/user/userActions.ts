@@ -25,3 +25,50 @@ export const userLogin = createAsyncThunk(
     }
   },
 );
+
+export const userRegister = createAsyncThunk(
+  'user/register',
+  async (
+    {
+      fullName,
+      email,
+      password,
+    }: {
+      fullName: string;
+      email: string;
+      password: string;
+    },
+    {rejectWithValue},
+  ) => {
+    try {
+      const response = await post({
+        url: '/register',
+        data: {
+          fullName,
+          email,
+          password,
+        },
+      });
+
+      return handleFetchJsonResponse(response);
+    } catch (e: any) {
+      return rejectWithValue(e?.response);
+    }
+  },
+);
+
+export const resetPassword = createAsyncThunk(
+  'user/resetPassword',
+  async ({email}: {email: string}, {rejectWithValue}) => {
+    try {
+      const response = await post({
+        url: '/reset-password',
+        data: {email},
+      });
+
+      return handleFetchJsonResponse(response);
+    } catch (e: any) {
+      return rejectWithValue(e?.response);
+    }
+  },
+);

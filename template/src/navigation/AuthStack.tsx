@@ -1,6 +1,8 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Login} from '../screens/Login/Login';
 import {Splash} from '../screens/splash/Splash';
+import RegistrationScreen from '../screens/registration/RegistrationScreen';
+import ForgotPasswordScreen from '../screens/resetPassword/ForgotPasswordScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -15,6 +17,20 @@ const AuthScreens = [
   {
     id: 'Login',
     component: Login,
+    options: {
+      headerShown: false,
+    },
+  },
+  {
+    id: 'Registration',
+    component: RegistrationScreen,
+    options: {
+      headerShown: false,
+    },
+  },
+  {
+    id: 'ForgotPassword',
+    component: ForgotPasswordScreen,
     options: {
       headerShown: false,
     },
