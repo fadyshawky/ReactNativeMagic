@@ -27,24 +27,7 @@ function AppNavigator() {
           border: '#000',
           notification: '#ff0000',
         },
-        fonts: {
-          regular: {
-            fontFamily: Fonts.regular,
-            fontWeight: 'normal',
-          },
-          medium: {
-            fontFamily: Fonts.medium,
-            fontWeight: '500',
-          },
-          bold: {
-            fontFamily: Fonts.bold,
-            fontWeight: '700',
-          },
-          heavy: {
-            fontFamily: Fonts.bold,
-            fontWeight: '900',
-          },
-        },
+        fonts: DefaultTheme.fonts,
       }}
       onReady={() => {
         routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;

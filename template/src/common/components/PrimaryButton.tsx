@@ -16,7 +16,7 @@ import {
   IIconPlatformProps,
   TouchablePlatformProps,
 } from '../../../types';
-import {Colors} from '../../core/theme/colors';
+import {Colors, NewColors} from '../../core/theme/colors';
 import {CommonSizes} from '../../core/theme/commonSizes';
 import {CommonStyles} from '../../core/theme/commonStyles';
 import {IconPlatform} from './IconPlatform';
@@ -203,7 +203,7 @@ const commonIcon: ImageStyle = {
 const solidStyles = StyleSheet.create({
   button: {
     ...commonButtonStyle,
-    backgroundColor: Colors.primary100,
+    backgroundColor: NewColors.blueNormalActive,
   } as ViewStyle,
   label: {
     ...commonLabelStyle,
@@ -217,12 +217,12 @@ const solidStyles = StyleSheet.create({
 const outlineStyles = StyleSheet.create({
   button: {
     ...commonButtonStyle,
-    borderColor: Colors.primary100,
+    borderColor: NewColors.blueNormalActive,
     borderWidth: 2,
   } as ViewStyle,
   label: {
     ...commonLabelStyle,
-    color: Colors.primary100,
+    color: NewColors.blueNormalActive,
   } as TextStyle,
   icon: {
     ...commonIcon,
@@ -255,7 +255,7 @@ const borderlessStyles = StyleSheet.create({
   } as ViewStyle,
   label: {
     ...commonLabelStyle,
-    color: Colors.primary100,
+    color: NewColors.blueNormalActive,
     textDecorationLine: 'underline',
   } as TextStyle,
   icon: {
@@ -278,7 +278,7 @@ const roundedButtonStyle: ViewStyle = {
 const smallSolidStyles = StyleSheet.create({
   button: {
     ...roundedButtonStyle,
-    backgroundColor: Colors.primary100,
+    backgroundColor: NewColors.blueNormalActive,
   } as ViewStyle,
   label: {
     ...CommonStyles.normalText,

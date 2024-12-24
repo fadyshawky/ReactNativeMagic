@@ -17,7 +17,7 @@ import {useInputError} from '../../common/validations/hooks/useInputError';
 import {emailValidations} from '../../common/validations/profileValidations';
 import {useAppDispatch} from '../../core/store/reduxHelpers';
 import {resetPassword} from '../../core/store/user/userActions';
-import {Colors} from '../../core/theme/colors';
+import {Colors, NewColors} from '../../core/theme/colors';
 import {CommonSizes} from '../../core/theme/commonSizes';
 import {CommonStyles} from '../../core/theme/commonStyles';
 import type {RootStackParamList} from '../../navigation/types';
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   },
   loginLink: {
     ...CommonStyles.normalText,
-    color: Colors.primary100,
+    color: NewColors.blueNormalActive,
     textAlign: 'center',
     marginTop: 16,
   },

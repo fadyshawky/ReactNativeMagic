@@ -21,7 +21,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {Colors} from '../../core/theme/colors';
+import {Colors, NewColors} from '../../core/theme/colors';
 import {isIos} from '../../core/theme/commonConsts';
 import {CommonSizes} from '../../core/theme/commonSizes';
 import {CommonStyles} from '../../core/theme/commonStyles';
@@ -192,7 +192,7 @@ function getInputContainerStyle(
   }
 }
 
-const selectionColor = Colors.primary100;
+const selectionColor = NewColors.blueNormalActive;
 
 const commonInputContainer: TextStyle = {
   flexDirection: 'row',

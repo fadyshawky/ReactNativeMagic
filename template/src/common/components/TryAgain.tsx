@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Colors} from '../../core/theme/colors';
+import {Colors, NewColors} from '../../core/theme/colors';
 import {CommonSizes} from '../../core/theme/commonSizes';
 import {CommonStyles} from '../../core/theme/commonStyles';
 import {localization} from '../localization/localization';
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   } as TextStyle,
   description: {
     ...CommonStyles.normalText,
-    color: Colors.primary100,
+    color: NewColors.blueNormalActive,
     textAlign: 'center',
     textDecorationLine: 'underline',
   } as TextStyle,
