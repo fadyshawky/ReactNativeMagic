@@ -2,7 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0.6] - 2024-12-24
+## [1.0.7] - 2024-12-27
+
+### Changed
+- Enhanced UI components for better user experience:
+  - Improved form input styling
+  - Updated button states for better feedback
+  - Refined error message displays
+  - Added loading spinners for async actions
+  - Standardized form layouts across authentication flows
+
+### Added
+- Responsive design improvements for mobile devices
+- Visual feedback for form validation states
+- Transition animations for state changes
+- Consistent error message styling
+
+## [1.0.6] - 2024-12-25
 
 ### Added
 - Added missing password reset handlers (`resetPasswordErrorHandler` and `resetPasswordLoadingHandler`) to user slice
@@ -16,6 +32,11 @@ All notable changes to this project will be documented in this file.
   - Success state with automatic login
   - Error handling for failed registration attempts
   - Loading states during registration process
+
+### Fixed
+- Fixed password reset error handling in user slice
+- Resolved undefined handler errors in password reset flow
+- Improved registration flow error handling
 
 ## [1.0.5] - 2024-12-23
 
