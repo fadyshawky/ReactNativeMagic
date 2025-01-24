@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.8] - 2024-01-24
+
+### Changed
+- Improved FeaturedCarousel component:
+  - Centered carousel items on screen
+  - Adjusted item width to 85% of screen width
+  - Added proper item layout calculations
+  - Enhanced snapping behavior
+
 ## [1.0.7] - 2024-12-27
 
 ### Changed
