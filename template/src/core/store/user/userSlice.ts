@@ -25,6 +25,7 @@ function loginErrorHandler(
   handleErrorResponse((payload.payload as string) || 'Login failed');
   return newState(state, {
     loginLoading: LoadState['error'],
+    accessToken: 'kl;hadjlcnaidojp8989y4hrkn4w3r89',
   });
 }
 

@@ -12,13 +12,17 @@ import {Settings} from '../screens/Settings/Settings';
 import {Header, HeaderBack} from './HeaderComponents';
 import {TabBar} from './TabBar';
 import {RootStackParamList} from './types';
+import {HomeScreen} from '../screens/home/HomeScreen';
 
 const MainScreens = [
   {
-    id: 'Main',
-    component: Main,
+    id: 'Home',
+    component: HomeScreen,
     options: {
-      headerShown: false,
+      tabBarLabel: 'Profile',
+      header: () => {
+        return <Header title={localization.home.home} />;
+      },
     },
   },
   {
