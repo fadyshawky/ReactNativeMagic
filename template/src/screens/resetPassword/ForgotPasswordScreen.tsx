@@ -105,13 +105,13 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     backgroundColor: Colors.white,
-    borderTopRightRadius: CommonSizes.spacing.large,
-    borderTopLeftRadius: CommonSizes.spacing.large,
+    borderTopRightRadius: CommonSizes.borderRadius.lg,
+    borderTopLeftRadius: CommonSizes.borderRadius.lg,
   },
   contentContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: CommonSizes.spacing.large,
+    paddingHorizontal: CommonSizes.spacing.lg,
     paddingVertical: 26,
     gap: 16,
   },

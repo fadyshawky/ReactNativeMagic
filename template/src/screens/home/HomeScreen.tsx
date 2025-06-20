@@ -76,32 +76,32 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   content: {
-    paddingVertical: CommonSizes.spacing.medium,
+    paddingVertical: CommonSizes.spacing.md,
   },
   featuredSection: {
-    marginBottom: CommonSizes.spacing.large,
+    marginBottom: CommonSizes.spacing.lg,
   },
   carouselSection: {
-    marginBottom: CommonSizes.spacing.large,
+    marginBottom: CommonSizes.spacing.lg,
   },
   sectionTitle: {
     ...CommonStyles.h2_semiBold,
-    marginHorizontal: CommonSizes.spacing.large,
-    marginBottom: CommonSizes.spacing.medium,
+    marginHorizontal: CommonSizes.spacing.lg,
+    marginBottom: CommonSizes.spacing.md,
   },
   trendingImage: {
     width: width * 0.7,
     height: 200,
-    borderRadius: CommonSizes.borderRadius.medium,
+    borderRadius: CommonSizes.borderRadius.md,
   },
   newArrivalsImage: {
     width: width * 0.5,
     height: 180,
-    borderRadius: CommonSizes.borderRadius.medium,
+    borderRadius: CommonSizes.borderRadius.md,
   },
   recommendedImage: {
     width: width * 0.6,
     height: 160,
-    borderRadius: CommonSizes.borderRadius.medium,
+    borderRadius: CommonSizes.borderRadius.md,
   },
 });

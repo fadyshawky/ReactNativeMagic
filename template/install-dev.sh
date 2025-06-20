@@ -1,1 +1,0 @@
-npm i --legacy-peer-deps --save-dev@babel/core @babel/preset-env @babel/runtime @react-native/babel-preset @react-native/eslint-config @react-native/metro-config @react-native/typescript-config @types/lodash @types/react @types/react-test-renderer babel-jest eslint jest prettier react-test-renderer typescript
