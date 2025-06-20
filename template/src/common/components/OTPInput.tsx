@@ -61,7 +61,7 @@ export const OTPInput: React.FC<OTPInputProps> = ({
     <RTLAwareView style={{...styles.container, ...style}}>
       {[0, 1, 2, 3, 4, 5].map(index => (
         <PrimaryTextInput
-          containerStyle={{width: scaleWidth(78)}}
+          width={scaleWidth(78)}
           key={index}
           inputRef={ref => (inputRefs.current[index] = ref)}
           style={[
@@ -94,14 +94,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    gap: CommonSizes.spacing.sm,
-    paddingHorizontal: CommonSizes.spacing.lg,
+    gap: CommonSizes.spacing.small,
+    paddingHorizontal: CommonSizes.spacing.large,
   },
   input: {
     flex: 1,
-    height: CommonSizes.spacing.xl,
+    height: CommonSizes.spacing.xxl,
     borderWidth: 1,
-    borderRadius: CommonSizes.borderRadius.md,
+    borderRadius: CommonSizes.borderRadius.medium,
     textAlign: 'center',
   },
 });

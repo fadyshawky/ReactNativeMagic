@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     ...CommonStyles.normalText,
     fontWeight: '600',
     textAlign: 'center',
-    marginBottom: CommonSizes.spacing.xs,
+    marginBottom: CommonSizes.spacing.extraSmall,
   } as TextStyle,
   description: {
     ...CommonStyles.normalText,

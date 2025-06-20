@@ -27,7 +27,7 @@ const sharedStyle: ViewStyle = {
 const styles = StyleSheet.create({
   container: {
     ...sharedStyle,
-    marginHorizontal: CommonSizes.spacing.md,
+    marginHorizontal: CommonSizes.spacing.medium,
   } as ViewStyle,
   fullContainer: {
     ...sharedStyle,

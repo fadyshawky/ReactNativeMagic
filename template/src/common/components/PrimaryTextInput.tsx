@@ -21,9 +21,8 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {Colors} from '../../core/theme/colors';
+import {useTheme} from '../../core/theme/ThemeProvider';
 import {isIos} from '../../core/theme/commonConsts';
-import {CommonSizes} from '../../core/theme/commonSizes';
 import {CommonStyles} from '../../core/theme/commonStyles';
 import {localization} from '../localization/localization';
 
@@ -53,31 +52,28 @@ interface IProps extends TextInputProps {
   inputContainerStyle?: ViewStyle;
 }
 
-export const PrimaryTextInput: FC<IProps> = memo(
+const PrimaryTextInput: FC<IProps> = memo(
   ({
-    style = styles.input,
-    blurOnSubmit = true,
-    disableFullscreenUI = true,
-    enablesReturnKeyAutomatically = true,
-    underlineColorAndroid = Colors.white,
-    placeholderTextColor = Colors.gray,
-    editable = true,
-    clearButtonMode = 'while-editing',
+    style,
+    containerStyle,
     label,
     error,
     hint,
-    containerStyle,
-    inputRef,
-    nextInputFocusRef,
-    onTouchStart,
+    required,
+    optional,
     onFocus,
     onBlur,
     onSubmitEditing,
-    required,
-    optional,
+    nextInputFocusRef,
+    inputRef,
+    onTouchStart,
+    editable = true,
     ...props
   }) => {
     const [isFocused, setFocused] = useState<boolean>(false);
+    const {theme} = useTheme();
+
+    const selectionColor = theme.colors.PlatinateBlue_700;
 
     const onLocalFocus = useCallback(
       (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
@@ -100,8 +96,9 @@ export const PrimaryTextInput: FC<IProps> = memo(
         isFocused,
         error,
         onTouchStart ? true : editable,
+        theme,
       );
-    }, [isFocused, error, editable, onTouchStart]);
+    }, [isFocused, error, editable, onTouchStart, theme]);
 
     const onLocalSubmitEditing = useCallback(
       (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
@@ -117,9 +114,97 @@ export const PrimaryTextInput: FC<IProps> = memo(
       return onTouchStart ? 'none' : undefined;
     }, [onTouchStart]);
 
+    const styles = useMemo(() => {
+      const commonInputContainer: TextStyle = {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: theme.spacing.xxxLarge, // 32px
+        textAlignVertical: 'center',
+        textAlign: 'center',
+        backgroundColor: theme.colors.grayScale_0,
+        borderRadius: theme.borderRadius.large, // 12px
+        borderWidth: theme.borderWidth.small, // 1px
+        borderColor: theme.colors.grayScale_50,
+      };
+
+      return StyleSheet.create({
+        container: {
+          flexDirection: 'column',
+        } as ViewStyle,
+        input: {
+          ...CommonStyles.normalText,
+          flex: 1,
+          textAlignVertical: 'center',
+          paddingStart: theme.spacing.xLarge, // 16px
+          ...Platform.select({
+            android: {
+              paddingEnd: theme.spacing.xLarge, // 16px
+            },
+          }),
+        } as TextStyle,
+        inputContainer: {
+          ...commonInputContainer,
+          ...Platform.select({
+            ios: {
+              paddingEnd: theme.spacing.xLarge, // 16px
+            },
+          }),
+        } as TextStyle,
+        errorInputContainer: {
+          ...commonInputContainer,
+          ...Platform.select({
+            android: {
+              borderColor: theme.colors.error_400,
+            },
+          }),
+        } as TextStyle,
+        disabledInputContainer: {
+          ...commonInputContainer,
+          ...Platform.select({
+            android: {
+              backgroundColor: theme.colors.grayScale_50,
+              borderColor: theme.colors.grayScale_50,
+            },
+          }),
+        } as TextStyle,
+        focusedInputContainer: {
+          ...commonInputContainer,
+          ...Platform.select({
+            android: {
+              borderColor: theme.colors.grayScale_50,
+            },
+          }),
+        } as TextStyle,
+        label: {
+          ...CommonStyles.body_regular,
+          paddingBottom: theme.spacing.small, // 4px
+        } as TextStyle,
+        hint: {
+          ...CommonStyles.normalText,
+          fontWeight: '200',
+          fontSize: theme.text.bodySmallRegular.fontSize, // 12px
+          lineHeight: theme.text.bodySmallRegular.lineHeight, // 16px
+          paddingTop: theme.spacing.small, // 4px
+        } as TextStyle,
+        error: {
+          ...CommonStyles.normalText,
+          color: theme.colors.error_400,
+          fontSize: theme.text.bodySmallRegular.fontSize, // 12px
+          lineHeight: theme.text.bodySmallRegular.lineHeight, // 16px
+          paddingTop: theme.spacing.small, // 4px
+        } as TextStyle,
+      });
+    }, [theme]);
+
     return (
       <View style={[styles.container, containerStyle]}>
-        <Label text={label} required={required} optional={optional} />
+        <Label
+          text={label}
+          required={required}
+          optional={optional}
+          styles={styles}
+        />
         <TouchableOpacity
           style={[inputContainerStyle, props.inputContainerStyle]}
           onPress={onTouchStart}
@@ -135,33 +220,36 @@ export const PrimaryTextInput: FC<IProps> = memo(
             autoComplete="off"
           />
         </TouchableOpacity>
-        <BottomText error={error} hint={hint} />
+        <BottomText error={error} hint={hint} styles={styles} />
       </View>
     );
   },
 );
 
-const Label: FC<{text?: string; required?: boolean; optional?: boolean}> = memo(
-  ({text, required, optional}) => {
-    if (text != null) {
-      return (
-        <Text style={styles.label} numberOfLines={1}>
-          {text +
-            (required
-              ? localization.common.required
-              : optional
-              ? localization.common.optional
-              : '')}
-        </Text>
-      );
-    } else {
-      return null;
-    }
-  },
-);
+const Label: FC<{
+  text?: string;
+  required?: boolean;
+  optional?: boolean;
+  styles: any;
+}> = memo(({text, required, optional, styles}) => {
+  if (text != null) {
+    return (
+      <Text style={styles.label} numberOfLines={1}>
+        {text +
+          (required
+            ? localization.common.required
+            : optional
+            ? localization.common.optional
+            : '')}
+      </Text>
+    );
+  } else {
+    return null;
+  }
+});
 
-const BottomText: FC<{error?: string | null; hint?: string}> = memo(
-  ({error, hint}) => {
+const BottomText: FC<{error?: string | null; hint?: string; styles: any}> =
+  memo(({error, hint, styles}) => {
     if (error != null) {
       return <Text style={styles.error}>{error}</Text>;
     } else if (hint != null) {
@@ -169,108 +257,86 @@ const BottomText: FC<{error?: string | null; hint?: string}> = memo(
     } else {
       return null;
     }
-  },
-);
+  });
 
 function getInputContainerStyle(
   isFocused: boolean,
   error?: string | null,
   isEditable?: boolean,
+  theme?: any,
 ): ViewStyle {
+  const commonInputContainer: TextStyle = {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: theme.spacing.xxxLarge, // 32px
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    backgroundColor: theme.colors.grayScale_0,
+    borderRadius: theme.borderRadius.large, // 12px
+    borderWidth: theme.borderWidth.small, // 1px
+    borderColor: theme.colors.grayScale_50,
+  };
+
   if (isIos) {
-    return !isEditable ? styles.disabledInputContainer : styles.inputContainer;
+    return !isEditable
+      ? {
+          ...commonInputContainer,
+          ...Platform.select({
+            android: {
+              backgroundColor: theme.colors.grayScale_50,
+              borderColor: theme.colors.grayScale_50,
+            },
+          }),
+        }
+      : {
+          ...commonInputContainer,
+          ...Platform.select({
+            ios: {
+              paddingEnd: theme.spacing.xLarge, // 16px
+            },
+          }),
+        };
   } else {
     if (isFocused) {
-      return styles.focusedInputContainer;
+      return {
+        ...commonInputContainer,
+        ...Platform.select({
+          android: {
+            borderColor: theme.colors.grayScale_50,
+          },
+        }),
+      };
     } else if (!isEditable) {
-      return styles.disabledInputContainer;
+      return {
+        ...commonInputContainer,
+        ...Platform.select({
+          android: {
+            backgroundColor: theme.colors.grayScale_50,
+            borderColor: theme.colors.grayScale_50,
+          },
+        }),
+      };
     } else if (error) {
-      return styles.errorInputContainer;
+      return {
+        ...commonInputContainer,
+        ...Platform.select({
+          android: {
+            borderColor: theme.colors.error_400,
+          },
+        }),
+      };
     } else {
-      return styles.inputContainer;
+      return {
+        ...commonInputContainer,
+        ...Platform.select({
+          ios: {
+            paddingEnd: theme.spacing.xLarge, // 16px
+          },
+        }),
+      };
     }
   }
 }
 
-const selectionColor = Colors.blueNormalActive;
-
-const commonInputContainer: TextStyle = {
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'center',
-  minHeight: CommonSizes.spacing.xl,
-  textAlignVertical: 'center',
-  textAlign: 'center',
-  backgroundColor: Colors.white,
-  borderRadius: CommonSizes.borderRadius.md,
-  borderWidth: CommonSizes.borderWidth.small,
-  borderColor: Colors.gray,
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-  } as ViewStyle,
-  input: {
-    ...CommonStyles.normalText,
-    flex: 1,
-    textAlignVertical: 'center',
-    paddingStart: CommonSizes.spacing.md,
-    ...Platform.select({
-      android: {
-        paddingEnd: CommonSizes.spacing.md,
-      },
-    }),
-  } as TextStyle,
-  inputContainer: {
-    ...commonInputContainer,
-    ...Platform.select({
-      ios: {
-        paddingEnd: CommonSizes.spacing.md,
-      },
-    }),
-  } as TextStyle,
-  errorInputContainer: {
-    ...commonInputContainer,
-    ...Platform.select({
-      android: {
-        borderColor: Colors.red,
-      },
-    }),
-  } as TextStyle,
-  disabledInputContainer: {
-    ...commonInputContainer,
-    ...Platform.select({
-      android: {
-        backgroundColor: Colors.gray,
-        borderColor: Colors.gray,
-      },
-    }),
-  } as TextStyle,
-  focusedInputContainer: {
-    ...commonInputContainer,
-    ...Platform.select({
-      android: {
-        borderColor: Colors.gray,
-      },
-    }),
-  } as TextStyle,
-  label: {
-    ...CommonStyles.body_regular,
-    paddingBottom: CommonSizes.spacing.xs,
-  } as TextStyle,
-  hint: {
-    ...CommonStyles.normalText,
-    fontWeight: '200',
-    fontSize: CommonSizes.font.small,
-    lineHeight: CommonSizes.lineHeight.small,
-    paddingTop: CommonSizes.spacing.xs,
-  } as TextStyle,
-  error: {
-    ...CommonStyles.normalText,
-    color: Colors.red,
-    fontSize: CommonSizes.font.small,
-    lineHeight: CommonSizes.lineHeight.small,
-    paddingTop: CommonSizes.spacing.xs,
-  } as TextStyle,
-});
+export {PrimaryTextInput};

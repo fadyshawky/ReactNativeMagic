@@ -1,11 +1,3 @@
-import {Languages} from '../../../common/localization/localization';
+export interface AppInitialEntity {}
 
-export interface AppInitialEntity {
-  language?: Languages;
-  isRTL?: boolean;
-}
-
-export const appInitialState: AppInitialEntity = {
-  language: undefined,
-  isRTL: false,
-};
+export const appInitialState: AppInitialEntity = {};

@@ -19,7 +19,6 @@ import {useInputError} from '../../common/validations/hooks/useInputError';
 import {emailValidations} from '../../common/validations/profileValidations';
 import {useAppDispatch} from '../../core/store/reduxHelpers';
 import {userLogin} from '../../core/store/user/userActions';
-import {Colors} from '../../core/theme/colors';
 import {CommonSizes} from '../../core/theme/commonSizes';
 import {CommonStyles} from '../../core/theme/commonStyles';
 import type {RootStackParamList} from '../../navigation/types';
@@ -112,20 +111,10 @@ export function Login(): JSX.Element {
         error={passwordError}
       />
       <PrimaryButton
-        onPress={goToForgotPassword}
-        label={localization.login.forgetPassword}
-        type={ButtonType.borderless}
-      />
-      <PrimaryButton
         isLoading={loading}
         onPress={loginUser}
         label={localization.login.continue}
         type={ButtonType.solid}
-      />
-      <PrimaryButton
-        onPress={goToRegistration}
-        label={localization.login.notMember}
-        type={ButtonType.borderless}
       />
     </KeyboardAwareScrollView>
   );
@@ -138,7 +127,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flexGrow: 1,
-    backgroundColor: Colors.white,
     borderTopRightRadius: CommonSizes.borderRadius.lg,
     borderTopLeftRadius: CommonSizes.borderRadius.lg,
   },
@@ -151,14 +139,12 @@ const styles = StyleSheet.create({
   },
   forgotPassword: {
     ...CommonStyles.normalText,
-    color: Colors.blueNormalActive,
     textAlign: 'right',
     marginTop: 8,
     marginBottom: 24,
   },
   registerLink: {
     ...CommonStyles.normalText,
-    color: Colors.blueNormalActive,
     textAlign: 'center',
     marginTop: 16,
   },

@@ -4,7 +4,6 @@ import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import * as React from 'react';
 import {useRef} from 'react';
 import {useAppSelector} from '../core/store/reduxHelpers';
-import {Colors} from '../core/theme/colors';
 import {AuthStack} from './AuthStack';
 import {AppMainNavigator} from './MainStack';
 import {navigationRef} from './RootNavigation';
@@ -23,7 +22,7 @@ function AppNavigator() {
         dark: false,
         colors: {
           primary: '#000',
-          background: Colors.background,
+          background: 'white',
           card: '#fff',
           text: '#000',
           border: '#000',

@@ -179,13 +179,13 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     backgroundColor: Colors.white,
-    borderTopRightRadius: CommonSizes.borderRadius.lg,
-    borderTopLeftRadius: CommonSizes.borderRadius.lg,
+    borderTopRightRadius: CommonSizes.spacing.large,
+    borderTopLeftRadius: CommonSizes.spacing.large,
   },
   contentContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: CommonSizes.spacing.lg,
+    paddingHorizontal: CommonSizes.spacing.large,
     paddingVertical: 26,
     gap: 16,
   },

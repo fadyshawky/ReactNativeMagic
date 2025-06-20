@@ -53,26 +53,26 @@ export function CarouselSection({
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: CommonSizes.spacing.lg,
+    paddingHorizontal: CommonSizes.spacing.large,
   },
   itemContainer: {
-    marginRight: CommonSizes.spacing.md,
+    marginRight: CommonSizes.spacing.medium,
   },
   image: {
     width: 200,
     height: 150,
-    borderRadius: CommonSizes.borderRadius.md,
+    borderRadius: CommonSizes.borderRadius.medium,
   },
   textContainer: {
-    marginTop: CommonSizes.spacing.sm,
+    marginTop: CommonSizes.spacing.small,
   },
   title: {
-    fontSize: CommonSizes.font.medium,
+    fontSize: 16,
     fontWeight: '600',
     color: Colors.blueDarker,
   },
   subtitle: {
-    fontSize: CommonSizes.font.small,
+    fontSize: 14,
     color: Colors.blueDarker,
     marginTop: 2,
   },

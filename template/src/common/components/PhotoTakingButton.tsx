@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     width: 120,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: CommonSizes.borderRadius.sm,
+    borderRadius: CommonSizes.borderRadius.small,
     borderWidth: 1,
   } as ViewStyle,
   image: {
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: CommonSizes.borderRadius.sm,
+    borderRadius: CommonSizes.borderRadius.small,
     overflow: 'hidden',
   } as ImageStyle,
   icon: {

@@ -6,8 +6,8 @@ import {
   ViewStyle,
 } from 'react-native';
 import {Theme} from './types';
-import {FontSizes, LineHeight, Spacing} from './commonSizes';
 import {Fonts} from './fonts';
+import {CommonSizes} from './commonSizes';
 
 export const screenComponentWidth = Dimensions.get('screen').width - 60;
 export const screenWidth = Dimensions.get('screen').width;
@@ -131,34 +131,34 @@ export const createThemedStyles = (theme: Theme) =>
     } as TextStyle,
     h4_semiBold: {
       fontFamily: Fonts.semiBold,
-      fontSize: FontSizes.medium,
-      lineHeight: LineHeight.medium,
+      fontSize: CommonSizes.font.medium,
+      lineHeight: CommonSizes.lineHeight.medium,
     } as TextStyle,
     h4_regular: {
       fontFamily: Fonts.regular,
-      fontSize: FontSizes.medium,
-      lineHeight: LineHeight.medium,
+      fontSize: CommonSizes.font.medium,
+      lineHeight: CommonSizes.lineHeight.medium,
     } as TextStyle,
     body_bold: {
       fontFamily: Fonts.bold,
-      fontSize: FontSizes.small,
-      lineHeight: LineHeight.small,
+      fontSize: CommonSizes.font.small,
+      lineHeight: CommonSizes.lineHeight.small,
     } as TextStyle,
     body_bold_underlined: {
       fontFamily: Fonts.bold,
-      fontSize: FontSizes.small,
-      lineHeight: LineHeight.small,
+      fontSize: CommonSizes.font.small,
+      lineHeight: CommonSizes.lineHeight.small,
       textDecorationLine: 'underline',
     } as TextStyle,
     body_semiBold: {
       fontFamily: Fonts.semiBold,
-      fontSize: FontSizes.small,
-      lineHeight: LineHeight.small,
+      fontSize: CommonSizes.font.small,
+      lineHeight: CommonSizes.lineHeight.small,
     } as TextStyle,
     body_regular: {
       fontFamily: Fonts.regular,
-      fontSize: FontSizes.small,
-      lineHeight: LineHeight.small,
+      fontSize: CommonSizes.font.small,
+      lineHeight: CommonSizes.lineHeight.small,
     } as TextStyle,
     tabBar_bold: {
       fontFamily: Fonts.bold,
@@ -204,47 +204,47 @@ export const CommonStyles = createThemedStyles({
   text: {
     header1: {
       fontFamily: Fonts.medium,
-      fontSize: FontSizes.header1,
+      fontSize: CommonSizes.font.large,
       color: '#000000',
     },
     header2: {
       fontFamily: Fonts.normal,
-      fontSize: FontSizes.header2,
+      fontSize: CommonSizes.font.largePlus,
       color: '#000000',
     },
     body1: {
       fontFamily: Fonts.light,
-      fontSize: FontSizes.body1,
+      fontSize: CommonSizes.font.medium,
       color: '#000000',
     },
     body2: {
       fontFamily: Fonts.regular,
-      fontSize: FontSizes.body2,
+      fontSize: CommonSizes.font.mediumPlus,
       color: '#000000',
     },
     button: {
       fontFamily: Fonts.regular,
-      fontSize: FontSizes.button,
+      fontSize: CommonSizes.font.mediumPlus,
       color: '#FFFFFF',
     },
     cards: {
       fontFamily: Fonts.semiBold,
-      fontSize: FontSizes.card,
+      fontSize: CommonSizes.font.mediumPlus,
       color: '#000000',
     },
     SearchBar: {
       fontFamily: Fonts.light,
-      fontSize: FontSizes.searchBar,
+      fontSize: CommonSizes.font.mediumPlus,
       color: '#000000',
     },
     label: {
       fontFamily: Fonts.light,
-      fontSize: FontSizes.label,
+      fontSize: CommonSizes.font.mediumPlus,
       color: '#000000',
     },
     hyperlink: {
       fontFamily: Fonts.light,
-      fontSize: FontSizes.hyperlink,
+      fontSize: CommonSizes.font.mediumPlus,
       color: '#000000',
       textDecorationLine: 'underline',
     },

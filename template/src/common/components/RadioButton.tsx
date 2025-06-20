@@ -46,13 +46,13 @@ export const RadioButton: FC<IProps> = memo(
 const commonLabel: TextStyle = {
   ...CommonStyles.normalText,
   flex: 1,
-  paddingStart: CommonSizes.spacing.xs,
+  paddingStart: CommonSizes.spacing.extraSmall,
 };
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    padding: CommonSizes.spacing.md,
+    padding: CommonSizes.spacing.medium,
     alignItems: 'center',
   } as ViewStyle,
   label: {

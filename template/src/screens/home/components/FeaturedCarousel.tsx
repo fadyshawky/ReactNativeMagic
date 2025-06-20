@@ -87,13 +87,13 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
-    borderRadius: CommonSizes.borderRadius.lg,
+    borderRadius: CommonSizes.borderRadius.large,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    borderRadius: CommonSizes.borderRadius.lg,
-    padding: CommonSizes.spacing.lg,
+    borderRadius: CommonSizes.borderRadius.large,
+    padding: CommonSizes.spacing.large,
     justifyContent: 'flex-end',
   },
   title: {
@@ -104,13 +104,13 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 16,
     color: Colors.white,
-    marginTop: CommonSizes.spacing.sm,
+    marginTop: CommonSizes.spacing.small,
   },
   pagination: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: CommonSizes.spacing.md,
+    marginTop: CommonSizes.spacing.medium,
   },
   dot: {
     width: 8,
