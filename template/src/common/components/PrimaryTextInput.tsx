@@ -21,7 +21,7 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import {Colors, NewColors} from '../../core/theme/colors';
+import {Colors} from '../../core/theme/colors';
 import {isIos} from '../../core/theme/commonConsts';
 import {CommonSizes} from '../../core/theme/commonSizes';
 import {CommonStyles} from '../../core/theme/commonStyles';
@@ -59,7 +59,7 @@ export const PrimaryTextInput: FC<IProps> = memo(
     blurOnSubmit = true,
     disableFullscreenUI = true,
     enablesReturnKeyAutomatically = true,
-    underlineColorAndroid = Colors.transparent,
+    underlineColorAndroid = Colors.white,
     placeholderTextColor = Colors.gray,
     editable = true,
     clearButtonMode = 'while-editing',
@@ -192,17 +192,17 @@ function getInputContainerStyle(
   }
 }
 
-const selectionColor = NewColors.blueNormalActive;
+const selectionColor = Colors.blueNormalActive;
 
 const commonInputContainer: TextStyle = {
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
-  minHeight: CommonSizes.spacing.extraLarge,
+  minHeight: CommonSizes.spacing.xl,
   textAlignVertical: 'center',
   textAlign: 'center',
   backgroundColor: Colors.white,
-  borderRadius: CommonSizes.borderRadius.medium,
+  borderRadius: CommonSizes.borderRadius.md,
   borderWidth: CommonSizes.borderWidth.small,
   borderColor: Colors.gray,
 };
@@ -215,10 +215,10 @@ const styles = StyleSheet.create({
     ...CommonStyles.normalText,
     flex: 1,
     textAlignVertical: 'center',
-    paddingStart: CommonSizes.spacing.medium,
+    paddingStart: CommonSizes.spacing.md,
     ...Platform.select({
       android: {
-        paddingEnd: CommonSizes.spacing.medium,
+        paddingEnd: CommonSizes.spacing.md,
       },
     }),
   } as TextStyle,
@@ -226,7 +226,7 @@ const styles = StyleSheet.create({
     ...commonInputContainer,
     ...Platform.select({
       ios: {
-        paddingEnd: CommonSizes.spacing.medium,
+        paddingEnd: CommonSizes.spacing.md,
       },
     }),
   } as TextStyle,
@@ -251,26 +251,26 @@ const styles = StyleSheet.create({
     ...commonInputContainer,
     ...Platform.select({
       android: {
-        borderColor: Colors.darkGray,
+        borderColor: Colors.gray,
       },
     }),
   } as TextStyle,
   label: {
     ...CommonStyles.body_regular,
-    paddingBottom: CommonSizes.spacing.extraSmall,
+    paddingBottom: CommonSizes.spacing.xs,
   } as TextStyle,
   hint: {
     ...CommonStyles.normalText,
     fontWeight: '200',
     fontSize: CommonSizes.font.small,
     lineHeight: CommonSizes.lineHeight.small,
-    paddingTop: CommonSizes.spacing.extraSmall,
+    paddingTop: CommonSizes.spacing.xs,
   } as TextStyle,
   error: {
     ...CommonStyles.normalText,
     color: Colors.red,
     fontSize: CommonSizes.font.small,
     lineHeight: CommonSizes.lineHeight.small,
-    paddingTop: CommonSizes.spacing.extraSmall,
+    paddingTop: CommonSizes.spacing.xs,
   } as TextStyle,
 });

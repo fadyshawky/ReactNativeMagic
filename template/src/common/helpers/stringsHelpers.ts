@@ -23,3 +23,7 @@ export function normalizeAndTrimWhitespace(text: string): string {
     ?.trimEnd() // Remove trailing whitespace
     ?.replace(/\s+/g, ' '); // Replace multiple whitespaces with single space
 }
+
+export function ensureString(text: string): string {
+  return text != null ? text : '';
+}

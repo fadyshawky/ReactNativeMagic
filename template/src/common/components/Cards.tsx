@@ -61,8 +61,8 @@ export const Card = ({
 
 const styles = StyleSheet.create({
   card: {
-    padding: CommonSizes.spacing.medium,
-    borderRadius: CommonSizes.borderRadius.large,
+    padding: CommonSizes.spacing.md,
+    borderRadius: CommonSizes.borderRadius.lg,
     alignItems: 'center',
     justifyContent: 'flex-start',
     gap: scaleHeight(10),
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   },
   blurContainer: {
     flex: 1,
-    padding: CommonSizes.spacing.medium,
+    padding: CommonSizes.spacing.md,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -80,9 +80,9 @@ const styles = StyleSheet.create({
     height: scaleHeight(100),
   },
   title: {
-    fontSize: CommonSizes.fontSize.body2,
+    fontSize: CommonSizes.font.medium,
     textAlign: 'center',
-    marginBottom: CommonSizes.spacing.small,
+    marginBottom: CommonSizes.spacing.sm,
   },
   dotsContainer: {
     flexDirection: 'row',

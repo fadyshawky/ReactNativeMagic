@@ -17,7 +17,7 @@ import {
   TouchablePlatformProps,
 } from '../../../types';
 import {useTheme} from '../../core/theme/ThemeProvider';
-import {BorderRadius, Spacing} from '../../core/theme/commonSizes';
+import {CommonSizes} from '../../core/theme/commonSizes';
 import {createThemedStyles} from '../../core/theme/commonStyles';
 import {Theme} from '../../core/theme/types';
 import {IconPlatform} from './IconPlatform';
@@ -271,10 +271,10 @@ function createSmallSolidStyles(theme: Theme): IStyles {
   const commonStyles = createThemedStyles(theme);
   return StyleSheet.create({
     button: {
-      padding: Spacing.medium,
+      padding: CommonSizes.spacing.md,
       alignItems: 'center',
       justifyContent: 'center',
-      borderRadius: BorderRadius.extraLarge,
+      borderRadius: CommonSizes.borderRadius.xl,
       flexDirection: 'row',
       backgroundColor: theme.colors.indigoBlue,
       // width: 175,
@@ -295,10 +295,10 @@ function createSmallOutlineStyles(theme: Theme): IStyles {
   const commonStyles = createThemedStyles(theme);
   return StyleSheet.create({
     button: {
-      padding: Spacing.medium,
+      padding: CommonSizes.spacing.md,
       alignItems: 'center',
       justifyContent: 'center',
-      borderRadius: BorderRadius.extraLarge,
+      borderRadius: CommonSizes.borderRadius.xl,
       flexDirection: 'row',
       backgroundColor: 'transparent',
       width: 175,

@@ -161,19 +161,19 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: 16,
     borderWidth: 1,
-    paddingHorizontal: CommonSizes.spacing.medium,
-    marginHorizontal: CommonSizes.spacing.large,
-    marginBottom: CommonSizes.spacing.large,
+    paddingHorizontal: CommonSizes.spacing.md,
+    marginHorizontal: CommonSizes.spacing.lg,
+    marginBottom: CommonSizes.spacing.lg,
   },
   input: {
     flex: 1,
-    paddingVertical: CommonSizes.spacing.medium,
-    paddingHorizontal: CommonSizes.spacing.small,
+    paddingVertical: CommonSizes.spacing.md,
+    paddingHorizontal: CommonSizes.spacing.sm,
   },
   searchIcon: {
-    marginHorizontal: CommonSizes.spacing.small,
+    marginHorizontal: CommonSizes.spacing.sm,
   },
   clearButton: {
-    padding: CommonSizes.spacing.small,
+    padding: CommonSizes.spacing.sm,
   },
 });

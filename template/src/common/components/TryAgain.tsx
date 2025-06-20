@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   title: {
     ...CommonStyles.normalText,
     textAlign: 'center',
-    marginBottom: CommonSizes.spacing.extraSmall,
+    marginBottom: CommonSizes.spacing.xs,
   } as TextStyle,
   description: {
     ...CommonStyles.normalText,

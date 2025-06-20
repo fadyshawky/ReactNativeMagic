@@ -4,7 +4,8 @@
  * @param error The error caught from an API request
  * @returns A structured error object with message (as string) and details
  */
-import {ensureString} from '../utils/stringUtils';
+
+import {ensureString} from '../../common/helpers/stringsHelpers';
 
 export const extractServerError = (error: any) => {
   let errorObj = {

@@ -1,4 +1,4 @@
-import {ISize} from '../../types';
+import {ISize} from './types';
 
 export const CommonSizes = {
   font: {
@@ -13,7 +13,7 @@ export const CommonSizes = {
     largePlus: 28,
     extraLarge: 34,
     extraLargePlus: 44,
-  } as Readonly<ISize>,
+  } as Readonly<ISize['font']>,
   letterSpacing: {
     extraSmall: 0.07,
     extraSmallPlus: 0,
@@ -25,7 +25,7 @@ export const CommonSizes = {
     largePlus: 0.36,
     extraLarge: 0.37,
     extraLargePlus: 0.37,
-  } as Readonly<ISize>,
+  } as Readonly<ISize['letterSpacing']>,
   lineHeight: {
     extraSmall: 13,
     extraSmallPlus: 16,
@@ -37,34 +37,24 @@ export const CommonSizes = {
     largePlus: 34,
     extraLarge: 41,
     extraLargePlus: 52,
-  } as Readonly<ISize>,
+  } as Readonly<ISize['lineHeight']>,
   spacing: {
-    extraSmall: 8,
-    extraSmallPlus: 10,
-    small: 12,
-    smallPlus: 13,
-    medium: 16,
-    mediumPlus: 20,
-    large: 30,
-    largePlus: 40,
-    extraLarge: 48,
-    extraLargePlus: 56,
-  } as Readonly<ISize>,
+    xs: 4,
+    sm: 8,
+    md: 16,
+    lg: 24,
+    xl: 32,
+  } as Readonly<ISize['spacing']>,
   borderRadius: {
-    extraSmall: 4,
-    extraSmallPlus: 6,
-    small: 8,
-    smallPlus: 10,
-    medium: 12,
-    mediumPlus: 13,
-    large: 14,
-    largePlus: 16,
-    extraLarge: 18,
-    extraLargePlus: 30,
-  } as Readonly<ISize>,
+    xs: 4,
+    sm: 8,
+    md: 12,
+    lg: 16,
+    xl: 24,
+  } as Readonly<ISize['borderRadius']>,
   borderWidth: {
     small: 1,
     medium: 2,
     large: 3,
-  } as Readonly<ISize>,
+  } as Readonly<ISize['borderWidth']>,
 };

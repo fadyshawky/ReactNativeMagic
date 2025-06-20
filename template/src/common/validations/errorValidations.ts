@@ -1,9 +1,8 @@
-import {localization} from '../localization/localization';
 import {unwrapResult} from '@reduxjs/toolkit';
 import {Alert} from 'react-native';
-import {IErrorResult, ErrorRepresentationType} from '../../../types';
 import Snackbar from 'react-native-snackbar';
-import {NewColors} from '../../core/theme/colors';
+import {ErrorRepresentationType, IErrorResult} from '../../../types';
+import {localization} from '../localization/localization';
 export function handlePromiseResult(
   promiseAction: Promise<any>,
   successMessage?: string,
