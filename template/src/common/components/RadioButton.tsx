@@ -4,7 +4,6 @@ import {RadioIcon} from './RadioIcon';
 import {TouchablePlatform} from './TouchablePlatform';
 import {CommonSizes} from '../../core/theme/commonSizes';
 import {CommonStyles} from '../../core/theme/commonStyles';
-import {Colors} from '../../core/theme/colors';
 
 interface IIconComponentProps {
   isSelected: boolean;
@@ -31,7 +30,7 @@ export const RadioButton: FC<IProps> = memo(
     return (
       <TouchablePlatform
         style={styles.container}
-        onPress={onButtonPress}
+        onPressIn={onButtonPress}
         disabled={disabled}>
         {IconComponent && (
           <IconComponent disabled={disabled} isSelected={isSelected} />
@@ -61,6 +60,5 @@ const styles = StyleSheet.create({
   } as TextStyle,
   labelDisabled: {
     ...commonLabel,
-    color: Colors.gray,
   } as TextStyle,
 });

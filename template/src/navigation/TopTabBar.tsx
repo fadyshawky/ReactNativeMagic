@@ -14,7 +14,7 @@ export function TopBar({state, descriptors, navigation, position}: any) {
         borderRadius: 20,
         marginBottom: 24,
       }}>
-      {state.routes.map((route, index) => {
+      {state.routes.map((route: any, index: any) => {
         const {options} = descriptors[route.key];
         const label =
           options.tabBarLabel !== undefined

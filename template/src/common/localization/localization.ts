@@ -8,9 +8,11 @@ import {setDateLocale} from './dateFormatter';
 import {loginLocalization} from './translations/loginLocalization';
 import {homeLocalization} from './translations/homeLocalization';
 import {profileLocalization} from './translations/profileLocalization';
+import {I18nManager} from 'react-native';
 
 export enum Languages {
   en = 'en',
+  ar = 'ar',
 }
 
 export const localization = {
@@ -47,5 +49,15 @@ export function setLanguage(language?: Languages): void {
     }
   }
 
+  // Set RTL for Arabic language
+  const isRTL = localizationLanguage === Languages.ar;
+  if (I18nManager.isRTL !== isRTL) {
+    I18nManager.allowRTL(isRTL);
+    I18nManager.forceRTL(isRTL);
+  }
+
   setDateLocale(localizationLanguage);
 }
+
+// Default language is Arabic
+export const DEFAULT_LANGUAGE = Languages.ar;

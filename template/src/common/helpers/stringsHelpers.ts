@@ -13,3 +13,13 @@ export function removeEmojis(text: string): string {
     '',
   );
 }
+
+export function normalizeAndTrimWhitespace(text: string): string {
+  // 1. Remove leading whitespace with trimStart()
+  // 2. Remove trailing whitespace with trimEnd()
+  // 3. Replace multiple whitespaces (including tabs, newlines) with a single space
+  return text
+    ?.trimStart() // Remove leading whitespace
+    ?.trimEnd() // Remove trailing whitespace
+    ?.replace(/\s+/g, ' '); // Replace multiple whitespaces with single space
+}

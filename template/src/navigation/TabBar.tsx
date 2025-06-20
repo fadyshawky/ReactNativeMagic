@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import {CommonStyles} from '../core/theme/commonStyles';
-import {Colors, NewColors} from '../core/theme/colors';
+import {Colors} from '../core/theme/colors';
 import {
   BottomTabBarProps,
   BottomTabNavigationOptions,
@@ -89,6 +89,6 @@ const styles = StyleSheet.create({
     color: Colors.gray,
   },
   labelFocused: {
-    color: NewColors.blueNormalActive,
+    color: Colors.blueNormalActive,
   },
 });

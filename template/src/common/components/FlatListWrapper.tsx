@@ -60,6 +60,7 @@ export function FlatListWrapper({
         {...props}
         refreshing={refreshing}
         ListEmptyComponent={ListEmptyComponent}
+        removeClippedSubviews={true}
       />
     );
   }

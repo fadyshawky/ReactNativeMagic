@@ -9,7 +9,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import {createPerfectSize} from '../../common/utils/createPerfectSize';
+import {createPerfectSize} from '../../common/utils';
 
 const windowDimensions = Dimensions.get('window');
 export const isIos = Platform.OS == 'ios';

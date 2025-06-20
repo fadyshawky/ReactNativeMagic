@@ -1,6 +1,6 @@
 import React, {FC, memo, useMemo} from 'react';
 import {StyleSheet, View, ViewStyle} from 'react-native';
-import {Colors, NewColors} from '../../core/theme/colors';
+import {NewColors} from '../../core/theme/colors';
 
 interface IProps {
   isSelected: boolean;
@@ -30,7 +30,6 @@ const commonOuterCircle: ViewStyle = {
   borderWidth: 2,
   justifyContent: 'center',
   alignItems: 'center',
-  backgroundColor: Colors.transparent,
 };
 
 const commonInnerCircle: ViewStyle = {

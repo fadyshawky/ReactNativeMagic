@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Colors, NewColors} from '../../core/theme/colors';
+import {Colors} from '../../core/theme/colors';
 import {CommonSizes} from '../../core/theme/commonSizes';
 import {CommonStyles} from '../../core/theme/commonStyles';
 import {localization} from '../localization/localization';
@@ -23,7 +23,7 @@ export const TryAgain: FC<IProps> = memo(
         style={{...CommonStyles.flexCenter, backgroundColor: 'transparent'}}>
         <Text style={styles.title}>{errorText}</Text>
         {onPress != null && (
-          <TouchableOpacity onPress={onPress}>
+          <TouchableOpacity onPressIn={onPress}>
             <Text style={styles.description}>
               {localization.errors.tryAgain}
             </Text>
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   } as TextStyle,
   description: {
     ...CommonStyles.normalText,
-    color: NewColors.blueNormalActive,
+    color: Colors.blueNormalActive,
     textAlign: 'center',
     textDecorationLine: 'underline',
   } as TextStyle,

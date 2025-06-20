@@ -1,12 +1,6 @@
 import {createNavigationContainerRef} from '@react-navigation/native';
 import {CommonActions} from '@react-navigation/native';
-
-type RootStackParamList = {
-  Home: undefined;
-  // Add other screens here
-  Profile: {userId: string};
-  Settings: undefined;
-};
+import {RootStackParamList} from './types';
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 

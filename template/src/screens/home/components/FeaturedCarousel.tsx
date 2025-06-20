@@ -1,16 +1,15 @@
-import React, {useState, useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {
-  View,
-  StyleSheet,
   Dimensions,
   FlatList,
   Image,
-  TouchableOpacity,
+  StyleSheet,
   Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import {Colors} from '../../../core/theme/colors';
 import {CommonSizes} from '../../../core/theme/commonSizes';
-import {CommonStyles} from '../../../core/theme/commonStyles';
 import {CarouselItem} from '../types';
 
 const {width} = Dimensions.get('window');
@@ -121,7 +120,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   activeDot: {
-    backgroundColor: Colors.blue100,
+    backgroundColor: Colors.blueDarker,
     width: 12,
     height: 12,
     borderRadius: 6,

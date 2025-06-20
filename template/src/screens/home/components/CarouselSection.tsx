@@ -1,17 +1,16 @@
 import React from 'react';
 import {
-  View,
-  StyleSheet,
-  ScrollView,
   Image,
-  TouchableOpacity,
   ImageStyle,
+  ScrollView,
+  StyleSheet,
   Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import {CommonSizes} from '../../../core/theme/commonSizes';
-import {CommonStyles} from '../../../core/theme/commonStyles';
-import {CarouselItem} from '../types';
 import {Colors} from '../../../core/theme/colors';
+import {CommonSizes} from '../../../core/theme/commonSizes';
+import {CarouselItem} from '../types';
 
 interface CarouselSectionProps {
   items: CarouselItem[];
@@ -70,11 +69,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: '600',
-    color: Colors.blue100,
+    color: Colors.blueDarker,
   },
   subtitle: {
     fontSize: 14,
-    color: Colors.blue100,
+    color: Colors.blueDarker,
     marginTop: 2,
   },
 });

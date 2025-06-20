@@ -7,7 +7,6 @@ import {
   PressableStateCallbackType,
   ViewStyle,
 } from 'react-native';
-import {Colors} from '../../core/theme/colors';
 import {isAndroid} from '../../core/theme/commonConsts';
 
 interface IProps extends PressableProps {
@@ -16,7 +15,7 @@ interface IProps extends PressableProps {
 }
 
 export const TouchablePlatform: FC<IProps> = memo(
-  ({children, highlightColor = Colors.white, style, ...props}) => {
+  ({children, highlightColor, style, ...props}) => {
     const pressableStyle = useCallback(
       (state: PressableStateCallbackType) => {
         if (isAndroid) {
@@ -56,6 +55,5 @@ export const TouchablePlatform: FC<IProps> = memo(
 );
 
 const androidRippleConfig: PressableAndroidRippleConfig = {
-  color: Colors.white,
   borderless: false,
 };

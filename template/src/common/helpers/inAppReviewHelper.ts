@@ -25,7 +25,6 @@ export function showInAppReview(
         failAction?.(error);
       });
   } else {
-    console.error('Review is not available for this device/account');
     onReviewNotAvailable?.();
   }
 }

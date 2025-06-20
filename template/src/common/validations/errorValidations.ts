@@ -3,8 +3,7 @@ import {unwrapResult} from '@reduxjs/toolkit';
 import {Alert} from 'react-native';
 import {IErrorResult, ErrorRepresentationType} from '../../../types';
 import Snackbar from 'react-native-snackbar';
-import {Colors} from '../../core/theme/colors';
-
+import {NewColors} from '../../core/theme/colors';
 export function handlePromiseResult(
   promiseAction: Promise<any>,
   successMessage?: string,
@@ -19,8 +18,6 @@ export function handlePromiseResult(
         Snackbar.show({
           text: successMessage,
           duration: Snackbar.LENGTH_SHORT,
-          textColor: Colors.white,
-          backgroundColor: Colors.green,
         });
       successAction && successAction();
     })
@@ -45,8 +42,6 @@ export function handleErrorPostProcessing(
       Snackbar.show({
         text: error.message,
         duration: Snackbar.LENGTH_SHORT,
-        textColor: Colors.white,
-        backgroundColor: Colors.red,
       });
       break;
     default:

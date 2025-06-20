@@ -16,11 +16,13 @@ import {
   IIconPlatformProps,
   TouchablePlatformProps,
 } from '../../../types';
-import {Colors, NewColors} from '../../core/theme/colors';
-import {CommonSizes} from '../../core/theme/commonSizes';
-import {CommonStyles} from '../../core/theme/commonStyles';
+import {useTheme} from '../../core/theme/ThemeProvider';
+import {BorderRadius, Spacing} from '../../core/theme/commonSizes';
+import {createThemedStyles} from '../../core/theme/commonStyles';
+import {Theme} from '../../core/theme/types';
 import {IconPlatform} from './IconPlatform';
 import {TouchablePlatform} from './TouchablePlatform';
+import {scaleHeight, scaleSpacing} from '../../core/theme/scaling';
 
 interface IProps extends TouchablePlatformProps {
   label: string;
@@ -46,16 +48,17 @@ export const PrimaryButton: FC<IProps> = memo(
     platformIconProps,
     ...props
   }) => {
+    const {theme} = useTheme();
     const styles = useMemo(() => {
-      return getStyles(type, rounded, props.disabled);
-    }, [type, rounded, props.disabled]);
+      return getStyles(theme, type, rounded, props.disabled);
+    }, [theme, type, rounded, props.disabled]);
 
     const content = useMemo(() => {
       if (isLoading) {
         return (
           <ActivityIndicator
             animating={true}
-            color={activityIndicatorColor}
+            color={theme.colors.backgroundOpacity}
             size={'small'}
           />
         );
@@ -82,20 +85,19 @@ export const PrimaryButton: FC<IProps> = memo(
       platformIconProps,
       styles.icon,
       styles.label,
+      theme,
     ]);
 
     return (
       <TouchablePlatform
         style={[styles.button, style] as ViewStyle[]}
-        highlightColor={'rgba(0,0,0,0.05)'}
+        highlightColor={theme.colors.mutedLavender30}
         {...props}>
         {content}
       </TouchablePlatform>
     );
   },
 );
-
-const activityIndicatorColor = Colors.gray_disabled;
 
 const ButtonIcon: FC<Pick<IProps, 'icon' | 'iconStyle' | 'platformIconProps'>> =
   memo(props => {
@@ -109,59 +111,68 @@ const ButtonIcon: FC<Pick<IProps, 'icon' | 'iconStyle' | 'platformIconProps'>> =
   });
 
 function getStyles(
+  theme: Theme,
   type: ButtonType,
   rounded?: boolean,
   disabled?: boolean | null,
 ): IStyles {
+  const baseStyles = createButtonStyles(theme);
+
   switch (type) {
     case ButtonType.solid:
       return mergeStylesWithDisabled(
-        rounded ? smallSolidStyles : solidStyles,
+        theme,
+        rounded ? createSmallSolidStyles(theme) : baseStyles.solid,
         disabled,
       );
     case ButtonType.outline:
       return mergeStylesWithDisabled(
-        rounded ? smallOutlineStyles : outlineStyles,
+        theme,
+        rounded ? createSmallOutlineStyles(theme) : baseStyles.outline,
         disabled,
         true,
       );
     case ButtonType.outlineNegative:
       return mergeStylesWithDisabled(
-        rounded ? smallOutlineStyles : outlineNegativeStyles,
+        theme,
+        rounded ? createSmallOutlineStyles(theme) : baseStyles.outlineNegative,
         disabled,
         true,
       );
     case ButtonType.borderless:
-      return borderlessStyles;
+      return baseStyles.borderless;
     default:
       throw new Error('Unknown button type: ' + type);
   }
 }
 
 function mergeStylesWithDisabled(
+  theme: Theme,
   styles: IStyles,
   disabled?: boolean | null,
   outline?: boolean,
 ): IStyles {
-  return disabled
-    ? {
-        ...styles,
-        button: {
-          ...styles.button,
-          backgroundColor: Colors.gray_disabled,
-          borderColor: outline ? Colors.teal100 : styles.button.borderColor,
-          elevation: 0,
-        } as ViewStyle,
-        icon: {
-          ...styles.icon,
-          tintColor: Colors.gray,
-        } as ImageStyle,
-        label: {
-          ...styles.label,
-          color: Colors.black,
-        } as TextStyle,
-      }
-    : styles;
+  if (!disabled) return styles;
+
+  return {
+    ...styles,
+    button: {
+      ...styles.button,
+      backgroundColor: theme.colors.mutedLavender30,
+      borderColor: outline
+        ? theme.colors.mutedLavender
+        : styles.button.borderColor,
+      elevation: 0,
+    } as ViewStyle,
+    icon: {
+      ...styles.icon,
+      tintColor: theme.colors.mutedLavender,
+    } as ImageStyle,
+    label: {
+      ...styles.label,
+      color: theme.colors.backgroundOpacity,
+    } as TextStyle,
+  };
 }
 
 interface IStyles {
@@ -170,136 +181,139 @@ interface IStyles {
   label: TextStyle;
 }
 
-const commonButtonStyle: ViewStyle = {
-  padding: CommonSizes.spacing.medium,
-  alignItems: 'center',
-  justifyContent: 'center',
-  borderRadius: CommonSizes.borderRadius.extraLargePlus,
-  flexDirection: 'row',
-  backgroundColor: Colors.transparent,
-  width: '100%',
-};
+function createButtonStyles(theme: Theme) {
+  const commonButtonStyle: ViewStyle = {
+    height: scaleHeight(97),
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 12,
+    flexDirection: 'row',
+    backgroundColor: 'transparent',
+    width: '100%',
+  };
 
-const commonLabelStyle: TextStyle = {
-  ...CommonStyles.h4_bold,
-  color: Colors.white,
-  textAlign: 'center',
-  textAlignVertical: 'center',
-  ...Platform.select({
-    android: {
-      textTransform: 'uppercase',
+  const commonLabelStyle: TextStyle = {
+    ...createThemedStyles(theme).h4_bold,
+    color: theme.colors.white,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    ...Platform.select({
+      android: {
+        textTransform: 'uppercase',
+      } as TextStyle,
+    }),
+  };
+
+  const commonIcon: ImageStyle = {
+    width: 22,
+    height: 22,
+    marginHorizontal: scaleSpacing(12),
+    resizeMode: 'contain',
+    tintColor: theme.colors.indigoBlue,
+  };
+
+  return {
+    solid: StyleSheet.create({
+      button: {
+        ...commonButtonStyle,
+        backgroundColor: theme.colors.indigoBlue,
+      } as ViewStyle,
+      label: theme.text.button,
+      icon: {
+        ...commonIcon,
+        tintColor: theme.colors.white,
+      },
+    }),
+
+    outline: StyleSheet.create({
+      button: {
+        ...commonButtonStyle,
+        borderColor: theme.colors.indigoBlue,
+        borderWidth: 2,
+      } as ViewStyle,
+      label: {
+        ...theme.text.button,
+      } as TextStyle,
+      icon: commonIcon,
+    }),
+
+    outlineNegative: StyleSheet.create({
+      button: {
+        ...commonButtonStyle,
+        borderColor: theme.colors.mutedLavender,
+        borderWidth: 2,
+      } as ViewStyle,
+      label: {
+        ...theme.text.button,
+      } as TextStyle,
+      icon: {
+        ...commonIcon,
+        tintColor: theme.colors.mutedLavender,
+      },
+    }),
+
+    borderless: StyleSheet.create({
+      button: {
+        ...commonButtonStyle,
+        borderRadius: undefined,
+        width: undefined,
+        padding: undefined,
+      } as ViewStyle,
+      label: {
+        ...theme.text.hyperlink,
+      } as TextStyle,
+      icon: commonIcon,
+    }),
+  };
+}
+
+function createSmallSolidStyles(theme: Theme): IStyles {
+  const commonStyles = createThemedStyles(theme);
+  return StyleSheet.create({
+    button: {
+      padding: Spacing.medium,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: BorderRadius.extraLarge,
+      flexDirection: 'row',
+      backgroundColor: theme.colors.indigoBlue,
+      // width: 175,
+    } as ViewStyle,
+    label: {
+      ...theme.text.button,
     } as TextStyle,
-  }),
-};
+    icon: {
+      width: 22,
+      height: 22,
+      resizeMode: 'contain',
+      tintColor: theme.colors.white,
+    } as ImageStyle,
+  });
+}
 
-const commonIcon: ImageStyle = {
-  width: 22,
-  height: 22,
-  marginHorizontal: CommonSizes.spacing.extraSmall,
-  resizeMode: 'contain',
-  tintColor: Colors.blue100,
-};
-
-const solidStyles = StyleSheet.create({
-  button: {
-    ...commonButtonStyle,
-    backgroundColor: NewColors.blueNormalActive,
-  } as ViewStyle,
-  label: {
-    ...commonLabelStyle,
-  } as TextStyle,
-  icon: {
-    ...commonIcon,
-    tintColor: Colors.white,
-  },
-});
-
-const outlineStyles = StyleSheet.create({
-  button: {
-    ...commonButtonStyle,
-    borderColor: NewColors.blueNormalActive,
-    borderWidth: 2,
-  } as ViewStyle,
-  label: {
-    ...commonLabelStyle,
-    color: NewColors.blueNormalActive,
-  } as TextStyle,
-  icon: {
-    ...commonIcon,
-    tintColor: Colors.blue100,
-  } as ImageStyle,
-});
-
-const outlineNegativeStyles = StyleSheet.create({
-  button: {
-    ...commonButtonStyle,
-    borderColor: Colors.red,
-    borderWidth: 2,
-  } as ViewStyle,
-  label: {
-    ...commonLabelStyle,
-    color: Colors.red,
-  } as TextStyle,
-  icon: {
-    ...commonIcon,
-    tintColor: Colors.red,
-  } as ImageStyle,
-});
-
-const borderlessStyles = StyleSheet.create({
-  button: {
-    ...commonButtonStyle,
-    borderRadius: undefined,
-    width: undefined,
-    padding: undefined,
-  } as ViewStyle,
-  label: {
-    ...commonLabelStyle,
-    color: NewColors.blueNormalActive,
-    textDecorationLine: 'underline',
-  } as TextStyle,
-  icon: {
-    ...commonIcon,
-    tintColor: Colors.blue100,
-  } as ImageStyle,
-});
-
-const roundedButtonStyle: ViewStyle = {
-  paddingHorizontal: CommonSizes.spacing.medium,
-  paddingVertical: CommonSizes.spacing.extraSmall,
-  alignItems: 'center',
-  justifyContent: 'center',
-  borderRadius: CommonSizes.borderRadius.extraLarge,
-  flexDirection: 'row',
-  backgroundColor: Colors.transparent,
-  width: 175,
-};
-
-const smallSolidStyles = StyleSheet.create({
-  button: {
-    ...roundedButtonStyle,
-    backgroundColor: NewColors.blueNormalActive,
-  } as ViewStyle,
-  label: {
-    ...CommonStyles.normalText,
-  } as TextStyle,
-  icon: {
-    ...commonIcon,
-  },
-});
-
-const smallOutlineStyles = StyleSheet.create({
-  button: {
-    ...roundedButtonStyle,
-    borderColor: Colors.blue100,
-    borderWidth: 1,
-  } as ViewStyle,
-  label: {
-    ...CommonStyles.normalText,
-    color: Colors.blue100,
-  } as TextStyle,
-  icon: {
-    ...commonIcon,
-    tintColor: Colors.blue100,
-  } as ImageStyle,
-});
+function createSmallOutlineStyles(theme: Theme): IStyles {
+  const commonStyles = createThemedStyles(theme);
+  return StyleSheet.create({
+    button: {
+      padding: Spacing.medium,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: BorderRadius.extraLarge,
+      flexDirection: 'row',
+      backgroundColor: 'transparent',
+      width: 175,
+      borderColor: theme.colors.indigoBlue,
+      borderWidth: 1,
+    } as ViewStyle,
+    label: {
+      ...commonStyles.normalText,
+      color: theme.colors.indigoBlue,
+    } as TextStyle,
+    icon: {
+      width: 22,
+      height: 22,
+      resizeMode: 'contain',
+      tintColor: theme.colors.indigoBlue,
+    } as ImageStyle,
+  });
+}

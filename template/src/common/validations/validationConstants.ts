@@ -1,7 +1,7 @@
 export const validationConstants = {
   phone: {
-    minLength: 8,
-    maxLength: 18,
+    minLength: 11,
+    maxLength: 11,
   },
   fullName: {
     minLength: 3,

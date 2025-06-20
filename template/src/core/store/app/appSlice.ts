@@ -1,7 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
-import {newState} from '../../../common/utils/newState';
 
-import {appInitialState, AppInitialEntity} from './appState';
+import {appInitialState} from './appState';
 
 export const {reducer: AppReducer, actions} = createSlice({
   name: 'app',

@@ -1,18 +1,10 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {
-  createNativeStackNavigator,
-  NativeStackHeaderProps,
-  NativeStackNavigationProp,
-} from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React from 'react';
-import {localization} from '../common/localization/localization';
-import {Main} from '../screens/main/Main';
+import {HomeScreen} from '../screens/home/HomeScreen';
 import {Profile} from '../screens/profile/Profile';
 import {Settings} from '../screens/Settings/Settings';
-import {Header, HeaderBack} from './HeaderComponents';
 import {TabBar} from './TabBar';
-import {RootStackParamList} from './types';
-import {HomeScreen} from '../screens/home/HomeScreen';
 
 const MainScreens = [
   {
@@ -20,9 +12,6 @@ const MainScreens = [
     component: HomeScreen,
     options: {
       tabBarLabel: 'Profile',
-      header: () => {
-        return <Header title={localization.home.home} />;
-      },
     },
   },
   {
@@ -30,9 +19,6 @@ const MainScreens = [
     component: Profile,
     options: {
       tabBarLabel: 'Profile',
-      header: () => {
-        return <Header title={localization.profile.studentProfile} />;
-      },
     },
   },
 ];
@@ -48,18 +34,7 @@ const AppStack = [
   {
     id: 'Settings',
     component: Settings,
-    options: {
-      header: (props: NativeStackHeaderProps) => {
-        return (
-          <HeaderBack
-            title={'Settings'}
-            navigation={
-              props.navigation as NativeStackNavigationProp<RootStackParamList>
-            }
-          />
-        );
-      },
-    },
+    options: {},
   },
 ];
 

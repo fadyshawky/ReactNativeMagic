@@ -1,33 +1,71 @@
-import React from 'react';
-import {ImageBackground, StyleSheet, ViewStyle} from 'react-native';
-import {CommonStyles} from '../../core/theme/commonStyles';
+import React, {FC, memo} from 'react';
+import {ImageBackground, StyleSheet, View, ViewStyle} from 'react-native';
+import {useTheme} from '../../core/theme/ThemeProvider';
+import {ImageResources} from '../ImageResources.g';
+import {Container} from './Container';
+import {KeyboardAwareScrollViewProps} from 'react-native-keyboard-aware-scroll-view';
 
-interface BackgroundType {
+interface BackgroundProps
+  extends Omit<KeyboardAwareScrollViewProps, 'contentContainerStyle'> {
   children: React.ReactNode;
-  inverted?: boolean;
-  extraStyle?: ViewStyle;
+  useSafeArea?: boolean;
+  style?: ViewStyle;
+  contentContainerStyle?: ViewStyle;
+  withoutPadding?: boolean;
+  withoutScroll?: boolean;
+  withoutBackgroundImage?: boolean;
 }
 
-export const Background = ({
-  children,
-  inverted,
-  extraStyle,
-}: BackgroundType) => {
-  const styles = StyleSheet.create({
-    imageContainer: {
-      ...CommonStyles.flex1,
-      flexGrow: 1,
-      // justifyContent: 'flex-end',
-    },
-  });
+export const Background: FC<BackgroundProps> = memo(
+  ({
+    children,
+    useSafeArea = true,
+    style,
+    contentContainerStyle,
+    withoutPadding = false,
+    withoutScroll = false,
+    withoutBackgroundImage = false,
+    ...scrollViewProps
+  }) => {
+    const {theme} = useTheme();
 
-  return (
-    <ImageBackground
-      resizeMode="cover"
-      style={{...styles.imageContainer, ...extraStyle}}
-      imageStyle={inverted ? {transform: [{rotateY: '180deg'}]} : undefined}
-      source={0}>
-      {children}
-    </ImageBackground>
-  );
-};
+    const content = (
+      <Container
+        useSafeArea={useSafeArea}
+        style={style}
+        contentContainerStyle={contentContainerStyle}
+        withoutPadding={withoutPadding}
+        withoutScroll={withoutScroll}
+        {...scrollViewProps}>
+        {children}
+      </Container>
+    );
+
+    if (withoutBackgroundImage) {
+      return (
+        <View
+          style={[
+            styles.container,
+            {backgroundColor: theme.colors.background},
+          ]}>
+          {content}
+        </View>
+      );
+    }
+
+    return (
+      <View
+        style={[styles.container, {backgroundColor: theme.colors.background}]}>
+        <ImageBackground source={0} style={styles.container}>
+          {content}
+        </ImageBackground>
+      </View>
+    );
+  },
+);
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

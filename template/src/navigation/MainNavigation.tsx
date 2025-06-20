@@ -4,11 +4,10 @@ import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import * as React from 'react';
 import {useRef} from 'react';
 import {useAppSelector} from '../core/store/reduxHelpers';
+import {Colors} from '../core/theme/colors';
 import {AuthStack} from './AuthStack';
 import {AppMainNavigator} from './MainStack';
 import {navigationRef} from './RootNavigation';
-import {NewColors} from '../core/theme/colors';
-import {Fonts} from '../core/theme/fonts';
 
 function AppNavigator() {
   const routeNameRef = useRef<string | undefined>(undefined);
@@ -17,20 +16,20 @@ function AppNavigator() {
   return (
     <NavigationContainer
       ref={navigationRef}
+      onReady={() => {
+        routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
+      }}
       theme={{
         dark: false,
         colors: {
           primary: '#000',
-          background: NewColors.background,
+          background: Colors.background,
           card: '#fff',
           text: '#000',
           border: '#000',
           notification: '#ff0000',
         },
         fonts: DefaultTheme.fonts,
-      }}
-      onReady={() => {
-        routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name;
       }}>
       {!accessToken ? <AuthStack /> : <AppMainNavigator />}
     </NavigationContainer>

@@ -1,5 +1,5 @@
 import {useCallback} from 'react';
-import {LoadState} from '../../types';
+import {LoadState} from '../../../types';
 import {AsyncThunk} from '@reduxjs/toolkit';
 import {useAppDispatch} from '../../core/store/reduxHelpers';
 
