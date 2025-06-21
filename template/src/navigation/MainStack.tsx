@@ -25,7 +25,7 @@ const MainScreens = [
 
 const AppStack = [
   {
-    id: 'Home',
+    id: 'Main',
     component: MainTabs,
     options: {
       headerShown: false,
