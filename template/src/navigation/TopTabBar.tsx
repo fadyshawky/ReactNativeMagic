@@ -1,13 +1,13 @@
 import {Animated, View, TouchableOpacity} from 'react-native';
-import {Colors} from '../core/theme/colors';
 import {CommonStyles, screenWidth} from '../core/theme/commonStyles';
+import {NaturalColors} from '../core/theme/colors';
 
 export function TopBar({state, descriptors, navigation, position}: any) {
   return (
     <View
       style={{
         flexDirection: 'row',
-        backgroundColor: Colors.gray,
+        backgroundColor: NaturalColors.grayScale_50,
         width: screenWidth - 60,
         alignSelf: 'center',
         height: 40,
@@ -56,7 +56,9 @@ export function TopBar({state, descriptors, navigation, position}: any) {
               flex: 1,
               alignItems: 'center',
               justifyContent: 'center',
-              backgroundColor: isFocused ? Colors.white : Colors.gray,
+              backgroundColor: isFocused
+                ? NaturalColors.grayScale_0
+                : NaturalColors.grayScale_50,
               borderRadius: 20,
             }}>
             <Animated.Text

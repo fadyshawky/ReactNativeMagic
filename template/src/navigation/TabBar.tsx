@@ -1,13 +1,13 @@
 import React from 'react';
 import {View, Text, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import {CommonStyles} from '../core/theme/commonStyles';
-import {Colors} from '../core/theme/colors';
 import {
   BottomTabBarProps,
   BottomTabNavigationOptions,
 } from '@react-navigation/bottom-tabs';
 import {ImageSourcePropType} from 'react-native';
 import {toString} from 'lodash';
+import {NaturalColors, PrimaryColors} from '../core/theme/colors';
 
 interface TabBarOptions extends BottomTabNavigationOptions {
   selectedIcon: ImageSourcePropType;
@@ -86,9 +86,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   label: {
-    color: Colors.gray,
+    color: NaturalColors.grayScale_50,
   },
   labelFocused: {
-    color: Colors.blueNormalActive,
+    color: PrimaryColors.PlatinateBlue_700,
   },
 });

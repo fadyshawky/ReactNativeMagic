@@ -59,8 +59,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   const containerStyle: ViewStyle = {
-    backgroundColor: `${theme.colors.white}20`,
-    borderColor: theme.colors.mutedLavender30,
+    backgroundColor: `${theme.colors.grayScale_0}20`,
+    borderColor: theme.colors.grayScale_25,
   };
 
   // Set keyboard language specific properties
@@ -111,14 +111,14 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         containerStyle,
         style as ViewStyle,
         {
-          backgroundColor: theme.colors.surface,
+          backgroundColor: theme.colors.grayScale_0,
           ...createThemedStyles(theme).dropShadow,
         },
       ]}>
       <Icon
         name="search"
         size={20}
-        color={theme.colors.mutedLavender}
+        color={theme.colors.grayScale_50}
         style={styles.searchIcon}
       />
       <TextInput
@@ -133,7 +133,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           inputStyle as TextStyle,
         ]}
         placeholder={placeholder || t('search', 'common')}
-        placeholderTextColor={`${theme.colors.mutedLavender}80`}
+        placeholderTextColor={`${theme.colors.grayScale_50}80`}
         value={value}
         onChangeText={onChangeText}
         autoCapitalize="none"
@@ -146,7 +146,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           <Icon
             name="close-circle"
             size={20}
-            color={theme.colors.mutedLavender}
+            color={theme.colors.grayScale_50}
           />
         </TouchableOpacity>
       )}

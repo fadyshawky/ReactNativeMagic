@@ -45,7 +45,7 @@ const Tab = createBottomTabNavigator();
 function MainTabs() {
   return (
     <Tab.Navigator
-      initialRouteName="Main"
+      initialRouteName="Home"
       tabBar={props => <TabBar {...props} />}>
       {MainScreens.map(s => (
         <Tab.Screen

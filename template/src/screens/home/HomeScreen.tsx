@@ -1,13 +1,13 @@
 import React from 'react';
 import {
-  View,
-  StyleSheet,
-  ScrollView,
-  RefreshControl,
   Dimensions,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
   Text,
+  View,
 } from 'react-native';
-import {Colors} from '../../core/theme/colors';
+import {NaturalColors} from '../../core/theme/colors';
 import {CommonSizes} from '../../core/theme/commonSizes';
 import {CommonStyles} from '../../core/theme/commonStyles';
 import {CarouselSection} from './components/CarouselSection';
@@ -73,7 +73,7 @@ export function HomeScreen(): JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: NaturalColors.grayScale_0,
   },
   content: {
     paddingVertical: CommonSizes.spacing.medium,

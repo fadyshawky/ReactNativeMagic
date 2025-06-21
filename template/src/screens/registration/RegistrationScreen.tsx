@@ -21,10 +21,10 @@ import {
 } from '../../common/validations/profileValidations';
 import {useAppDispatch} from '../../core/store/reduxHelpers';
 import {userRegister} from '../../core/store/user/userActions';
-import {Colors} from '../../core/theme/colors';
 import {CommonSizes} from '../../core/theme/commonSizes';
 import {CommonStyles} from '../../core/theme/commonStyles';
 import type {RootStackParamList} from '../../navigation/types';
+import {NaturalColors, PrimaryColors} from '../../core/theme/colors';
 
 export default function RegistrationScreen(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -178,7 +178,7 @@ export default function RegistrationScreen(): JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: Colors.white,
+    backgroundColor: NaturalColors.grayScale_0,
     borderTopRightRadius: CommonSizes.spacing.large,
     borderTopLeftRadius: CommonSizes.spacing.large,
   },
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   },
   loginLink: {
     ...CommonStyles.normalText,
-    color: Colors.blueNormalActive,
+    color: PrimaryColors.PlatinateBlue_700,
     textAlign: 'center',
     marginTop: 16,
   },

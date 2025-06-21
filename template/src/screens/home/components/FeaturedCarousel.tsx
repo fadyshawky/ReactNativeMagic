@@ -8,9 +8,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Colors} from '../../../core/theme/colors';
 import {CommonSizes} from '../../../core/theme/commonSizes';
 import {CarouselItem} from '../types';
+import {NaturalColors, PrimaryColors} from '../../../core/theme/colors';
 
 const {width} = Dimensions.get('window');
 const ITEM_WIDTH = width * 0.85;
@@ -99,11 +99,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: '600',
-    color: Colors.white,
+    color: NaturalColors.grayScale_0,
   },
   subtitle: {
     fontSize: 16,
-    color: Colors.white,
+    color: NaturalColors.grayScale_0,
     marginTop: CommonSizes.spacing.small,
   },
   pagination: {
@@ -116,11 +116,11 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: Colors.gray,
+    backgroundColor: NaturalColors.grayScale_50,
     marginHorizontal: 4,
   },
   activeDot: {
-    backgroundColor: Colors.blueDarker,
+    backgroundColor: PrimaryColors.PlatinateBlue_700,
     width: 12,
     height: 12,
     borderRadius: 6,

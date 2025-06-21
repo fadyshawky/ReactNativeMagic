@@ -8,9 +8,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {Colors} from '../../../core/theme/colors';
 import {CommonSizes} from '../../../core/theme/commonSizes';
 import {CarouselItem} from '../types';
+import {PrimaryColors} from '../../../core/theme/colors';
 
 interface CarouselSectionProps {
   items: CarouselItem[];
@@ -69,11 +69,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: '600',
-    color: Colors.blueDarker,
+    color: PrimaryColors.PlatinateBlue_700,
   },
   subtitle: {
     fontSize: 14,
-    color: Colors.blueDarker,
+    color: PrimaryColors.PlatinateBlue_700,
     marginTop: 2,
   },
 });
