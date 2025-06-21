@@ -52,7 +52,7 @@ const Stepper: React.FC<StepperProps> = ({
                   isActive && styles.circleActive,
                 ]}>
                 {isCompleted ? (
-                  <Image source={ImageResources.complete} style={styles.icon} />
+                  <Image source={0} style={styles.icon} />
                 ) : (
                   <Text style={styles.stepNumber}>{index + 1}</Text>
                 )}
