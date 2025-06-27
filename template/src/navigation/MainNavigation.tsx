@@ -7,6 +7,8 @@ import {useAppSelector} from '../core/store/reduxHelpers';
 import {AuthStack} from './AuthStack';
 import {AppMainNavigator} from './MainStack';
 import {navigationRef} from './RootNavigation';
+import {NewColors} from '../core/theme/colors';
+import {Fonts} from '../core/theme/fonts';
 
 function AppNavigator() {
   const routeNameRef = useRef<string | undefined>(undefined);
@@ -22,7 +24,7 @@ function AppNavigator() {
         dark: false,
         colors: {
           primary: '#000',
-          background: 'white',
+          background: NewColors.background,
           card: '#fff',
           text: '#000',
           border: '#000',

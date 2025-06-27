@@ -1,16 +1,17 @@
 export const Fonts = {
-  // Almarai Font Family
-  light: 'Almarai-Light',
-  regular: 'Almarai-Regular',
-  bold: 'Almarai-Bold',
-  extraBold: 'Almarai-ExtraBold',
+  // Inter Variable Font
+  regular: 'Inter-VariableFont_opsz,wght',
+  italic: 'Inter-Italic-VariableFont_opsz,wght',
 
-  // Legacy support - keeping these for backward compatibility
-  // but they now map to Almarai equivalents
-  thin: 'Almarai-Light',
-  normal: 'Almarai-Regular',
-  medium: 'Almarai-Regular',
-  semiBold: 'Almarai-Bold',
-  black: 'Almarai-ExtraBold',
-  italic: 'Almarai-Regular', // Almarai doesn't have italic variant
+  // Kanit Font
+  medium: 'Kanit-Medium',
+
+  // Font weights for Inter Variable Font
+  thin: 'Inter-Thin',
+  light: 'Inter-Light',
+  normal: 'Inter-Regular',
+  semiBold: 'Inter-SemiBold',
+  bold: 'Inter-Bold',
+  extraBold: 'Inter-ExtraBold',
+  black: 'Inter-Black',
 };

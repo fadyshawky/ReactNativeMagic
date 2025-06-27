@@ -17,12 +17,12 @@ import {
   TouchablePlatformProps,
 } from '../../../types';
 import {useTheme} from '../../core/theme/ThemeProvider';
+import {BorderRadius, Spacing} from '../../core/theme/commonSizes';
 import {createThemedStyles} from '../../core/theme/commonStyles';
 import {Theme} from '../../core/theme/types';
 import {IconPlatform} from './IconPlatform';
 import {TouchablePlatform} from './TouchablePlatform';
 import {scaleHeight, scaleSpacing} from '../../core/theme/scaling';
-import {CommonSizes} from '../../core/theme/commonSizes';
 
 interface IProps extends TouchablePlatformProps {
   label: string;
@@ -58,7 +58,7 @@ export const PrimaryButton: FC<IProps> = memo(
         return (
           <ActivityIndicator
             animating={true}
-            color={theme.colors.grayScale_50}
+            color={theme.colors.backgroundOpacity}
             size={'small'}
           />
         );
@@ -91,7 +91,7 @@ export const PrimaryButton: FC<IProps> = memo(
     return (
       <TouchablePlatform
         style={[styles.button, style] as ViewStyle[]}
-        highlightColor={theme.colors.grayScale_50}
+        highlightColor={theme.colors.mutedLavender30}
         {...props}>
         {content}
       </TouchablePlatform>
@@ -158,19 +158,19 @@ function mergeStylesWithDisabled(
     ...styles,
     button: {
       ...styles.button,
-      backgroundColor: theme.colors.grayScale_50,
+      backgroundColor: theme.colors.mutedLavender30,
       borderColor: outline
-        ? theme.colors.grayScale_50
+        ? theme.colors.mutedLavender
         : styles.button.borderColor,
       elevation: 0,
     } as ViewStyle,
     icon: {
       ...styles.icon,
-      tintColor: theme.colors.grayScale_50,
+      tintColor: theme.colors.mutedLavender,
     } as ImageStyle,
     label: {
       ...styles.label,
-      color: theme.colors.grayScale_50,
+      color: theme.colors.backgroundOpacity,
     } as TextStyle,
   };
 }
@@ -194,7 +194,7 @@ function createButtonStyles(theme: Theme) {
 
   const commonLabelStyle: TextStyle = {
     ...createThemedStyles(theme).h4_bold,
-    color: theme.colors.grayScale_0,
+    color: theme.colors.white,
     textAlign: 'center',
     textAlignVertical: 'center',
     ...Platform.select({
@@ -209,26 +209,26 @@ function createButtonStyles(theme: Theme) {
     height: 22,
     marginHorizontal: scaleSpacing(12),
     resizeMode: 'contain',
-    tintColor: theme.colors.PlatinateBlue_700,
+    tintColor: theme.colors.indigoBlue,
   };
 
   return {
     solid: StyleSheet.create({
       button: {
         ...commonButtonStyle,
-        backgroundColor: theme.colors.PlatinateBlue_700,
+        backgroundColor: theme.colors.indigoBlue,
       } as ViewStyle,
       label: theme.text.button,
       icon: {
         ...commonIcon,
-        tintColor: theme.colors.grayScale_0,
+        tintColor: theme.colors.white,
       },
     }),
 
     outline: StyleSheet.create({
       button: {
         ...commonButtonStyle,
-        borderColor: theme.colors.PlatinateBlue_700,
+        borderColor: theme.colors.indigoBlue,
         borderWidth: 2,
       } as ViewStyle,
       label: {
@@ -240,7 +240,7 @@ function createButtonStyles(theme: Theme) {
     outlineNegative: StyleSheet.create({
       button: {
         ...commonButtonStyle,
-        borderColor: theme.colors.PlatinateBlue_700,
+        borderColor: theme.colors.mutedLavender,
         borderWidth: 2,
       } as ViewStyle,
       label: {
@@ -248,7 +248,7 @@ function createButtonStyles(theme: Theme) {
       } as TextStyle,
       icon: {
         ...commonIcon,
-        tintColor: theme.colors.PlatinateBlue_700,
+        tintColor: theme.colors.mutedLavender,
       },
     }),
 
@@ -271,12 +271,12 @@ function createSmallSolidStyles(theme: Theme): IStyles {
   const commonStyles = createThemedStyles(theme);
   return StyleSheet.create({
     button: {
-      padding: CommonSizes.spacing.md,
+      padding: Spacing.medium,
       alignItems: 'center',
       justifyContent: 'center',
-      borderRadius: CommonSizes.borderRadius.xl,
+      borderRadius: BorderRadius.extraLarge,
       flexDirection: 'row',
-      backgroundColor: theme.colors.PlatinateBlue_700,
+      backgroundColor: theme.colors.indigoBlue,
       // width: 175,
     } as ViewStyle,
     label: {
@@ -286,7 +286,7 @@ function createSmallSolidStyles(theme: Theme): IStyles {
       width: 22,
       height: 22,
       resizeMode: 'contain',
-      tintColor: theme.colors.grayScale_0,
+      tintColor: theme.colors.white,
     } as ImageStyle,
   });
 }
@@ -295,25 +295,25 @@ function createSmallOutlineStyles(theme: Theme): IStyles {
   const commonStyles = createThemedStyles(theme);
   return StyleSheet.create({
     button: {
-      padding: CommonSizes.spacing.md,
+      padding: Spacing.medium,
       alignItems: 'center',
       justifyContent: 'center',
-      borderRadius: CommonSizes.borderRadius.xl,
+      borderRadius: BorderRadius.extraLarge,
       flexDirection: 'row',
       backgroundColor: 'transparent',
       width: 175,
-      borderColor: theme.colors.PlatinateBlue_700,
+      borderColor: theme.colors.indigoBlue,
       borderWidth: 1,
     } as ViewStyle,
     label: {
       ...commonStyles.normalText,
-      color: theme.colors.PlatinateBlue_700,
+      color: theme.colors.indigoBlue,
     } as TextStyle,
     icon: {
       width: 22,
       height: 22,
       resizeMode: 'contain',
-      tintColor: theme.colors.PlatinateBlue_700,
+      tintColor: theme.colors.indigoBlue,
     } as ImageStyle,
   });
 }

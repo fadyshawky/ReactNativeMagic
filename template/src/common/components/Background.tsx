@@ -56,7 +56,9 @@ export const Background: FC<BackgroundProps> = memo(
     return (
       <View
         style={[styles.container, {backgroundColor: theme.colors.background}]}>
-        <ImageBackground source={0} style={styles.container}>
+        <ImageBackground
+          source={ImageResources[`${theme.mode}_background_1`]}
+          style={styles.container}>
           {content}
         </ImageBackground>
       </View>

@@ -9,4 +9,36 @@ import {ImageURISource} from 'react-native';
  * https://github.com/svbutko/react-native-image-resource-generator
  */
 
-export class ImageResources {}
+export class ImageResources {
+  static readonly account: ImageURISource = require('../../resources/images/Account.png');
+  static readonly arrows: ImageURISource = require('../../resources/images/Arrows.png');
+  static readonly background_2: ImageURISource = require('../../resources/images/Background_2.png');
+  static readonly balance: ImageURISource = require('../../resources/images/Balance.png');
+  static readonly commission: ImageURISource = require('../../resources/images/Commission.png');
+  static readonly display: ImageURISource = require('../../resources/images/Display.png');
+  static readonly en: ImageURISource = require('../../resources/images/EN.png');
+  static readonly favourite_active: ImageURISource = require('../../resources/images/Favourite_Active.png');
+  static readonly favourite_inactive: ImageURISource = require('../../resources/images/Favourite_Inactive.png');
+  static readonly favourites: ImageURISource = require('../../resources/images/Favourites.png');
+  static readonly financials: ImageURISource = require('../../resources/images/Financials.png');
+  static readonly language: ImageURISource = require('../../resources/images/Language.png');
+  static readonly neo_pay_plus_logo: ImageURISource = require('../../resources/images/Neo_Pay_Plus_Logo.png');
+  static readonly services: ImageURISource = require('../../resources/images/Services.png');
+  static readonly splash_screen: ImageURISource = require('../../resources/images/Splash_Screen.png');
+  static readonly ar: ImageURISource = require('../../resources/images/ar.png');
+  static readonly arrow_left: ImageURISource = require('../../resources/images/arrow_left.png');
+  static readonly arrow_right: ImageURISource = require('../../resources/images/arrow_right.png');
+  static readonly dark: ImageURISource = require('../../resources/images/dark.png');
+  static readonly dark_background_1: ImageURISource = require('../../resources/images/dark_background_1.png');
+  static readonly dark_splash_logo: ImageURISource = require('../../resources/images/dark_splash_logo.png');
+  static readonly full_ammount: ImageURISource = require('../../resources/images/full_ammount.png');
+  static readonly header_logo: ImageURISource = require('../../resources/images/header_logo.png');
+  static readonly light: ImageURISource = require('../../resources/images/light.png');
+  static readonly light_background_1: ImageURISource = require('../../resources/images/light_background_1.png');
+  static readonly light_header_logo: ImageURISource = require('../../resources/images/light_header_logo.png');
+  static readonly light_splash_logo: ImageURISource = require('../../resources/images/light_splash_logo.png');
+  static readonly partial_ammount: ImageURISource = require('../../resources/images/partial_ammount.png');
+  static readonly receipt_logo: ImageURISource = require('../../resources/images/receipt_logo.png');
+  static readonly receipt_logo_transparent: ImageURISource = require('../../resources/images/receipt_logo_transparent.png');
+  static readonly repeat: ImageURISource = require('../../resources/images/repeat.png');
+}

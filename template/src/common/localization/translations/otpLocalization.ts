@@ -1,0 +1,28 @@
+export const otpLocalization = {
+  en: {
+    title: 'Verification',
+    subtitle: 'Enter the verification code sent to your phone',
+    didntReceiveCode: "Didn't receive code?",
+    resendIn: 'Resend code in {0}s',
+    resend: 'Resend',
+    verify: 'Verify',
+    invalidCode: 'Invalid verification code',
+    verificationFailed: 'Verification failed',
+    verificationSuccess: 'Verification successful',
+    resendSuccess: 'Code resent successfully',
+    resendFailed: 'Failed to resend code',
+  },
+  ar: {
+    title: 'التحقق',
+    subtitle: 'أدخل رمز التحقق المرسل إلى هاتفك',
+    didntReceiveCode: 'لم تستلم الرمز؟',
+    resendIn: 'إعادة إرسال الرمز خلال {0} ثانية',
+    resend: 'إعادة إرسال',
+    verify: 'تحقق',
+    invalidCode: 'رمز التحقق غير صالح',
+    verificationFailed: 'فشل التحقق',
+    verificationSuccess: 'تم التحقق بنجاح',
+    resendSuccess: 'تم إعادة إرسال الرمز بنجاح',
+    resendFailed: 'فشل إعادة إرسال الرمز',
+  },
+};

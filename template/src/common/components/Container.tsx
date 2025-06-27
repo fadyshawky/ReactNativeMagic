@@ -41,7 +41,7 @@ export const Container = forwardRef<KeyboardAwareScrollView, ContainerProps>(
       withoutScroll = false,
       backgroundColor,
       withoutBackgroundImage = false,
-      backgroundImage = 0,
+      backgroundImage = ImageResources[`light_background_1`],
       extendedBackground = false,
       ...scrollViewProps
     },

@@ -1,27 +1,29 @@
 import React from 'react';
 import {
-  I18nManager,
-  KeyboardTypeOptions,
-  Platform,
-  StyleProp,
   StyleSheet,
   TextInput,
-  TextInputProps,
+  View,
+  ViewStyle,
   TextStyle,
   TouchableOpacity,
-  ViewStyle,
+  StyleProp,
+  Platform,
+  KeyboardTypeOptions,
+  TextInputProps,
+  I18nManager,
+  NativeModules,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import {CommonSizes} from '../../core/theme/commonSizes';
-import {createThemedStyles} from '../../core/theme/commonStyles';
 import {useTheme} from '../../core/theme/ThemeProvider';
-import {Languages} from '../localization/localization';
 import {
-  useLocalization,
   useRTL,
   useTranslation,
+  useLocalization,
 } from '../localization/LocalizationProvider';
+import {CommonSizes} from '../../core/theme/commonSizes';
 import {RTLAwareView} from './RTLAwareView';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {createThemedStyles} from '../../core/theme/commonStyles';
+import {Languages} from '../localization/localization';
 
 interface SearchBarProps {
   value: string;
@@ -59,8 +61,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   const containerStyle: ViewStyle = {
-    backgroundColor: `${theme.colors.grayScale_0}20`,
-    borderColor: theme.colors.grayScale_25,
+    backgroundColor: `${theme.colors.white}20`,
+    borderColor: theme.colors.mutedLavender30,
   };
 
   // Set keyboard language specific properties
@@ -111,14 +113,14 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         containerStyle,
         style as ViewStyle,
         {
-          backgroundColor: theme.colors.grayScale_0,
+          backgroundColor: theme.colors.surface,
           ...createThemedStyles(theme).dropShadow,
         },
       ]}>
       <Icon
         name="search"
         size={20}
-        color={theme.colors.grayScale_50}
+        color={theme.colors.mutedLavender}
         style={styles.searchIcon}
       />
       <TextInput
@@ -133,7 +135,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           inputStyle as TextStyle,
         ]}
         placeholder={placeholder || t('search', 'common')}
-        placeholderTextColor={`${theme.colors.grayScale_50}80`}
+        placeholderTextColor={`${theme.colors.mutedLavender}80`}
         value={value}
         onChangeText={onChangeText}
         autoCapitalize="none"
@@ -146,7 +148,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           <Icon
             name="close-circle"
             size={20}
-            color={theme.colors.grayScale_50}
+            color={theme.colors.mutedLavender}
           />
         </TouchableOpacity>
       )}

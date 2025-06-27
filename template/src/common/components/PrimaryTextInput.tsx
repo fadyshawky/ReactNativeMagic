@@ -1,3 +1,4 @@
+import {GradientBorderView} from '@good-react-native/gradient-border';
 import React, {
   FC,
   memo,
@@ -17,14 +18,17 @@ import {
   TextInputProps,
   TextInputSubmitEditingEventData,
   TextStyle,
-  TouchableOpacity,
   View,
   ViewStyle,
 } from 'react-native';
 import {useTheme} from '../../core/theme/ThemeProvider';
+import {NewColors} from '../../core/theme/colors';
 import {isIos} from '../../core/theme/commonConsts';
+import {CommonSizes} from '../../core/theme/commonSizes';
 import {CommonStyles} from '../../core/theme/commonStyles';
+import {scaleHeight} from '../../core/theme/scaling';
 import {localization} from '../localization/localization';
+import {regexValidation} from '../validations/regexValidator';
 
 interface IProps extends TextInputProps {
   nextInputFocusRef?: MutableRefObject<any>;
@@ -33,6 +37,7 @@ interface IProps extends TextInputProps {
   label?: string;
   error?: string | null;
   hint?: string;
+  width?: ViewStyle['width'];
   autoComplete?:
     | 'off'
     | 'username'
@@ -50,30 +55,43 @@ interface IProps extends TextInputProps {
   required?: boolean;
   optional?: boolean;
   inputContainerStyle?: ViewStyle;
+  height?: ViewStyle['height'];
+  regex?: RegExp;
+  regexErrorMessage?: string;
 }
 
-const PrimaryTextInput: FC<IProps> = memo(
+export const PrimaryTextInput: FC<IProps> = memo(
   ({
     style,
-    containerStyle,
+    blurOnSubmit = true,
+    disableFullscreenUI = true,
+    enablesReturnKeyAutomatically = true,
+    underlineColorAndroid,
+    placeholderTextColor,
+    editable = true,
+    clearButtonMode = 'while-editing',
     label,
+    keyboardType = 'numeric',
     error,
     hint,
-    required,
-    optional,
+    containerStyle,
+    inputRef,
+    nextInputFocusRef,
+    onTouchStart,
     onFocus,
     onBlur,
     onSubmitEditing,
-    nextInputFocusRef,
-    inputRef,
-    onTouchStart,
-    editable = true,
+    required,
+    optional,
+    width,
+    height,
+    regex,
+    regexErrorMessage = 'Invalid format',
     ...props
   }) => {
     const [isFocused, setFocused] = useState<boolean>(false);
     const {theme} = useTheme();
-
-    const selectionColor = theme.colors.PlatinateBlue_700;
+    const [regexError, setRegexError] = useState<string | null>(null);
 
     const onLocalFocus = useCallback(
       (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
@@ -96,9 +114,8 @@ const PrimaryTextInput: FC<IProps> = memo(
         isFocused,
         error,
         onTouchStart ? true : editable,
-        theme,
       );
-    }, [isFocused, error, editable, onTouchStart, theme]);
+    }, [isFocused, error, editable, onTouchStart]);
 
     const onLocalSubmitEditing = useCallback(
       (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
@@ -114,229 +131,202 @@ const PrimaryTextInput: FC<IProps> = memo(
       return onTouchStart ? 'none' : undefined;
     }, [onTouchStart]);
 
-    const styles = useMemo(() => {
-      const commonInputContainer: TextStyle = {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: theme.spacing.xxxLarge, // 32px
-        textAlignVertical: 'center',
-        textAlign: 'center',
-        backgroundColor: theme.colors.grayScale_0,
-        borderRadius: theme.borderRadius.large, // 12px
-        borderWidth: theme.borderWidth.small, // 1px
-        borderColor: theme.colors.grayScale_50,
-      };
+    const handleChangeText = useCallback(
+      (text: string) => {
+        setRegexError(null);
 
-      return StyleSheet.create({
-        container: {
-          flexDirection: 'column',
-        } as ViewStyle,
-        input: {
-          ...CommonStyles.normalText,
-          flex: 1,
-          textAlignVertical: 'center',
-          paddingStart: theme.spacing.xLarge, // 16px
-          ...Platform.select({
-            android: {
-              paddingEnd: theme.spacing.xLarge, // 16px
-            },
-          }),
-        } as TextStyle,
-        inputContainer: {
-          ...commonInputContainer,
-          ...Platform.select({
-            ios: {
-              paddingEnd: theme.spacing.xLarge, // 16px
-            },
-          }),
-        } as TextStyle,
-        errorInputContainer: {
-          ...commonInputContainer,
-          ...Platform.select({
-            android: {
-              borderColor: theme.colors.error_400,
-            },
-          }),
-        } as TextStyle,
-        disabledInputContainer: {
-          ...commonInputContainer,
-          ...Platform.select({
-            android: {
-              backgroundColor: theme.colors.grayScale_50,
-              borderColor: theme.colors.grayScale_50,
-            },
-          }),
-        } as TextStyle,
-        focusedInputContainer: {
-          ...commonInputContainer,
-          ...Platform.select({
-            android: {
-              borderColor: theme.colors.grayScale_50,
-            },
-          }),
-        } as TextStyle,
-        label: {
-          ...CommonStyles.body_regular,
-          paddingBottom: theme.spacing.small, // 4px
-        } as TextStyle,
-        hint: {
-          ...CommonStyles.normalText,
-          fontWeight: '200',
-          fontSize: theme.text.bodySmallRegular.fontSize, // 12px
-          lineHeight: theme.text.bodySmallRegular.lineHeight, // 16px
-          paddingTop: theme.spacing.small, // 4px
-        } as TextStyle,
-        error: {
-          ...CommonStyles.normalText,
-          color: theme.colors.error_400,
-          fontSize: theme.text.bodySmallRegular.fontSize, // 12px
-          lineHeight: theme.text.bodySmallRegular.lineHeight, // 16px
-          paddingTop: theme.spacing.small, // 4px
-        } as TextStyle,
-      });
-    }, [theme]);
+        if (regex) {
+          const validation = regexValidation(text, regex, regexErrorMessage);
+          if (!validation.isValid) {
+            setRegexError(validation.message);
+          }
+        }
+
+        if (props.onChangeText) {
+          props.onChangeText(text);
+        }
+      },
+      [regex, regexErrorMessage, props.onChangeText],
+    );
 
     return (
-      <View style={[styles.container, containerStyle]}>
-        <Label
-          text={label}
-          required={required}
-          optional={optional}
-          styles={styles}
-        />
-        <TouchableOpacity
-          style={[inputContainerStyle, props.inputContainerStyle]}
-          onPress={onTouchStart}
-          disabled={!onTouchStart}>
+      <View
+        style={{
+          justifyContent: 'space-between',
+          gap: CommonSizes.spacing.small,
+          width: width ?? '100%',
+        }}>
+        <GradientBorderView
+          gradientProps={{
+            colors: [theme.colors.mutedLavender, theme.colors.indigoBlue],
+          }}
+          style={{
+            borderWidth: CommonSizes.borderWidth.small,
+            borderRadius: CommonSizes.borderRadius.medium,
+            height: height ?? scaleHeight(84),
+            width: '100%',
+            backgroundColor: theme.colors.backgroundOpacity,
+          }}>
           <TextInput
             disableFullscreenUI={true}
             selectionColor={selectionColor}
             {...props}
             pointerEvents={pointerEvents}
             ref={inputRef}
-            style={[styles.input, style]}
+            style={[
+              {
+                ...theme.text.body1,
+                width: '100%',
+                zIndex: 2,
+                alignSelf: 'flex-start',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flex: 1,
+                textAlignVertical: 'center',
+                paddingStart: CommonSizes.spacing.medium,
+                ...Platform.select({
+                  android: {
+                    paddingEnd: CommonSizes.spacing.medium,
+                  },
+                }),
+              },
+              style,
+            ]}
+            onChangeText={handleChangeText}
+            placeholderTextColor={theme.colors.tintColor}
             autoCapitalize="none"
             autoComplete="off"
+            keyboardType={keyboardType}
+            editable={editable}
           />
-        </TouchableOpacity>
-        <BottomText error={error} hint={hint} styles={styles} />
+        </GradientBorderView>
+        <BottomText error={error || regexError} hint={hint} />
       </View>
     );
   },
 );
 
-const Label: FC<{
-  text?: string;
-  required?: boolean;
-  optional?: boolean;
-  styles: any;
-}> = memo(({text, required, optional, styles}) => {
-  if (text != null) {
-    return (
-      <Text style={styles.label} numberOfLines={1}>
-        {text +
-          (required
-            ? localization.common.required
-            : optional
-            ? localization.common.optional
-            : '')}
-      </Text>
-    );
-  } else {
-    return null;
-  }
-});
+const Label: FC<{text?: string; required?: boolean; optional?: boolean}> = memo(
+  ({text, required, optional}) => {
+    const {theme} = useTheme();
+    if (text != null) {
+      return (
+        <Text
+          style={{
+            ...theme.text.label,
+            color: theme.colors.indigoBlue,
+          }}
+          numberOfLines={1}>
+          {text +
+            (required
+              ? localization.common.required
+              : optional
+              ? localization.common.optional
+              : '')}
+        </Text>
+      );
+    } else {
+      return null;
+    }
+  },
+);
 
-const BottomText: FC<{error?: string | null; hint?: string; styles: any}> =
-  memo(({error, hint, styles}) => {
+const BottomText: FC<{error?: string | null; hint?: string}> = memo(
+  ({error, hint}) => {
+    const {theme} = useTheme();
     if (error != null) {
-      return <Text style={styles.error}>{error}</Text>;
+      return (
+        <Text style={{...theme.text.body2, color: theme.colors.red}}>
+          {error}
+        </Text>
+      );
     } else if (hint != null) {
       return <Text style={styles.hint}>{hint}</Text>;
     } else {
       return null;
     }
-  });
+  },
+);
 
 function getInputContainerStyle(
   isFocused: boolean,
   error?: string | null,
   isEditable?: boolean,
-  theme?: any,
 ): ViewStyle {
-  const commonInputContainer: TextStyle = {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: theme.spacing.xxxLarge, // 32px
-    textAlignVertical: 'center',
-    textAlign: 'center',
-    backgroundColor: theme.colors.grayScale_0,
-    borderRadius: theme.borderRadius.large, // 12px
-    borderWidth: theme.borderWidth.small, // 1px
-    borderColor: theme.colors.grayScale_50,
-  };
-
   if (isIos) {
-    return !isEditable
-      ? {
-          ...commonInputContainer,
-          ...Platform.select({
-            android: {
-              backgroundColor: theme.colors.grayScale_50,
-              borderColor: theme.colors.grayScale_50,
-            },
-          }),
-        }
-      : {
-          ...commonInputContainer,
-          ...Platform.select({
-            ios: {
-              paddingEnd: theme.spacing.xLarge, // 16px
-            },
-          }),
-        };
+    return !isEditable ? styles.disabledInputContainer : styles.inputContainer;
   } else {
     if (isFocused) {
-      return {
-        ...commonInputContainer,
-        ...Platform.select({
-          android: {
-            borderColor: theme.colors.grayScale_50,
-          },
-        }),
-      };
+      return styles.focusedInputContainer;
     } else if (!isEditable) {
-      return {
-        ...commonInputContainer,
-        ...Platform.select({
-          android: {
-            backgroundColor: theme.colors.grayScale_50,
-            borderColor: theme.colors.grayScale_50,
-          },
-        }),
-      };
+      return styles.disabledInputContainer;
     } else if (error) {
-      return {
-        ...commonInputContainer,
-        ...Platform.select({
-          android: {
-            borderColor: theme.colors.error_400,
-          },
-        }),
-      };
+      return styles.errorInputContainer;
     } else {
-      return {
-        ...commonInputContainer,
-        ...Platform.select({
-          ios: {
-            paddingEnd: theme.spacing.xLarge, // 16px
-          },
-        }),
-      };
+      return styles.inputContainer;
     }
   }
 }
 
-export {PrimaryTextInput};
+const selectionColor = NewColors.blueNormalActive;
+
+const commonInputContainer: TextStyle = {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  minHeight: CommonSizes.spacing.extraLarge,
+  textAlignVertical: 'center',
+  textAlign: 'center',
+  width: '100%',
+  borderRadius: CommonSizes.borderRadius.medium,
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'column',
+  } as ViewStyle,
+  input: {
+    flex: 1,
+    textAlignVertical: 'center',
+    paddingStart: CommonSizes.spacing.medium,
+    ...Platform.select({
+      android: {
+        paddingEnd: CommonSizes.spacing.medium,
+      },
+    }),
+  } as TextStyle,
+  inputContainer: {
+    ...commonInputContainer,
+    ...Platform.select({
+      ios: {
+        paddingEnd: CommonSizes.spacing.medium,
+      },
+    }),
+  } as TextStyle,
+  errorInputContainer: {
+    ...commonInputContainer,
+    ...Platform.select({
+      android: {
+        borderColor: NewColors.red,
+      },
+    }),
+  } as TextStyle,
+  disabledInputContainer: {
+    ...commonInputContainer,
+  } as TextStyle,
+  focusedInputContainer: {
+    ...commonInputContainer,
+  } as TextStyle,
+  label: {
+    ...CommonStyles.body_regular,
+  } as TextStyle,
+  hint: {
+    ...CommonStyles.normalText,
+    fontWeight: '200',
+    lineHeight: CommonSizes.lineHeight.small,
+  } as TextStyle,
+  error: {
+    ...CommonStyles.normalText,
+    lineHeight: CommonSizes.lineHeight.small,
+  } as TextStyle,
+});

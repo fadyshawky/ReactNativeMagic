@@ -1,39 +1,34 @@
-import {useState, useEffect} from 'react';
-import {CarouselItem} from '../types';
-
+import {useState} from 'react';
+import {getCategories} from '../../../core/store/Categories/categoryActions';
+import {clearSelectedCategory} from '../../../core/store/Categories/categorySlice';
+import {getHomeProviders} from '../../../core/store/Providers/providersActions';
+import {useAppDispatch, useAppSelector} from '../../../core/store/reduxHelpers';
+import {RootState} from '../../../core/store/rootReducer';
+import {getBalance} from '../../../core/store/user/userActions';
+import {clearSelectedProvider} from '../../../core/store/Providers/providersSlice';
 export function useHomeData() {
   const [isLoading, setIsLoading] = useState(false);
-  const [featuredItems, setFeaturedItems] = useState<CarouselItem[]>([]);
-  const [trendingItems, setTrendingItems] = useState<CarouselItem[]>([]);
-  const [newItems, setNewItems] = useState<CarouselItem[]>([]);
-  const [recommendedItems, setRecommendedItems] = useState<CarouselItem[]>([]);
+  const dispatch = useAppDispatch();
+  const {categories, loadState} = useAppSelector(
+    (state: RootState) => state.categories,
+  );
+  const [isPayByCodeModalVisible, setIsPayByCodeModalVisible] = useState(false);
+  const {homeProviders} = useAppSelector((state: RootState) => state.providers);
+  const {user} = useAppSelector((state: RootState) => state.user);
 
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      // Simulate API calls
-      // Replace with actual API calls in production
-      setFeaturedItems([
-        {
-          id: '1',
-          title: 'Featured Item 1',
-          subtitle: 'Discover amazing features',
-          imageUrl: 'https://picsum.photos/800/400',
-        },
-        // Add more items...
-      ]);
-
-      setTrendingItems([
-        {
-          id: '1',
-          title: 'Trending Item 1',
-          subtitle: 'Hot right now',
-          imageUrl: 'https://picsum.photos/700/400',
-        },
-        // Add more items...
-      ]);
-
-      // Similar for newItems and recommendedItems...
+      const balance = await dispatch(getBalance());
+      if (balance.type.includes('fulfilled')) {
+        const categoryResponse = await dispatch(
+          getCategories({data: {limit: 30}}),
+        );
+        if (categoryResponse.type.includes('fulfilled')) {
+          const category_id = categoryResponse?.payload?.categories?.[0]?.id;
+          await dispatch(getHomeProviders({data: {category_id: category_id}}));
+        }
+      }
     } catch (error) {
       console.error('Error fetching home data:', error);
     } finally {
@@ -45,16 +40,15 @@ export function useHomeData() {
     fetchData();
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   return {
     isLoading,
-    featuredItems,
-    trendingItems,
-    newItems,
-    recommendedItems,
     refreshData,
+    fetchData,
+    categories,
+    user,
+    homeProviders,
+    loadState,
+    isPayByCodeModalVisible,
+    setIsPayByCodeModalVisible,
   };
 }

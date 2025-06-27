@@ -1,15 +1,16 @@
 import React, {useRef, useState} from 'react';
 import {
-  NativeSyntheticEvent,
   StyleSheet,
+  View,
   TextInput,
+  NativeSyntheticEvent,
   TextInputKeyPressEventData,
   ViewStyle,
 } from 'react-native';
 import {useTheme} from '../../core/theme/ThemeProvider';
 import {CommonSizes} from '../../core/theme/commonSizes';
-import {scaleWidth} from '../../core/theme/scaling';
 import {PrimaryTextInput} from './PrimaryTextInput';
+import {scaleWidth} from '../../core/theme/scaling';
 import {RTLAwareView} from './RTLAwareView';
 
 interface OTPInputProps {

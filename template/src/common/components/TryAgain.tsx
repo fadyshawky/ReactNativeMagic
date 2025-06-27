@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {PrimaryColors} from '../../core/theme/colors';
+import {Colors, NewColors} from '../../core/theme/colors';
 import {CommonSizes} from '../../core/theme/commonSizes';
 import {CommonStyles} from '../../core/theme/commonStyles';
 import {localization} from '../localization/localization';
@@ -38,11 +38,11 @@ const styles = StyleSheet.create({
   title: {
     ...CommonStyles.normalText,
     textAlign: 'center',
-    marginBottom: CommonSizes.spacing.xSmall,
+    marginBottom: CommonSizes.spacing.extraSmall,
   } as TextStyle,
   description: {
     ...CommonStyles.normalText,
-    color: PrimaryColors.PlatinateBlue_700,
+    color: NewColors.blueNormalActive,
     textAlign: 'center',
     textDecorationLine: 'underline',
   } as TextStyle,

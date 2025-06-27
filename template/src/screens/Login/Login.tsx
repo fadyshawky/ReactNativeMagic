@@ -1,39 +1,46 @@
 import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {toLower} from 'lodash';
 import React, {useRef, useState} from 'react';
-import {
-  findNodeHandle,
-  NativeSyntheticEvent,
-  StyleSheet,
-  Text,
-  TextInputFocusEventData,
-} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {ButtonType} from '../../../types';
+import {Container} from '../../common/components/Container';
 import {PrimaryButton} from '../../common/components/PrimaryButton';
 import {PrimaryTextInput} from '../../common/components/PrimaryTextInput';
-import {localization} from '../../common/localization/localization';
+import {RTLAwareText} from '../../common/components/RTLAwareText';
+import {RTLAwareView} from '../../common/components/RTLAwareView';
+import {ImageResources} from '../../common/ImageResources.g';
+import {
+  useTranslation,
+  useRTL,
+} from '../../common/localization/LocalizationProvider';
+import {phoneValidations} from '../../common/validations/authValidations';
 import {emptyValidation} from '../../common/validations/commonValidations';
 import {useInputError} from '../../common/validations/hooks/useInputError';
-import {emailValidations} from '../../common/validations/profileValidations';
 import {useAppDispatch} from '../../core/store/reduxHelpers';
 import {userLogin} from '../../core/store/user/userActions';
 import {CommonSizes} from '../../core/theme/commonSizes';
-import {CommonStyles} from '../../core/theme/commonStyles';
+import {Fonts} from '../../core/theme/fonts';
+import {useTheme} from '../../core/theme/ThemeProvider';
+import {Header} from '../../navigation/HeaderComponents';
 import type {RootStackParamList} from '../../navigation/types';
+import {scaleHeight} from '../../core/theme/scaling';
 
 export function Login(): JSX.Element {
   const dispatch = useAppDispatch();
-  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const scroll = useRef<KeyboardAwareScrollView>(null);
+  const {theme} = useTheme();
+  const t = useTranslation();
+  const isRTL = useRTL();
 
-  const {error: emailError, recheckValue: recheckEmail} = useInputError(
-    email,
-    emailValidations,
+  const {error: phoneError, recheckValue: recheckPhone} = useInputError(
+    phone,
+    phoneValidations,
   );
   const {error: passwordError, recheckValue: recheckPassword} = useInputError(
     password,
@@ -41,111 +48,104 @@ export function Login(): JSX.Element {
   );
 
   async function loginUser() {
-    const emailValid = recheckEmail() === null;
+    const phoneValid = recheckPhone() === null;
     const passwordValid = recheckPassword() === null;
 
-    if (!emailValid || !passwordValid) {
+    if (!phoneValid || !passwordValid) {
       return;
     }
+    try {
+      setLoading(true);
+      const result = await dispatch(
+        userLogin({
+          phone: phone,
+          password,
+        }),
+      );
 
-    setLoading(true);
-    await dispatch(
-      userLogin({
-        email: toLower(email),
-        password,
-      }),
-    );
-    setLoading(false);
+      if (userLogin.fulfilled.match(result)) {
+        navigation.navigate('OTP', {phone: phone});
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
   }
-  const scroll = useRef<KeyboardAwareScrollView>(null);
-  function scrollToInput(reactNode: any) {
-    // Add a 'scroll' ref to your ScrollView
-
-    // setTimeout(() => {
-    scroll.current?.scrollToFocusedInput(reactNode);
-    // }, 500);
-  }
-
-  const goToRegistration = () => {
-    navigation.navigate('Registration');
-  };
 
   const goToForgotPassword = () => {
     navigation.navigate('ForgotPassword');
   };
 
   return (
-    <KeyboardAwareScrollView
+    <Container
       ref={scroll}
-      resetScrollToCoords={{x: 0, y: 0}}
-      scrollEnabled={true}
-      enableOnAndroid={true}
-      testID={'MainPageID'}
+      testID={'LoginScreenID'}
       contentContainerStyle={styles.contentContainer}
-      contentInsetAdjustmentBehavior={'automatic'}
-      style={styles.container}>
-      <Text style={CommonStyles.h1_semiBold}>{localization.login.Login}</Text>
+      style={styles.container}
+      backgroundImage={ImageResources.background_2}
+      withoutPadding
+      extendedBackground
+      backgroundColor={theme.colors.background}>
+      <Header />
+      <RTLAwareText style={{...theme.text.header1, textAlign: 'center'}}>
+        {t('welcome', 'login')}
+      </RTLAwareText>
       <PrimaryTextInput
-        onFocus={(event: NativeSyntheticEvent<TextInputFocusEventData>) => {
-          scrollToInput(findNodeHandle(event.target));
-        }}
-        autoCapitalize="none"
-        value={email}
-        onChangeText={setEmail}
-        containerStyle={CommonStyles.textInputContainer}
-        label={localization.login.Email}
-        placeholder={localization.login.EnterEmail}
-        error={emailError}
+        value={phone}
+        onChangeText={setPhone}
+        error={phoneError}
+        keyboardType="numeric"
+        placeholder={t('EnterPhone', 'login')}
       />
       <PrimaryTextInput
-        onFocus={(event: NativeSyntheticEvent<TextInputFocusEventData>) => {
-          scrollToInput(findNodeHandle(event.target));
-        }}
-        clearButtonMode="never"
         value={password}
-        secureTextEntry
         onChangeText={setPassword}
-        containerStyle={CommonStyles.textInputContainer}
-        label={localization.login.Password}
-        placeholder={localization.login.EnterPassword}
         error={passwordError}
+        secureTextEntry={true}
+        keyboardType="numeric"
+        placeholder={t('EnterPassword', 'login')}
       />
+
+      <RTLAwareView
+        style={{width: '100%', alignItems: isRTL ? 'flex-start' : 'flex-end'}}>
+        <PrimaryButton
+          label={t('forgetPassword', 'login')}
+          onPressIn={goToForgotPassword}
+          type={ButtonType.borderless}
+        />
+      </RTLAwareView>
       <PrimaryButton
+        label={t('Login', 'login')}
+        onPressIn={loginUser}
         isLoading={loading}
-        onPress={loginUser}
-        label={localization.login.continue}
+        disabled={loading}
         type={ButtonType.solid}
       />
-    </KeyboardAwareScrollView>
+    </Container>
   );
 }
 
 const styles = StyleSheet.create({
-  imageContainer: {
-    ...CommonStyles.flex1,
-    justifyContent: 'flex-end',
-  },
   container: {
     flexGrow: 1,
-    borderTopRightRadius: CommonSizes.borderRadius.lg,
-    borderTopLeftRadius: CommonSizes.borderRadius.lg,
+    borderTopRightRadius: CommonSizes.spacing.large,
+    borderTopLeftRadius: CommonSizes.spacing.large,
+    paddingHorizontal: CommonSizes.spacing.large,
+    gap: CommonSizes.spacing.xl,
+    justifyContent: 'flex-start',
   },
   contentContainer: {
-    justifyContent: 'center',
+    flexGrow: 1,
+  },
+  formContainer: {
     alignItems: 'center',
-    paddingHorizontal: CommonSizes.spacing.lg,
-    paddingVertical: 26,
-    gap: 16,
+    paddingHorizontal: CommonSizes.spacing.large,
+    gap: CommonSizes.spacing.large,
   },
-  forgotPassword: {
-    ...CommonStyles.normalText,
-    textAlign: 'right',
-    marginTop: 8,
-    marginBottom: 24,
-  },
-  registerLink: {
-    ...CommonStyles.normalText,
+  title: {
     textAlign: 'center',
-    marginTop: 16,
+    fontSize: CommonSizes.fontSize.header1,
+    fontWeight: 'bold',
+    fontFamily: Fonts.regular,
   },
 });

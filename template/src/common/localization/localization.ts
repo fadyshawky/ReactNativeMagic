@@ -8,7 +8,12 @@ import {setDateLocale} from './dateFormatter';
 import {loginLocalization} from './translations/loginLocalization';
 import {homeLocalization} from './translations/homeLocalization';
 import {profileLocalization} from './translations/profileLocalization';
+import {otpLocalization} from './translations/otpLocalization';
+import {passwordLocalization} from './translations/passwordLocalization';
+import {navigationLocalization} from './translations/navigationLocalization';
+import {mainNavigationLocalization} from './translations/mainNavigationLocalization';
 import {I18nManager} from 'react-native';
+import {posLocalization} from './translations/posLocalization';
 
 export enum Languages {
   en = 'en',
@@ -24,6 +29,11 @@ export const localization = {
   login: new LocalizedStrings(loginLocalization),
   home: new LocalizedStrings(homeLocalization),
   profile: new LocalizedStrings(profileLocalization),
+  otp: new LocalizedStrings(otpLocalization),
+  password: new LocalizedStrings(passwordLocalization),
+  navigation: new LocalizedStrings(navigationLocalization),
+  mainNavigation: new LocalizedStrings(mainNavigationLocalization),
+  pos: new LocalizedStrings(posLocalization),
 };
 
 export function getLanguage(): string {
