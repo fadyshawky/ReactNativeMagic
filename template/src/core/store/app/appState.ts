@@ -6,6 +6,6 @@ export interface AppInitialEntity {
 }
 
 export const appInitialState: AppInitialEntity = {
-  language: undefined,
-  isRTL: false,
+  language: Languages.en,
+  isRTL: true,
 };

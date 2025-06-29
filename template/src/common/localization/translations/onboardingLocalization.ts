@@ -1,13 +1,44 @@
 export const onboardingLocalization = {
   en: {
-    welcomeToApp: 'Welcome to\nApp',
-    firstHeader: 'Welcome',
-    firstBody: 'Thank you for choosing react-native-template-strong',
-    secondHeader: 'Learn',
-    secondBody:
-      'Some things are already done, to know more check the contents of pages and tabs',
-    thirdHeader: 'Star',
-    thirdBody:
-      'Star the repo if you find this project useful and participate in its development',
+    welcome: 'Welcome',
+    getStarted: 'Get Started',
+    skip: 'Skip',
+    next: 'Next',
+    done: 'Done',
+    slides: {
+      slide1: {
+        title: 'Welcome to Our App',
+        description: 'Discover amazing features and possibilities',
+      },
+      slide2: {
+        title: 'Easy to Use',
+        description: 'Simple and intuitive interface for everyone',
+      },
+      slide3: {
+        title: 'Get Started',
+        description: 'Ready to begin your journey with us',
+      },
+    },
+  },
+  ar: {
+    welcome: 'مرحباً',
+    getStarted: 'ابدأ',
+    skip: 'تخطي',
+    next: 'التالي',
+    done: 'تم',
+    slides: {
+      slide1: {
+        title: 'مرحباً بك في تطبيقنا',
+        description: 'اكتشف الميزات والإمكانيات الرائعة',
+      },
+      slide2: {
+        title: 'سهل الاستخدام',
+        description: 'واجهة بسيطة وبديهية للجميع',
+      },
+      slide3: {
+        title: 'ابدأ الآن',
+        description: 'مستعد لبدء رحلتك معنا',
+      },
+    },
   },
 };

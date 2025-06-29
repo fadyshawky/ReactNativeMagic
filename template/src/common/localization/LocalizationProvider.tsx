@@ -46,41 +46,42 @@ export const LocalizationProvider: React.FC<LocalizationProviderProps> = ({
     storedIsRTL !== undefined ? storedIsRTL : currentLanguage === Languages.ar,
   );
 
+  // Update RTL state when stored values change
   useEffect(() => {
-    setLanguageUtil(currentLanguage);
-    setIsRTL(currentLanguage === Languages.ar);
+    if (storedIsRTL !== undefined) {
+      setIsRTL(storedIsRTL);
+    } else if (storedLanguage) {
+      setIsRTL(storedLanguage === Languages.ar);
+    }
+  }, [storedLanguage, storedIsRTL]);
 
-    // Force app restart on Android when changing RTL/LTR
-    if (Platform.OS === 'android') {
-      const shouldBeRTL = currentLanguage === Languages.ar;
-      if (I18nManager.isRTL !== shouldBeRTL) {
-        I18nManager.allowRTL(shouldBeRTL);
-        I18nManager.forceRTL(shouldBeRTL);
-      }
+  // Set language utility when currentLanguage changes
+  useEffect(() => {
+    if (currentLanguage) {
+      setLanguageUtil(currentLanguage);
     }
   }, [currentLanguage]);
 
   const changeLanguage = (language: Languages) => {
-    // Only restart if the language is actually changing
     if (language !== currentLanguage) {
+      console.log('Changing language from', currentLanguage, 'to', language);
+
       setCurrentLanguage(language);
       dispatch(setLanguageAction(language));
 
       // Set RTL configuration before restart
       const shouldBeRTL = language === Languages.ar;
       if (I18nManager.isRTL !== shouldBeRTL) {
+        console.log('Language change requires RTL update:', shouldBeRTL);
         I18nManager.allowRTL(shouldBeRTL);
         I18nManager.forceRTL(shouldBeRTL);
 
         // Restart the app to apply RTL/LTR changes properly
-        // Small delay to ensure settings are applied
         setTimeout(() => {
           try {
-            // Check if RNRestart is available
             if (RNRestart && typeof RNRestart.restart === 'function') {
               RNRestart.restart();
             } else if (Platform.OS === 'android') {
-              // Fallback for Android using DevSettings
               const DevSettings = NativeModules.DevSettings;
               if (DevSettings && DevSettings.reload) {
                 DevSettings.reload();
@@ -103,7 +104,6 @@ export const LocalizationProvider: React.FC<LocalizationProviderProps> = ({
       const keys = key.split('.');
       let result: any = localization[section];
 
-      // If the key has dot notation (e.g., 'registration.title'), navigate through the object
       if (keys.length > 1) {
         for (const k of keys) {
           result = result[k];
@@ -111,7 +111,6 @@ export const LocalizationProvider: React.FC<LocalizationProviderProps> = ({
         return result || key;
       }
 
-      // Simple key
       return result[key] || key;
     } catch (error) {
       console.warn(
@@ -139,13 +138,11 @@ export const useLocalization = () => {
   return context;
 };
 
-// Shorthand hook for translations
 export const useTranslation = () => {
   const {t} = useLocalization();
   return t;
 };
 
-// Hook to get RTL status
 export const useRTL = () => {
   const {isRTL} = useLocalization();
   return isRTL;

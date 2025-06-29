@@ -1,7 +1,7 @@
 export const mainNavigationLocalization = {
   en: {
     tabs: {
-      Main: 'Services',
+      Main: 'Home',
       Favorites: 'Favorites',
       Financials: 'Financials',
       Account: 'Account',
@@ -15,7 +15,7 @@ export const mainNavigationLocalization = {
   },
   ar: {
     tabs: {
-      Main: 'الخدمات',
+      Main: 'الرئيسية',
       Favorites: 'المفضلة',
       Financials: 'المالية',
       Account: 'الحساب',

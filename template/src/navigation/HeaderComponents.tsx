@@ -1,17 +1,16 @@
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {ImageResources} from '../common/ImageResources.g';
+import {useRTL} from '../common/localization/LocalizationProvider';
 import {CommonSizes} from '../core/theme/commonSizes';
 import {screenWidth} from '../core/theme/commonStyles';
+import {scaleWidth} from '../core/theme/scaling';
 import {useTheme} from '../core/theme/ThemeProvider';
 import {RootStackParamList} from './types';
-import {useRTL} from '../common/localization/LocalizationProvider';
-import {scaleWidth} from '../core/theme/scaling';
 export function Header() {
   return (
     <View style={styles.headerBase}>
-      <Image source={ImageResources.light_header_logo} style={styles.logo} />
+      <Image source={0} style={styles.logo} />
     </View>
   );
 }
@@ -20,7 +19,7 @@ export function HeaderBack({onPress}: {onPress: () => void}) {
   return (
     <View style={styles.headerWithBack}>
       <BackButton onPress={onPress} />
-      <Image source={ImageResources.light_header_logo} style={styles.logo} />
+      <Image source={0} style={styles.logo} />
       <View style={{width: 40}} />
     </View>
   );
@@ -31,16 +30,6 @@ export function HeaderButton({onPress}: {onPress: () => void}) {
     <View style={styles.headerWithBack}>
       <BackButton onPress={onPress} />
       <View style={styles.logo} />
-      <View style={{width: 40}} />
-    </View>
-  );
-}
-
-export function HomeHeader({onPress}: {onPress: () => void}) {
-  return (
-    <View style={styles.headerWithBack}>
-      <RefreshButton onPress={onPress} />
-      <Image source={ImageResources.light_header_logo} style={styles.logo} />
       <View style={{width: 40}} />
     </View>
   );
@@ -64,25 +53,12 @@ function BackButton({onPress}: {onPress: () => void}) {
   return (
     <TouchableOpacity style={styles.backButton} onPressIn={onPress}>
       <Image
-        tintColor={theme.colors.tintColor}
+        tintColor={theme.colors.PlatinateBlue_100}
         style={{
           ...styles.backIcon,
           transform: [{rotate: isRTL ? '180deg' : '0deg'}],
         }}
-        source={ImageResources.arrow_left}
-      />
-    </TouchableOpacity>
-  );
-}
-
-function RefreshButton({onPress}: {onPress: () => void}) {
-  const {theme} = useTheme();
-  return (
-    <TouchableOpacity style={styles.backButton} onPressIn={onPress}>
-      <Image
-        tintColor={theme.colors.tintColor}
-        style={styles.backIcon}
-        source={ImageResources.repeat}
+        source={0}
       />
     </TouchableOpacity>
   );

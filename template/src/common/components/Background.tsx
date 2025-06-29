@@ -1,9 +1,8 @@
 import React, {FC, memo} from 'react';
 import {ImageBackground, StyleSheet, View, ViewStyle} from 'react-native';
-import {useTheme} from '../../core/theme/ThemeProvider';
-import {ImageResources} from '../ImageResources.g';
-import {Container} from './Container';
 import {KeyboardAwareScrollViewProps} from 'react-native-keyboard-aware-scroll-view';
+import {useTheme} from '../../core/theme/ThemeProvider';
+import {Container} from './Container';
 
 interface BackgroundProps
   extends Omit<KeyboardAwareScrollViewProps, 'contentContainerStyle'> {
@@ -46,7 +45,7 @@ export const Background: FC<BackgroundProps> = memo(
         <View
           style={[
             styles.container,
-            {backgroundColor: theme.colors.background},
+            {backgroundColor: theme.colors.background_2},
           ]}>
           {content}
         </View>
@@ -55,10 +54,11 @@ export const Background: FC<BackgroundProps> = memo(
 
     return (
       <View
-        style={[styles.container, {backgroundColor: theme.colors.background}]}>
-        <ImageBackground
-          source={ImageResources[`${theme.mode}_background_1`]}
-          style={styles.container}>
+        style={[
+          styles.container,
+          {backgroundColor: theme.colors.background_2},
+        ]}>
+        <ImageBackground source={0} style={styles.container}>
           {content}
         </ImageBackground>
       </View>

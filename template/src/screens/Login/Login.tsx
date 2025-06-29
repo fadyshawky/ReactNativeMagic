@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useRef, useState} from 'react';
-import {Dimensions, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {ButtonType} from '../../../types';
 import {Container} from '../../common/components/Container';
@@ -9,10 +9,9 @@ import {PrimaryButton} from '../../common/components/PrimaryButton';
 import {PrimaryTextInput} from '../../common/components/PrimaryTextInput';
 import {RTLAwareText} from '../../common/components/RTLAwareText';
 import {RTLAwareView} from '../../common/components/RTLAwareView';
-import {ImageResources} from '../../common/ImageResources.g';
 import {
-  useTranslation,
   useRTL,
+  useTranslation,
 } from '../../common/localization/LocalizationProvider';
 import {phoneValidations} from '../../common/validations/authValidations';
 import {emptyValidation} from '../../common/validations/commonValidations';
@@ -24,7 +23,6 @@ import {Fonts} from '../../core/theme/fonts';
 import {useTheme} from '../../core/theme/ThemeProvider';
 import {Header} from '../../navigation/HeaderComponents';
 import type {RootStackParamList} from '../../navigation/types';
-import {scaleHeight} from '../../core/theme/scaling';
 
 export function Login(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -82,10 +80,10 @@ export function Login(): JSX.Element {
       testID={'LoginScreenID'}
       contentContainerStyle={styles.contentContainer}
       style={styles.container}
-      backgroundImage={ImageResources.background_2}
+      backgroundImage={0}
       withoutPadding
       extendedBackground
-      backgroundColor={theme.colors.background}>
+      backgroundColor={theme.colors.background_2}>
       <Header />
       <RTLAwareText style={{...theme.text.header1, textAlign: 'center'}}>
         {t('welcome', 'login')}
@@ -144,7 +142,7 @@ const styles = StyleSheet.create({
   },
   title: {
     textAlign: 'center',
-    fontSize: CommonSizes.fontSize.header1,
+    fontSize: CommonSizes.font.bodyLarge,
     fontWeight: 'bold',
     fontFamily: Fonts.regular,
   },

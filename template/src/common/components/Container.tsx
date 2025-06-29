@@ -1,21 +1,18 @@
 import React, {forwardRef} from 'react';
 import {
-  StyleSheet,
-  ViewStyle,
-  Platform,
-  KeyboardAvoidingView,
-  ScrollView,
-  View,
   ImageBackground,
   ImageSourcePropType,
+  KeyboardAvoidingView,
+  StyleSheet,
+  View,
+  ViewStyle,
 } from 'react-native';
 import {
   KeyboardAwareScrollView,
   KeyboardAwareScrollViewProps,
 } from 'react-native-keyboard-aware-scroll-view';
-import {useTheme} from '../../core/theme/ThemeProvider';
 import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
-import {ImageResources} from '../ImageResources.g';
+import {useTheme} from '../../core/theme/ThemeProvider';
 
 interface ContainerProps extends Partial<KeyboardAwareScrollViewProps> {
   children: React.ReactNode;
@@ -41,7 +38,7 @@ export const Container = forwardRef<KeyboardAwareScrollView, ContainerProps>(
       withoutScroll = false,
       backgroundColor,
       withoutBackgroundImage = false,
-      backgroundImage = ImageResources[`light_background_1`],
+      backgroundImage = 0,
       extendedBackground = false,
       ...scrollViewProps
     },
@@ -50,7 +47,7 @@ export const Container = forwardRef<KeyboardAwareScrollView, ContainerProps>(
     const {theme} = useTheme();
     const insets = useSafeAreaInsets();
     const Wrapper = useSafeArea ? SafeAreaView : View;
-    const bgColor = backgroundColor || theme.colors.background;
+    const bgColor = backgroundColor || theme.colors.background_2;
 
     const content = (
       <Wrapper

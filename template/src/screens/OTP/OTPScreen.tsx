@@ -1,26 +1,25 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useRef, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {ButtonType} from '../../../types';
 import {Container} from '../../common/components/Container';
-import {PrimaryButton} from '../../common/components/PrimaryButton';
 import {OTPInput} from '../../common/components/OTPInput';
-import {useInputError} from '../../common/validations/hooks/useInputError';
-import {useAppDispatch} from '../../core/store/reduxHelpers';
-import {CommonSizes} from '../../core/theme/commonSizes';
-import {useTheme} from '../../core/theme/ThemeProvider';
-import {ImageResources} from '../../common/ImageResources.g';
-import {Header, HeaderBack} from '../../navigation/HeaderComponents';
-import type {RootStackParamList} from '../../navigation/types';
-import {verifyOTP} from '../../core/store/user/userActions';
-import {
-  useTranslation,
-  useRTL,
-} from '../../common/localization/LocalizationProvider';
+import {PrimaryButton} from '../../common/components/PrimaryButton';
 import {RTLAwareText} from '../../common/components/RTLAwareText';
 import {RTLAwareView} from '../../common/components/RTLAwareView';
+import {
+  useRTL,
+  useTranslation,
+} from '../../common/localization/LocalizationProvider';
+import {useInputError} from '../../common/validations/hooks/useInputError';
+import {useAppDispatch} from '../../core/store/reduxHelpers';
+import {verifyOTP} from '../../core/store/user/userActions';
+import {CommonSizes} from '../../core/theme/commonSizes';
+import {useTheme} from '../../core/theme/ThemeProvider';
+import {HeaderBack} from '../../navigation/HeaderComponents';
+import type {RootStackParamList} from '../../navigation/types';
 
 export function OTPScreen(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -93,10 +92,10 @@ export function OTPScreen(): JSX.Element {
       testID={'OTPScreenID'}
       contentContainerStyle={styles.contentContainer}
       style={styles.container}
-      backgroundImage={ImageResources.background_2}
+      backgroundImage={0}
       withoutPadding
       extendedBackground
-      backgroundColor={theme.colors.background}>
+      backgroundColor={theme.colors.background_2}>
       <HeaderBack onPress={() => navigation.goBack()} />
       <RTLAwareText style={{...theme.text.header1, textAlign: 'center'}}>
         {t('title', 'otp')}

@@ -1,6 +1,6 @@
 export const profileLocalization = {
   en: {
-    studentProfile: 'Student Profile',
+    studentProfile: 'User Profile',
     allDetails: 'All Details',
     settings: 'Settings',
     darkMode: 'Dark Mode',
@@ -11,10 +11,10 @@ export const profileLocalization = {
     logout: 'Logout',
     changeLanguage: 'Change Language',
     changeLanguageConfirmation:
-      'Are you sure you want to change the language? The app will restart to apply changes.',
+      'Are you sure you want to change the language? The app will restart.',
   },
   ar: {
-    studentProfile: 'الملف الشخصي للطالب',
+    studentProfile: 'الملف الشخصي',
     allDetails: 'جميع التفاصيل',
     settings: 'الإعدادات',
     darkMode: 'الوضع الداكن',
@@ -25,6 +25,6 @@ export const profileLocalization = {
     logout: 'تسجيل الخروج',
     changeLanguage: 'تغيير اللغة',
     changeLanguageConfirmation:
-      'هل أنت متأكد أنك تريد تغيير اللغة؟ سيتم إعادة تشغيل التطبيق لتطبيق التغييرات.',
+      'هل تريد تغيير اللغة؟ سيتم إعادة تشغيل التطبيق.',
   },
 };
