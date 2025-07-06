@@ -7,5 +7,5 @@ export interface AppInitialEntity {
 
 export const appInitialState: AppInitialEntity = {
   language: Languages.en,
-  isRTL: true,
+  isRTL: false,
 };

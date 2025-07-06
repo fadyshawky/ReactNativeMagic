@@ -4,11 +4,10 @@ import {DefaultTheme, NavigationContainer} from '@react-navigation/native';
 import * as React from 'react';
 import {useRef} from 'react';
 import {useAppSelector} from '../core/store/reduxHelpers';
+import {NaturalColors} from '../core/theme/colors';
 import {AuthStack} from './AuthStack';
 import {AppMainNavigator} from './MainStack';
 import {navigationRef} from './RootNavigation';
-import {NewColors} from '../core/theme/colors';
-import {Fonts} from '../core/theme/fonts';
 
 function AppNavigator() {
   const routeNameRef = useRef<string | undefined>(undefined);
@@ -24,7 +23,7 @@ function AppNavigator() {
         dark: false,
         colors: {
           primary: '#000',
-          background: NewColors.background,
+          background: NaturalColors.background_2,
           card: '#fff',
           text: '#000',
           border: '#000',
