@@ -34,7 +34,7 @@ Then run:
 
 ```bash
 npm start
-npm run ios    # or: npm run android
+npm run ios    # or an Android variant below
 ```
 
 ## First steps after creating your app
@@ -69,7 +69,12 @@ src/
 |---------|-------------|
 | `npm start` | Start Metro bundler |
 | `npm run ios` | Run on iOS |
-| `npm run android` | Run on Android |
+| `npm run android:prod:debug` | Run Android (production, debug) |
+| `npm run android:prod:release` | Run Android (production, release) |
+| `npm run android:staging:debug` | Run Android (staging, debug) |
+| `npm run android:staging:release` | Run Android (staging, release) |
+| `npm run android:development:debug` | Run Android (development, debug) |
+| `npm run android:development:release` | Run Android (development, release) |
 | `npm test` | Run tests |
 | `npm run lint` | Lint code |
 
