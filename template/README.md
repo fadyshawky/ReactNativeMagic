@@ -1,79 +1,112 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# ReactNativeMagic
 
-# Getting Started
+**Plug and play** – create your app and start developing without hassle.
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+A production-ready React Native template with TypeScript, Redux, React Navigation, and a scalable architecture (Uprise-style). Use it to bootstrap new apps with one command.
 
-## Step 1: Start the Metro Server
+## Requirements
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+- **Node.js >= 20** ([Download](https://nodejs.org/en/download/))
+- JDK >= 11 ([Download](https://www.oracle.com/java/technologies/downloads/))
+- Ruby >= 2.7.5 (for iOS)
+- Xcode (for iOS) / Android Studio (for Android)
 
-To start Metro, run the following command from the _root_ of your React Native project:
+## Quick start
 
 ```bash
-# using npm
+npx @react-native-community/cli init YourAppName --template @fadyshawky/react-native-magic
+cd YourAppName
+```
+
+Optional: set your bundle ID at creation:
+
+```bash
+npx @react-native-community/cli init YourAppName --template @fadyshawky/react-native-magic --package-name com.yourcompany.yourapp
+```
+
+For iOS, install pods:
+
+```bash
+cd ios && pod install && cd ..
+```
+
+Then run:
+
+```bash
 npm start
-
-# OR using Yarn
-yarn start
+npm run ios    # or an Android variant below
 ```
 
-## Step 2: Start your Application
+## First steps after creating your app
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+1. **App name & bundle ID** – Set at init (or you’ll be prompted for package name if you didn’t pass `--package-name`). See [CUSTOMIZATION.md](template/docs/CUSTOMIZATION.md#app-name-and-bundle-id).
+2. **API** – Copy `.env.example` to `.env` and set `API_BASE_URL` (and other vars) for your backend.
+3. **Theme** – Edit `src/core/theme/colors.ts` (and `fonts.ts`, `commonSizes.ts` if needed) for your brand.
+4. **Config** – Optional: adjust `src/core/config/index.ts` for feature toggles or app-level constants.
 
-### For Android
+## Documentation
+
+In your generated project you’ll have:
+
+- **[docs/ARCHITECTURE.md](template/docs/ARCHITECTURE.md)** – Layers, folder map, data flow, SOLID.
+- **[docs/CUSTOMIZATION.md](template/docs/CUSTOMIZATION.md)** – App name, bundle ID, API, theme, adding a screen/slice/language.
+- **[docs/BEST_PRACTICES.md](template/docs/BEST_PRACTICES.md)** – Code style, structure, testing, security, upgrades.
+
+## Project structure (in your app)
+
+```
+src/
+├── common/          # Shared components, localization, helpers, validations, utils
+├── core/            # Store (Redux), API, theme, config
+├── navigation/      # Auth stack, main stack, tabs
+├── screens/         # Feature screens
+└── sheetManager/    # Action sheets
+```
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm start` | Start Metro bundler |
+| `npm run ios` | Run on iOS |
+| `npm run android:prod:debug` | Run Android (production, debug) |
+| `npm run android:prod:release` | Run Android (production, release) |
+| `npm run android:staging:debug` | Run Android (staging, debug) |
+| `npm run android:staging:release` | Run Android (staging, release) |
+| `npm run android:development:debug` | Run Android (development, debug) |
+| `npm run android:development:release` | Run Android (development, release) |
+| `npm test` | Run tests |
+| `npm run lint` | Lint code |
+
+## Versioning
+
+- **React Native**: ^0.84.x (current stable at release).
+- **React**: ^19.2.x.
+- **Node**: >= 20 (LTS).
+
+Dependencies use **caret (^)** so your app can get patch/minor updates independently.
+
+## Common issues
+
+**iOS – Pod install fails**
 
 ```bash
-# using npm
-npm run android
-
-# OR using Yarn
-yarn android
+cd ios && pod deintegrate && pod install && cd ..
 ```
 
-### For iOS
+**Android – Gradle / SDK**
 
-```bash
-# using npm
-npm run ios
+- Run `./gradlew clean` in `android/`.
+- Ensure `android/local.properties` has `sdk.dir` set to your Android SDK path.
 
-# OR using Yarn
-yarn ios
-```
+**Upgrading React Native**
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+Use [React Native Upgrade Helper](https://react-native-community.github.io/upgrade-helper/) (select current → target version) and apply the suggested changes.
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
+## License
 
-## Step 3: Modifying your App
+MIT – see [LICENSE.md](LICENSE.md).
 
-Now that you have successfully run the app, let's modify it.
+## Author
 
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+Fady Shawky – [GitHub](https://github.com/fadyshawky)
