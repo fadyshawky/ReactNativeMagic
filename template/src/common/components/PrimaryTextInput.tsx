@@ -22,7 +22,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import {useTheme} from '../../core/theme/ThemeProvider';
-import {PrimaryColors, AlertColors} from '../../core/theme/colors';
+import {PrimaryColors, AlertColors, NaturalColors} from '../../core/theme/colors';
 import {isIos} from '../../core/theme/commonConsts';
 import {CommonSizes} from '../../core/theme/commonSizes';
 import {CommonStyles} from '../../core/theme/commonStyles';
@@ -93,6 +93,15 @@ export const PrimaryTextInput: FC<IProps> = memo(
     const {theme} = useTheme();
     const [regexError, setRegexError] = useState<string | null>(null);
 
+    // Ensure gradient colors are always a valid array (BVLinearGradient crashes on null/undefined)
+    const gradientColors = useMemo(
+      () => [
+        theme.colors.mutedLavender ?? NaturalColors.naturalColor_100,
+        theme.colors.indigoBlue ?? PrimaryColors.PlatinateBlue_400,
+      ],
+      [theme.colors.mutedLavender, theme.colors.indigoBlue],
+    );
+
     const onLocalFocus = useCallback(
       (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
         setFocused(true);
@@ -158,7 +167,7 @@ export const PrimaryTextInput: FC<IProps> = memo(
         }}>
         <GradientBorderView
           gradientProps={{
-            colors: [theme.colors.mutedLavender, theme.colors.indigoBlue],
+            colors: gradientColors,
           }}
           style={{
             borderWidth: CommonSizes.borderWidth.small,
