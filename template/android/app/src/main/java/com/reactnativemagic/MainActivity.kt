@@ -5,11 +5,17 @@ import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
+import com.swmansion.rnscreens.fragment.restoration.RNScreensFragmentFactory
 
 class MainActivity : ReactActivity() {
 
+  /**
+   * Prevents crash on activity recreation: "Screen fragments should never be restored".
+   * See https://github.com/software-mansion/react-native-screens/issues/17
+   */
   override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(null)
+    supportFragmentManager.fragmentFactory = RNScreensFragmentFactory()
+    super.onCreate(savedInstanceState)
   }
 
   /**

@@ -46,7 +46,7 @@ export const RadioButton: FC<IProps> = memo(
 const commonLabel: TextStyle = {
   ...CommonStyles.normalText,
   flex: 1,
-  paddingStart: CommonSizes.spacing.extraSmall,
+  paddingStart: CommonSizes.spacing.xSmall,
 };
 
 const styles = StyleSheet.create({

@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     height: scaleHeight(100),
   },
   title: {
-    fontSize: CommonSizes.fontSize.body2,
+    fontSize: CommonSizes.font.bodyMedium,
     textAlign: 'center',
     marginBottom: CommonSizes.spacing.small,
   },

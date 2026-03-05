@@ -1,6 +1,6 @@
 import React, {FC, memo, useMemo} from 'react';
 import {StyleSheet, View, ViewStyle} from 'react-native';
-import {NewColors} from '../../core/theme/colors';
+import {PrimaryColors} from '../../core/theme/colors';
 
 interface IProps {
   isSelected: boolean;
@@ -41,14 +41,14 @@ const commonInnerCircle: ViewStyle = {
 const styles = StyleSheet.create({
   outerCircle: {
     ...commonOuterCircle,
-    borderColor: NewColors.blueNormalActive,
+    borderColor: PrimaryColors.PlatinateBlue_400,
   } as ViewStyle,
   outerCircleSelected: {
     ...commonOuterCircle,
-    borderColor: NewColors.blueNormalActive,
+    borderColor: PrimaryColors.PlatinateBlue_400,
   } as ViewStyle,
   innerCircle: {
     ...commonInnerCircle,
-    backgroundColor: NewColors.blueNormalActive,
+    backgroundColor: PrimaryColors.PlatinateBlue_400,
   } as ViewStyle,
 });

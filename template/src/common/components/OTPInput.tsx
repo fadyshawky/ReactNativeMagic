@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    height: CommonSizes.spacing.xxl,
+    height: CommonSizes.spacing.xxxLarge,
     borderWidth: 1,
     borderRadius: CommonSizes.borderRadius.medium,
     textAlign: 'center',

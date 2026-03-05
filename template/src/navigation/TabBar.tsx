@@ -16,7 +16,7 @@ import {
   useRTL,
   useTranslation,
 } from '../common/localization/LocalizationProvider';
-import {BlackColors, NewColors} from '../core/theme/colors';
+import {PrimaryColors} from '../core/theme/colors';
 import {CommonSizes} from '../core/theme/commonSizes';
 import {CommonStyles} from '../core/theme/commonStyles';
 import {scaleHeight, scaleWidth} from '../core/theme/scaling';
@@ -125,11 +125,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     height: scaleHeight(130),
-    borderTopLeftRadius: CommonSizes.borderRadius.huge,
-    borderTopRightRadius: CommonSizes.borderRadius.huge,
+    borderTopLeftRadius: CommonSizes.borderRadius.xxLarge,
+    borderTopRightRadius: CommonSizes.borderRadius.xxLarge,
     justifyContent: 'space-evenly',
     ...CommonStyles.dropShadow,
-    backgroundColor: BlackColors.indigoBlue,
+    backgroundColor: PrimaryColors.PlatinateBlue_600,
     position: 'absolute',
     bottom: 0,
     left: 0,
@@ -141,6 +141,6 @@ const styles = StyleSheet.create({
   },
   label: {},
   labelFocused: {
-    color: NewColors.blueNormalActive,
+    color: PrimaryColors.PlatinateBlue_400,
   },
 });

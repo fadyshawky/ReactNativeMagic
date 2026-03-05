@@ -22,7 +22,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import {useTheme} from '../../core/theme/ThemeProvider';
-import {NewColors} from '../../core/theme/colors';
+import {PrimaryColors, AlertColors} from '../../core/theme/colors';
 import {isIos} from '../../core/theme/commonConsts';
 import {CommonSizes} from '../../core/theme/commonSizes';
 import {CommonStyles} from '../../core/theme/commonStyles';
@@ -268,13 +268,13 @@ function getInputContainerStyle(
   }
 }
 
-const selectionColor = NewColors.blueNormalActive;
+const selectionColor = PrimaryColors.PlatinateBlue_400;
 
 const commonInputContainer: TextStyle = {
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'center',
-  minHeight: CommonSizes.spacing.extraLarge,
+  minHeight: CommonSizes.spacing.xxxLarge,
   textAlignVertical: 'center',
   textAlign: 'center',
   width: '100%',
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     ...commonInputContainer,
     ...Platform.select({
       android: {
-        borderColor: NewColors.red,
+        borderColor: AlertColors.error_400,
       },
     }),
   } as TextStyle,

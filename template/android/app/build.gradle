@@ -123,8 +123,8 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         multiDexEnabled true
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode  project.env.get("ANDROID_VERSION_CODE").toInteger()
-        versionName  project.env.get("ANDROID_VERSION_NAME")
+        versionCode  project.env.get("ANDROID_VERSION_CODE")?.toInteger() ?: 1
+        versionName  project.env.get("ANDROID_VERSION_NAME") ?: "1.0.0"
         resValue "string", "build_config_package", project.env.get("ANDROID_APP_ID")
 
         ndk {
@@ -169,7 +169,7 @@ android {
                 def projectName = project.env.get("PROJECT_NAME")
                 def SEP = "_"
                 
-                def newApkName = projectName + SEP + project.env.get("ENV") + SEP + project.env.get("ANDROID_VERSION_NAME") + SEP + project.env.get("ANDROID_VERSION_CODE") + ".apk"
+                def newApkName = projectName + SEP + project.env.get("ENV") + SEP + (project.env.get("ANDROID_VERSION_NAME") ?: "1.0.0") + SEP + (project.env.get("ANDROID_VERSION_CODE")?.toInteger() ?: 1) + ".apk"
                 
 
                 println "Naming File ... " + newApkName                        
