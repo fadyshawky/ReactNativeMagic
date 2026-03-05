@@ -21,7 +21,6 @@ import {userLogin} from '../../core/store/user/userActions';
 import {CommonSizes} from '../../core/theme/commonSizes';
 import {Fonts} from '../../core/theme/fonts';
 import {useTheme} from '../../core/theme/ThemeProvider';
-import {Header} from '../../navigation/HeaderComponents';
 import type {RootStackParamList} from '../../navigation/types';
 
 export function Login(): JSX.Element {
