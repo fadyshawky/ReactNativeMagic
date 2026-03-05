@@ -1,4 +1,6 @@
 module.exports = {
-  placeholderName: "reactnativemagic",
-  templateDir: "./template",
+  placeholderName: 'reactnativemagic',
+  titlePlaceholder: 'React Native Magic App',
+  templateDir: './template',
+  postInitScript: 'scripts/askPackageName.js',
 };

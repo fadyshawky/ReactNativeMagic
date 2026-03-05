@@ -1,3 +1,6 @@
+/**
+ * Customize for your brand – this is the only place to change app colors.
+ */
 export enum PrimaryColors {
   PlatinateBlue_0 = '#E9EDFF',
   PlatinateBlue_25 = '#D3DAFF',

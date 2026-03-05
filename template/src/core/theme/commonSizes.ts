@@ -1,5 +1,8 @@
 import {ISize} from './types';
 
+/**
+ * Customize for your brand – this is the only place to change app sizes/spacing.
+ */
 export const CommonSizes = {
   font: {
     // Body Text Sizes

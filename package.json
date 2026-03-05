@@ -1,7 +1,7 @@
 {
   "name": "@fadyshawky/react-native-magic",
-  "version": "2.0.9",
-  "description": "react native template with ready components, hooks, react navigation, redux, typescript, etc.",
+  "version": "2.1.0",
+  "description": "Plug-and-play React Native template: TypeScript, Redux, React Navigation, scalable architecture. Init and start developing without hassle.",
   "keywords": [
     "react-native-magic",
     "react-native",
@@ -109,6 +109,13 @@
   },
   "scripts": {
     "test": "exit 0"
+  },
+  "peerDependencies": {
+    "react": "^19.2.0",
+    "react-native": "^0.84.0"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "repository": {
     "type": "git",

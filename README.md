@@ -1,20 +1,27 @@
 # ReactNativeMagic
 
-A modern, production-ready React Native template with best practices, common dependencies, and a scalable architecture.
+**Plug and play** – create your app and start developing without hassle.
+
+A production-ready React Native template with TypeScript, Redux, React Navigation, and a scalable architecture (Uprise-style). Use it to bootstrap new apps with one command.
 
 ## Requirements
 
-- Node.js >= 14 ([Download](https://nodejs.org/en/download/))
+- **Node.js >= 20** ([Download](https://nodejs.org/en/download/))
 - JDK >= 11 ([Download](https://www.oracle.com/java/technologies/downloads/))
-- Ruby >= 2.7.5 (for iOS) ([Download](https://www.ruby-lang.org/en/downloads/))
-- Xcode (for iOS) ([Mac App Store](https://apps.apple.com/us/app/xcode/id497799835))
-- Android Studio (for Android) ([Download](https://developer.android.com/studio))
+- Ruby >= 2.7.5 (for iOS)
+- Xcode (for iOS) / Android Studio (for Android)
 
-## Installation
+## Quick start
 
 ```bash
 npx @react-native-community/cli init YourAppName --template @fadyshawky/react-native-magic
 cd YourAppName
+```
+
+Optional: set your bundle ID at creation:
+
+```bash
+npx @react-native-community/cli init YourAppName --template @fadyshawky/react-native-magic --package-name com.yourcompany.yourapp
 ```
 
 For iOS, install pods:
@@ -23,244 +30,78 @@ For iOS, install pods:
 cd ios && pod install && cd ..
 ```
 
-## Project Structure
-
-```
-YourAppName/
-├── src/
-│   ├── components/       # Reusable UI components
-│   ├── screens/         # Screen components
-│   ├── navigation/      # Navigation configurations
-│   ├── services/        # API services and other external services
-│   ├── store/          # State management
-│   │   ├── slices/     # Redux slices
-│   │   └── index.ts    # Store configuration
-│   ├── theme/          # Theme configurations
-│   ├── utils/          # Utility functions
-│   └── types/          # TypeScript type definitions
-├── android/
-├── ios/
-└── ...
-```
-
-## Features
-
-### 1. Type Safety
-
-- Full TypeScript support
-- Pre-configured tsconfig.json
-- Type definitions for all components
-
-### 2. Navigation
-
-- React Navigation v6
-- Type-safe navigation
-- Bottom tabs setup
-- Stack navigation setup
-
-Documentation: [React Navigation](https://reactnavigation.org/docs/getting-started)
-
-### 3. State Management
-
-- Redux Toolkit
-- Async storage integration
-- Predefined store setup
-
-Documentation: [Redux Toolkit](https://redux-toolkit.js.org/introduction/getting-started)
-
-### 4. Environment Variables
-
-- React Native Config integration
-- Secure environment configuration
-- Type-safe environment variables
-
-Documentation: [React Native Config](https://github.com/luggit/react-native-config)
-
-### 5. Styling
-
-- React Native Paper
-- Custom theming system
-- Dark mode support
-
-Documentation: [React Native Paper](https://callstack.github.io/react-native-paper/)
-
-### 6. Testing
-
-- Jest configuration
-- React Native Testing Library
-- Example tests included
-
-Documentation:
-
-- [Jest](https://jestjs.io/docs/getting-started)
-- [React Native Testing Library](https://callstack.github.io/react-native-testing-library/)
-
-## Available Scripts
+Then run:
 
 ```bash
-# Start the Metro bundler
 npm start
-
-# Run on iOS
-npm run ios
-
-# Run on Android
-npm run android
-
-# Run tests
-npm test
-
-# Lint code
-npm run lint
-
-# Type checking
-npm run typescript
+npm run ios    # or: npm run android
 ```
 
-## Dependencies
+## First steps after creating your app
 
-### Production Dependencies
+1. **App name & bundle ID** – Set at init (or you’ll be prompted for package name if you didn’t pass `--package-name`). See [CUSTOMIZATION.md](template/docs/CUSTOMIZATION.md#app-name-and-bundle-id).
+2. **API** – Copy `.env.example` to `.env` and set `API_BASE_URL` (and other vars) for your backend.
+3. **Theme** – Edit `src/core/theme/colors.ts` (and `fonts.ts`, `commonSizes.ts` if needed) for your brand.
+4. **Config** – Optional: adjust `src/core/config/index.ts` for feature toggles or app-level constants.
 
-```json
-{
-  "@react-navigation/bottom-tabs": "^6.x",
-  "@react-navigation/native": "^6.x",
-  "@react-navigation/native-stack": "^6.x",
-  "@reduxjs/toolkit": "^1.x",
-  "react-native-paper": "^5.x",
-  "react-native-safe-area-context": "^4.x",
-  "react-native-screens": "^3.x",
-  "@react-native-async-storage/async-storage": "^1.x",
-  "react-native-config": "^1.x"
-}
+## Documentation
+
+In your generated project you’ll have:
+
+- **[docs/ARCHITECTURE.md](template/docs/ARCHITECTURE.md)** – Layers, folder map, data flow, SOLID.
+- **[docs/CUSTOMIZATION.md](template/docs/CUSTOMIZATION.md)** – App name, bundle ID, API, theme, adding a screen/slice/language.
+- **[docs/BEST_PRACTICES.md](template/docs/BEST_PRACTICES.md)** – Code style, structure, testing, security, upgrades.
+
+## Project structure (in your app)
+
+```
+src/
+├── common/          # Shared components, localization, helpers, validations, utils
+├── core/            # Store (Redux), API, theme, config
+├── navigation/      # Auth stack, main stack, tabs
+├── screens/         # Feature screens
+└── sheetManager/    # Action sheets
 ```
 
-### Development Dependencies
+## Scripts
 
-```json
-{
-  "@testing-library/react-native": "^11.x",
-  "@types/jest": "^29.x",
-  "@types/react": "^18.x",
-  "typescript": "^4.x",
-  "jest": "^29.x"
-}
-```
+| Command | Description |
+|---------|-------------|
+| `npm start` | Start Metro bundler |
+| `npm run ios` | Run on iOS |
+| `npm run android` | Run on Android |
+| `npm test` | Run tests |
+| `npm run lint` | Lint code |
 
-## Common Issues & Solutions
+## Versioning
 
-### iOS Build Issues
+- **React Native**: ^0.84.x (current stable at release).
+- **React**: ^19.2.x.
+- **Node**: >= 20 (LTS).
 
-1. Pod installation fails:
+Dependencies use **caret (^)** so your app can get patch/minor updates independently.
+
+## Common issues
+
+**iOS – Pod install fails**
 
 ```bash
-cd ios
-pod deintegrate
-pod install
+cd ios && pod deintegrate && pod install && cd ..
 ```
 
-2. Clean build:
+**Android – Gradle / SDK**
 
-```bash
-cd ios
-xcodebuild clean
-cd ..
-npm run ios
-```
+- Run `./gradlew clean` in `android/`.
+- Ensure `android/local.properties` has `sdk.dir` set to your Android SDK path.
 
-### Android Build Issues
+**Upgrading React Native**
 
-1. Gradle issues:
-
-```bash
-cd android
-./gradlew clean
-cd ..
-npm run android
-```
-
-2. SDK location issues:
-   Create a `local.properties` file in the android folder with your SDK path:
-
-```properties
-sdk.dir=/Users/USERNAME/Library/Android/sdk
-```
-
-## Customization
-
-### 1. Changing Theme
-
-Edit `src/theme/index.ts`:
-
-```typescript
-export const theme = {
-  colors: {
-    primary: "#YOUR_COLOR",
-    // ...
-  },
-  // ...
-};
-```
-
-### 2. Adding New Navigation Screens
-
-1. Create screen in `src/screens`
-2. Add to navigation stack in `src/navigation`
-3. Update types in `src/types/navigation.ts`
-
-### 3. Environment Variables
-
-1. Create `.env` file in root directory:
-
-```env
-API_URL=https://api.example.com
-ENV=development
-```
-
-2. Access variables in your code:
-
-```typescript
-import Config from "react-native-config";
-
-console.log(Config.API_URL);
-```
-
-Note: Remember to add `.env` to your `.gitignore` file and provide a `.env.example` template.
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## Useful Links
-
-- [React Native Documentation](https://reactnative.dev/docs/getting-started)
-- [TypeScript Documentation](https://www.typescriptlang.org/docs/)
-- [React Navigation Documentation](https://reactnavigation.org/docs/getting-started)
-- [Redux Toolkit Documentation](https://redux-toolkit.js.org/introduction/getting-started)
-- [React Native Paper Documentation](https://callstack.github.io/react-native-paper/)
+Use [React Native Upgrade Helper](https://react-native-community.github.io/upgrade-helper/) (select current → target version) and apply the suggested changes.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Support
-
-If you find this template helpful, consider buying me a beer! 🍺
-
-<a href="https://www.buymeacoffee.com/fadytshawke"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a beer&emoji=🍺&slug=fadytshawke&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" /></a>
+MIT – see [LICENSE.md](LICENSE.md).
 
 ## Author
 
-Fady Shawky
-
-- GitHub: [@fadyshawky](https://github.com/fadyshawky)
-
-## Acknowledgments
-
-- React Native Team
-- React Navigation Team
-- All contributors who help maintain this template
+Fady Shawky – [GitHub](https://github.com/fadyshawky)

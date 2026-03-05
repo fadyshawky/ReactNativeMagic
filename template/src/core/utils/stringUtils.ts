@@ -1,9 +1,7 @@
 /**
- * Safely converts any value to a string
- * This is especially useful for error messages that might be objects
+ * Safely converts any value to a string.
+ * Useful for error messages that might be objects.
  */
-import CryptoJS from 'crypto-js';
-
 export const ensureString = (value: any): string => {
   if (value === null || value === undefined) {
     return '';
@@ -30,47 +28,6 @@ export const ensureString = (value: any): string => {
   // For numbers, booleans, etc.
   return String(value);
 };
-
-export function decryptTripleDES(
-  encryptedBase64: string,
-  secretKeyBase64: string,
-) {
-  try {
-    // Decode the key from base64
-    const decodedKey = CryptoJS.enc.Base64.parse(secretKeyBase64);
-
-    // Decode the encrypted value from base64
-    const encryptedWordArray = CryptoJS.enc.Base64.parse(encryptedBase64);
-
-    // Decrypt using Triple DES
-    const decrypted = CryptoJS.TripleDES.decrypt(
-      {ciphertext: encryptedWordArray},
-      decodedKey,
-      {
-        mode: CryptoJS.mode.ECB,
-        padding: CryptoJS.pad.Pkcs7,
-      },
-    );
-
-    let decryptedText = decrypted.toString(CryptoJS.enc.Utf8);
-
-    if (!decryptedText) {
-      throw new Error('Decryption resulted in empty string');
-    }
-
-    decryptedText = decryptedText.replace(/(.{4})/g, '$1-');
-    if (decryptedText.endsWith('-')) {
-      decryptedText = decryptedText.slice(0, -1);
-    }
-
-    return decryptedText;
-  } catch (error) {
-    throw new Error(`Decryption failed`);
-  }
-}
-
-// Example usage:
-// const decrypted = decryptBase64('encrypted_base64_string', 'your_secret_key');
 
 /**
  * Converts a camelCase string to PascalCase with specific formatting

@@ -34,6 +34,11 @@ local.properties
 *.keystore
 !debug.keystore
 
+# Environment (do not commit secrets; copy .env.example to .env)
+.env
+.env.local
+.env.*.local
+
 # node.js
 #
 ../node_modules/

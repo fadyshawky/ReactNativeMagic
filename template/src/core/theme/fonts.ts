@@ -1,3 +1,6 @@
+/**
+ * Customize for your brand – this is the only place to change app fonts.
+ */
 export const Fonts = {
   // Almarai Font Family
   light: 'Almarai-Light',
