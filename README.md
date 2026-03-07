@@ -82,9 +82,8 @@ src/
 
 - **React Native**: ^0.84.x (current stable at release).
 - **React**: ^19.2.x.
-- **Node**: >= 20 (LTS).
+- **Node**: >= 24 (LTS).
 
-Dependencies use **caret (^)** so your app can get patch/minor updates independently.
 
 ## Common issues
 
