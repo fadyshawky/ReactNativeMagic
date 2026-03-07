@@ -94,6 +94,7 @@ Dependencies use **caret (^)** so your app can get patch/minor updates independe
 cd ios && pod deintegrate && pod install && cd ..
 ```
 
+
 **Android – Gradle / SDK**
 
 - Run `./gradlew clean` in `android/`.
