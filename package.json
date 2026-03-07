@@ -1,6 +1,6 @@
 {
   "name": "@fadyshawky/react-native-magic",
-  "version": "2.1.8",
+  "version": "2.1.9",
   "description": "Plug-and-play React Native template: TypeScript, Redux, React Navigation, scalable architecture. Init and start developing without hassle.",
   "keywords": [
     "react-native-magic",
