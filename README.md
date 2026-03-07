@@ -103,6 +103,10 @@ cd ios && pod deintegrate && pod install && cd ..
 
 Use [React Native Upgrade Helper](https://react-native-community.github.io/upgrade-helper/) (select current → target version) and apply the suggested changes.
 
+## Contributing
+
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for how to get started, run the template locally, and open a pull request. This project adheres to a [Code of Conduct](CODE_OF_CONDUCT.md).
+
 ## License
 
 MIT – see [LICENSE.md](LICENSE.md).

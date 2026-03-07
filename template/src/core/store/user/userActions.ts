@@ -22,7 +22,7 @@ export const userLogin = createAsyncThunk(
         scheme_id: 1,
       };
       const response = await post({
-        url: 'wallet_users/login',
+        url: '/login',
         data,
       });
 
