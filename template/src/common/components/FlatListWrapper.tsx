@@ -1,5 +1,5 @@
 import React, {FC, useMemo} from 'react';
-import {FlatList, FlatListProps} from 'react-native';
+import {FlashList, FlashListProps} from '@shopify/flash-list';
 import {LoadState} from '../../../types';
 import {TryAgain} from './TryAgain';
 import {Separator} from './Separator';
@@ -9,14 +9,16 @@ import {localization} from '../localization/localization';
 import {defaultKeyIdExtractor} from '../helpers/defaultKeyIdExtractor';
 import {CommonStyles} from '../../core/theme/commonStyles';
 
-interface IProps extends FlatListProps<any> {
+interface IProps extends FlashListProps<any> {
   loadState: LoadState;
   tryAgain?: () => void;
   error?: string | null;
 }
 
+// Shared FlashList defaults. Tune estimatedItemSize per-screen for long/heavy lists.
 const FlatListWrapperProps = {
   keyExtractor: defaultKeyIdExtractor,
+  estimatedItemSize: 72,
   ListEmptyComponent: (
     <EmptyView
       title={localization.empty.noData}
@@ -54,13 +56,12 @@ export function FlatListWrapper({
     return <LoadingComponent />;
   } else {
     return (
-      <FlatList
+      <FlashList
         contentContainerStyle={CommonStyles.listContentContainer}
         {...FlatListWrapperProps}
         {...props}
         refreshing={refreshing}
         ListEmptyComponent={ListEmptyComponent}
-        removeClippedSubviews={true}
       />
     );
   }

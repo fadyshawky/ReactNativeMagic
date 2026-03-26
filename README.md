@@ -2,7 +2,7 @@
 
 **Plug and play** – create your app and start developing without hassle.
 
-A production-ready React Native template with TypeScript, Redux, React Navigation, and a scalable architecture (Uprise-style). Use it to bootstrap new apps with one command.
+A production-ready React Native template with TypeScript, Redux Toolkit, React Navigation, and a scalable architecture (Uprise-style). Use it to bootstrap new apps with one command.
 
 ## Requirements
 
@@ -43,6 +43,7 @@ npm run ios    # or an Android variant below
 2. **API** – Copy `.env.example` to `.env` and set `API_BASE_URL` (and other vars) for your backend.
 3. **Theme** – Edit `src/core/theme/colors.ts` (and `fonts.ts`, `commonSizes.ts` if needed) for your brand.
 4. **Config** – Optional: adjust `src/core/config/index.ts` for feature toggles or app-level constants.
+5. **Lists** – Use `src/common/components/FlatListWrapper.tsx` (FlashList-backed) and tune `estimatedItemSize` for heavy lists.
 
 ## Documentation
 
@@ -57,7 +58,7 @@ In your generated project you’ll have:
 ```
 src/
 ├── common/          # Shared components, localization, helpers, validations, utils
-├── core/            # Store (Redux), API, theme, config
+├── core/            # Store (Redux Toolkit), API, theme, config
 ├── navigation/      # Auth stack, main stack, tabs
 ├── screens/         # Feature screens
 └── sheetManager/    # Action sheets
