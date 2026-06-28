@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.0] - 2026-06-25
+
+### Added
+- Futuristic "Indigo → Cyan" design system: recolored theme tokens (`core/theme/colors.ts`) and new brand tokens in `core/theme/brand.ts` (`BrandColors`, `BrandGradients`, `GradientDirection`, `Glow`), re-exported via the `@design-system` barrel.
+- FS brand logo: a `Logo` component (`common/components/Logo.tsx`, variants gradient/mono/light/mark) plus raw SVG assets in `src/assets/brand/`.
+- Real starter screens (previously blank stubs): branded Splash, Login with logo, Home (greeting + gradient hero + categories list), and Profile (info card + language/theme toggles + logout).
+- Example `categories` Redux slice (`core/store/categories/`) demonstrating the newState/LoadState/createAsyncThunk house pattern, wired into the Home screen via `useHomeData`.
+- `verifyOTP` thunk so the OTP screen works end to end.
+- Design references shipped with the template: `docs/design-system.html` and `docs/wireframes.html`.
+- Package `files` whitelist, root `LICENSE` (MIT), and a root `index.js` entry point.
+
+### Changed
+- Defaults reconciled: the app now follows the system color scheme and defaults to English/LTR (Arabic + RTL stay fully available and switchable).
+- `RootStackParamList` trimmed to the actually-registered routes (Splash, Login, OTP, Main, Account).
+- `react-native` peer dependency range widened to `>=0.84.0`.
+
+### Fixed
+- Removed dead/broken code that blocked a clean build: unused helpers importing libraries that were never dependencies (image-crop-picker, in-app-review, orientation-locker, react-native-share, moment), a broken validations example, the undefined `<Header/>` reference in Login, and a dead "Forgot password" route.
+
 ## [1.0.8] - 2024-01-24
 
 ### Changed

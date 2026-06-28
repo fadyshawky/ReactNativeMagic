@@ -9,10 +9,7 @@ import {OTPInput} from '../../common/components/OTPInput';
 import {PrimaryButton} from '../../common/components/PrimaryButton';
 import {RTLAwareText} from '../../common/components/RTLAwareText';
 import {RTLAwareView} from '../../common/components/RTLAwareView';
-import {
-  useRTL,
-  useTranslation,
-} from '../../common/localization/LocalizationProvider';
+import {useTranslation} from '../../common/localization/LocalizationProvider';
 import {useInputError} from '../../common/validations/hooks/useInputError';
 import {useAppDispatch} from '../../core/store/reduxHelpers';
 import {verifyOTP} from '../../core/store/user/userActions';
@@ -34,7 +31,6 @@ export function OTPScreen(): JSX.Element {
   const {theme} = useTheme();
   const {phone} = route.params as {phone: string};
   const t = useTranslation();
-  const isRTL = useRTL();
 
   const {error: otpError, recheckValue: recheckOTP} = useInputError(
     otp,
@@ -51,7 +47,7 @@ export function OTPScreen(): JSX.Element {
     try {
       setLoading(true);
 
-      const result = await dispatch(
+      await dispatch(
         verifyOTP({
           verification_code: otp?.toString(),
           mobile_number: phone,
@@ -59,7 +55,7 @@ export function OTPScreen(): JSX.Element {
           scheme_id: 1,
         }),
       );
-    } catch (error) {
+    } catch {
     } finally {
       setLoading(false);
     }
@@ -97,10 +93,10 @@ export function OTPScreen(): JSX.Element {
       extendedBackground
       backgroundColor={theme.colors.background_2}>
       <HeaderBack onPress={() => navigation.goBack()} />
-      <RTLAwareText style={{...theme.text.header1, textAlign: 'center'}}>
+      <RTLAwareText style={[theme.text.header1, styles.center]}>
         {t('title', 'otp')}
       </RTLAwareText>
-      <RTLAwareText style={{...theme.text.body2, textAlign: 'center'}}>
+      <RTLAwareText style={[theme.text.body2, styles.center]}>
         {t('subtitle', 'otp')}
       </RTLAwareText>
       <View style={styles.inputContainer}>
@@ -148,6 +144,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexGrow: 1,
   },
+  center: {textAlign: 'center'},
   inputContainer: {
     width: '100%',
     marginTop: CommonSizes.spacing.large,

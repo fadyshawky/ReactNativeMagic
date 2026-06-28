@@ -13,7 +13,12 @@ const persistConfig: PersistConfig<RootState> = {
   version: 1,
   timeout: 1000,
   transforms: [
-    createWhitelistFilter('user', ['accessToken', 'user']),
+    createWhitelistFilter('user', [
+      'accessToken',
+      'refreshToken',
+      'fcmToken',
+      'user',
+    ]),
     createWhitelistFilter('app', ['language', 'isRTL']),
   ],
 };

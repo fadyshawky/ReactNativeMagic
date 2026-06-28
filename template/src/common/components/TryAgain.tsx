@@ -19,8 +19,7 @@ interface IProps {
 export const TryAgain: FC<IProps> = memo(
   ({onPress, errorText = localization.errors.unknownErrorHasOccurred}) => {
     return (
-      <View
-        style={{...CommonStyles.flexCenter, backgroundColor: 'transparent'}}>
+      <View style={[CommonStyles.flexCenter, styles.container]}>
         <Text style={styles.title}>{errorText}</Text>
         {onPress != null && (
           <TouchableOpacity onPressIn={onPress}>
@@ -35,6 +34,9 @@ export const TryAgain: FC<IProps> = memo(
 );
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'transparent',
+  },
   title: {
     ...CommonStyles.normalText,
     textAlign: 'center',

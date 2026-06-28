@@ -1,4 +1,4 @@
-import React, {FC, useMemo} from 'react';
+import React, {useMemo} from 'react';
 import {FlashList, FlashListProps} from '@shopify/flash-list';
 import {LoadState} from '../../../types';
 import {TryAgain} from './TryAgain';
@@ -18,7 +18,6 @@ interface IProps extends FlashListProps<any> {
 // Shared FlashList defaults. Tune estimatedItemSize per-screen for long/heavy lists.
 const FlatListWrapperProps = {
   keyExtractor: defaultKeyIdExtractor,
-  estimatedItemSize: 72,
   ListEmptyComponent: (
     <EmptyView
       title={localization.empty.noData}
@@ -36,7 +35,7 @@ export function FlatListWrapper({
   ...props
 }: IProps) {
   const ListEmptyComponent = useMemo(() => {
-    if (loadState == LoadState.error) {
+    if (loadState === LoadState.error) {
       return (
         <TryAgain
           onPress={tryAgain}
@@ -49,10 +48,10 @@ export function FlatListWrapper({
   }, [loadState, props.ListEmptyComponent, error, tryAgain]);
 
   const refreshing = useMemo(() => {
-    return loadState == LoadState.pullToRefresh;
+    return loadState === LoadState.pullToRefresh;
   }, [loadState]);
 
-  if (loadState == LoadState.firstLoad) {
+  if (loadState === LoadState.firstLoad) {
     return <LoadingComponent />;
   } else {
     return (

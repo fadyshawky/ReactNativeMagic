@@ -1,6 +1,5 @@
 import {ColorValue, PressableProps, TextStyle, ViewStyle} from 'react-native';
 import {RehydrateAction} from 'redux-persist';
-import {IconProps} from 'react-native-vector-icons/Icon';
 import {SFSymbolProps} from 'react-native-sfsymbols';
 import {RootState} from '../src/core/store/rootReducer';
 import {SFSymbols} from '../resources/symbols/SFSymbols';
@@ -14,12 +13,11 @@ export interface ICalendarSpec {
   sameElse: string;
 }
 
-export interface IIconPlatformProps
-  extends Omit<IconProps, 'name' | 'color'>,
-    Omit<SFSymbolProps, 'name'> {
+export interface IIconPlatformProps extends Omit<SFSymbolProps, 'name'> {
   iosName?: SFSymbols;
   androidName?: string;
   color?: ColorValue;
+  size?: number;
   style?: TextStyle | ViewStyle;
 }
 
@@ -64,14 +62,12 @@ export enum ButtonType {
   outlineNegative = 'outlineNegative',
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export interface IListState<T> {
   data: T[];
   loadState: LoadState;
   error: string | null;
 }
 
-// eslint-disable-next-line import/no-unused-modules
 export interface ISection<T> {
   data: T[];
   id: string;

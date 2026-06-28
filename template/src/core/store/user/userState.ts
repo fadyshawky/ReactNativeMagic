@@ -3,8 +3,11 @@ import {LoadState} from '../../../../types';
 export interface UserState {
   user: User;
   accessToken: string;
+  refreshToken: string;
+  fcmToken: string;
   loginLoading: string;
 }
+
 export interface User {
   type: string;
   mobile_number: string;
@@ -12,15 +15,12 @@ export interface User {
   status: string;
 }
 
-
 export enum UserStatus {
   ACTIVE = 'Active',
   REGISTERED = 'Registered',
   SUSPENDED = 'Suspended',
   PENDING = 'Pending',
 }
-
-
 
 export const UserInitialState: UserState = {
   user: {
@@ -30,7 +30,9 @@ export const UserInitialState: UserState = {
     status: UserStatus.PENDING,
   },
   accessToken: '',
-  loginLoading: LoadState['needLoad'],
+  refreshToken: '',
+  fcmToken: '',
+  loginLoading: LoadState.needLoad,
 };
 
 export interface UserEntity {

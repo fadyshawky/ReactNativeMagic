@@ -30,7 +30,7 @@ export const extractServerError = (error: any) => {
     } else if (error?.message) {
       errorObj.message = ensureString(error.message);
     }
-  } catch (e) {}
+  } catch {}
 
   // Final safety check
   errorObj.message = ensureString(errorObj.message);

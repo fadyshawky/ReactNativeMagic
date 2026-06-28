@@ -1,6 +1,6 @@
 // We extend some of the types here to give us great intellisense
 
-import {registerSheet, SheetDefinition} from 'react-native-actions-sheet';
+import {SheetDefinition} from 'react-native-actions-sheet';
 
 type Sheet = SheetDefinition;
 

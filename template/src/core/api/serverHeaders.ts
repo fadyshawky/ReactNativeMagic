@@ -1,9 +1,15 @@
-import axios, {AxiosDefaults, AxiosError, AxiosResponse} from 'axios';
-import {store} from '../store/store';
-import {setLogout} from '../store/user/userSlice';
+import axios, {
+  AxiosDefaults,
+  AxiosError,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from 'axios';
 import {API_BASE_URL} from '../config';
+import {store} from '../store/store';
+import {refreshUserToken} from '../store/user/userActions';
+import {setLogout} from '../store/user/userSlice';
 
-export const defaultHeaders: HeadersInit = {
+export const defaultHeaders: Record<string, string> = {
   Connection: 'keep-alive',
   'Content-Type': 'application/json',
 };
@@ -16,9 +22,8 @@ declare type MethodData = {
 
 const instance = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    ...defaultHeaders,
-  },
+  timeout: 30000,
+  headers: {...defaultHeaders},
 });
 
 instance.interceptors.request.use(
@@ -35,19 +40,63 @@ instance.interceptors.request.use(
   error => Promise.reject(error),
 );
 
+/**
+ * Dedup concurrent 401s: only one refresh request in flight at a time;
+ * other failing requests await the same promise and retry once the new
+ * token is available.
+ */
+let refreshPromise: Promise<string | null> | null = null;
+
+async function runRefresh(): Promise<string | null> {
+  try {
+    const result = await store.dispatch(refreshUserToken());
+    if (refreshUserToken.fulfilled.match(result)) {
+      return result.payload.accessToken;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 instance.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config;
-    if (
-      originalRequest?.url?.includes('/login') ||
-      originalRequest?.url?.includes('/refresh-token')
-    ) {
+    const originalRequest = error.config as AxiosRequestConfig & {
+      _retry?: boolean;
+    };
+
+    const url = originalRequest?.url ?? '';
+    const isAuthEndpoint =
+      url.includes('/login') || url.includes('/auth/refresh');
+
+    if (isAuthEndpoint) {
       return Promise.reject(error);
     }
-    if (error.response?.status === 401 || error.response?.status === 402) {
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      if (!refreshPromise) {
+        refreshPromise = runRefresh().finally(() => {
+          refreshPromise = null;
+        });
+      }
+      const newToken = await refreshPromise;
+      if (newToken) {
+        originalRequest.headers = {
+          ...(originalRequest.headers ?? {}),
+          Authorization: `Bearer ${newToken}`,
+        };
+        return instance.request(originalRequest);
+      }
+      store.dispatch(setLogout());
+      return Promise.reject(error);
+    }
+
+    if (error.response?.status === 402) {
       store.dispatch(setLogout());
     }
+
     return Promise.reject(error);
   },
 );

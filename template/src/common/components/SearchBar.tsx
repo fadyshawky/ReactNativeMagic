@@ -2,7 +2,6 @@ import React from 'react';
 import {
   StyleSheet,
   TextInput,
-  View,
   ViewStyle,
   TextStyle,
   TouchableOpacity,
@@ -11,7 +10,6 @@ import {
   KeyboardTypeOptions,
   TextInputProps,
   I18nManager,
-  NativeModules,
 } from 'react-native';
 import {useTheme} from '../../core/theme/ThemeProvider';
 import {
@@ -65,6 +63,10 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     borderColor: theme.colors.mutedLavender30,
   };
 
+  const textAlignStyle: TextStyle = {
+    textAlign: isRTL ? 'right' : 'left',
+  };
+
   // Set keyboard language specific properties
   const getKeyboardProps = (): Partial<TextInputProps> => {
     if (Platform.OS === 'ios') {
@@ -104,6 +106,8 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         }
       }, 100);
     }
+    // Only re-run when language or value changes; inputRef is a stable ref.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentLanguage, value]);
 
   return (
@@ -129,9 +133,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         style={[
           styles.input,
           theme.text.SearchBar,
-          {
-            textAlign: isRTL ? 'right' : 'left',
-          },
+          textAlignStyle,
           inputStyle as TextStyle,
         ]}
         placeholder={placeholder || t('search', 'common')}

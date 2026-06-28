@@ -1,35 +1,14 @@
+/**
+ * Routes actually registered in the navigators:
+ *   AuthStack  → Splash, Login, OTP
+ *   Main tabs  → Main (Home), Account (Profile)
+ * Keep this in sync with AuthStack.tsx / MainStack.tsx when you add a screen.
+ */
 export type RootStackParamList = {
-  Home: undefined;
-  Details: {id: string};
-  Login: undefined;
-  Registration: undefined;
-  ForgotPassword: undefined;
-  Main: undefined;
-  Profile: undefined;
-  Settings: undefined;
   Splash: undefined;
+  Login: undefined;
   OTP: {phone?: string};
-  ForceChangePassword: undefined;
-  Services: {providerID: string};
-  SingleService: {serviceID?: string};
-  InquiredBill: undefined;
-  Loading: undefined;
-  PaymentConfirmation: {
-    paymentData: {
-      amountToBePaid: string;
-      billInfo: any;
-      fees: number;
-      currencyCode: string;
-      billRec: {
-        BillingAcct: string;
-        BillerId: string;
-        BillTypeCode: number;
-        BillRefNumber: string;
-        BillStatus: string;
-      };
-    };
-  };
-  Categories: undefined;
-  Providers: {categoryID: string};
-  ReceiptScreen: {type: 'print' | 'history'; historyID?: string};
+  Main: undefined;
+  Components: undefined;
+  Account: undefined;
 };

@@ -1,6 +1,5 @@
 import {TextStyle} from 'react-native';
 import {ElevationShadow} from './shadows';
-import {PrimaryColors, NaturalColors, AlertColors} from './colors';
 
 export type ThemeMode = 'light' | 'dark';
 
@@ -133,7 +132,10 @@ export interface ISize {
 
 export interface Theme {
   mode: ThemeMode;
-  colors: typeof PrimaryColors & typeof NaturalColors & typeof AlertColors;
+  // Raw color-scale keys (PlatinateBlue_*, grayScale_*, …) plus the semantic
+  // aliases (white, indigoBlue, surface, card, shadow, background, …) the
+  // themes spread in. Indexed as string so both kinds of key are accessible.
+  colors: Record<string, string>;
   text: {
     // Almarai Design System Typography
     // Headings

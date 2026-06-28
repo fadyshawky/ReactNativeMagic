@@ -4,6 +4,8 @@
 
 - Use **TypeScript** strictly; avoid `any` where possible.
 - Use typed Redux: `useAppSelector`, `useAppDispatch`, and `createAppAsyncThunk` with `RootState` / `AppDispatch`.
+- Follow the house slice pattern: a `newState` reducer helper, a `LoadState` enum for request status, and `createAsyncThunk` thunks that call the API helpers. The `categories` slice (`src/core/store/categories/`) is the reference.
+- Use relative imports to match the existing code. Path aliases are configured but not used by the shipped `src/`.
 - Run `npm run lint` and fix issues.
 
 ## Structure
@@ -21,6 +23,13 @@
 
 - Avoid creating new objects/functions in render when they are passed as props to children.
 - Use stable keys for list items.
+- For heavy lists, use `src/common/components/FlatListWrapper.tsx` (FlashList-backed) and set `estimatedItemSize`; don't reintroduce a raw `FlatList`.
+
+## Theming
+
+- Change brand colors, fonts, and sizes only in `src/core/theme/` — keep the token keys stable so the rest of the app keeps working.
+- Reuse the gradient and glow tokens from `src/core/theme/brand.ts` (`BrandGradients`, `Glow`) for the futuristic surfaces rather than hardcoding shadows or gradient stops.
+- The app follows the system color scheme by default; verify new screens in both light and dark.
 
 ## Security
 
@@ -29,5 +38,5 @@
 
 ## LTS / upgrades
 
-- The template targets **Node >= 20** and current stable **React Native** (e.g. 0.84.x).
+- The template targets **Node >= 20** and **React Native 0.85.x** (React 19.2.x).
 - To upgrade React Native, use [React Native Upgrade Helper](https://react-native-community.github.io/upgrade-helper/): select your current version and the target version, then apply the suggested changes to `package.json`, `android/`, `ios/`, and config files.

@@ -1,5 +1,4 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {useTranslation} from '../common/localization/LocalizationProvider';
 import {Login} from '../screens/Login/Login';
 import {OTPScreen} from '../screens/OTP/OTPScreen';
 import {Splash} from '../screens/splash/Splash';
@@ -7,8 +6,6 @@ import {Splash} from '../screens/splash/Splash';
 const Stack = createNativeStackNavigator();
 
 export function AuthStack() {
-  const t = useTranslation();
-
   const AuthScreens = [
     {
       id: 'Splash',
@@ -35,7 +32,7 @@ export function AuthStack() {
 
   return (
     <Stack.Navigator
-      initialRouteName="Login"
+      initialRouteName="Splash"
       screenOptions={{animation: 'none'}}>
       {AuthScreens.map(s => (
         <Stack.Screen

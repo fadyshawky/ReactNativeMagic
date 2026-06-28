@@ -212,6 +212,7 @@ export const lightTheme: Theme = {
     ...PrimaryColors,
     ...NaturalColors,
     ...AlertColors,
+    ...lightThemeColors,
   },
   text: {
     ...commonTextStyles,
@@ -371,6 +372,7 @@ export const darkTheme: Theme = {
     ...PrimaryColors,
     ...NaturalColors,
     ...AlertColors,
+    ...darkThemeColors,
   },
   text: {
     ...commonTextStyles,

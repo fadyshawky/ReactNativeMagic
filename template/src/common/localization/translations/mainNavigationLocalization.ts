@@ -2,6 +2,7 @@ export const mainNavigationLocalization = {
   en: {
     tabs: {
       Main: 'Home',
+      Components: 'Components',
       Favorites: 'Favorites',
       Financials: 'Financials',
       Account: 'Account',
@@ -16,6 +17,7 @@ export const mainNavigationLocalization = {
   ar: {
     tabs: {
       Main: 'الرئيسية',
+      Components: 'المكوّنات',
       Favorites: 'المفضلة',
       Financials: 'المالية',
       Account: 'الحساب',

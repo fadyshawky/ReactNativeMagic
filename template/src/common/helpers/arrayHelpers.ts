@@ -4,7 +4,7 @@ export function getItemIndex<T, V>(
   comparisonValue: V,
 ) {
   const index = data.findIndex(
-    item => item[comparisonParam] == comparisonValue,
+    item => item[comparisonParam] === comparisonValue,
   );
 
   const itemExists = index > -1;
@@ -17,7 +17,7 @@ export function filterBySearch<T>(
   param: keyof T,
   searchText: string,
 ): T[] {
-  if (searchText != '') {
+  if (searchText !== '') {
     const lowerCaseSearch = searchText.toLowerCase();
 
     return data.filter(item =>

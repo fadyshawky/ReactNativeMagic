@@ -4,7 +4,6 @@ import {
   Image,
   ImageStyle,
   ImageURISource,
-  Platform,
   StyleProp,
   StyleSheet,
   Text,
@@ -192,18 +191,6 @@ function createButtonStyles(theme: Theme) {
     width: '100%',
   };
 
-  const commonLabelStyle: TextStyle = {
-    ...createThemedStyles(theme).h4_bold,
-    color: theme.colors.white,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    ...Platform.select({
-      android: {
-        textTransform: 'uppercase',
-      } as TextStyle,
-    }),
-  };
-
   const commonIcon: ImageStyle = {
     width: 22,
     height: 22,
@@ -268,7 +255,6 @@ function createButtonStyles(theme: Theme) {
 }
 
 function createSmallSolidStyles(theme: Theme): IStyles {
-  const commonStyles = createThemedStyles(theme);
   return StyleSheet.create({
     button: {
       padding: CommonSizes.spacing.medium,

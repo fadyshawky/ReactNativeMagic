@@ -1,7 +1,7 @@
 import {localization} from '../localization/localization';
 
 export function emptyValidation(checkValue: string): string | null {
-  return checkValue != null && checkValue != ''
+  return checkValue != null && checkValue !== ''
     ? null
     : localization.errors.thisFieldIsRequired;
 }
@@ -16,7 +16,7 @@ export function datesValidation(
   const fromTime = from.getTime();
   const toTime = to.getTime();
 
-  if (fromTime == toTime) {
+  if (fromTime === toTime) {
     return localization.errors.datesCantBeEqual(fromLabel, toLabel);
   } else {
     const isFromTimeLater = fromTime > toTime;

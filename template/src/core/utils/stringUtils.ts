@@ -20,7 +20,7 @@ export const ensureString = (value: any): string => {
 
       // Otherwise stringify the object
       return JSON.stringify(value);
-    } catch (e) {
+    } catch {
       return '[Object]';
     }
   }

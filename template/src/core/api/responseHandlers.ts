@@ -1,11 +1,9 @@
 import {AxiosResponse} from 'axios';
 import Snackbar from 'react-native-snackbar';
-import {setLogout} from '../store/user/userSlice';
-import {store} from '../store/store';
 
 export const handleFetchJsonResponse = (
   response: AxiosResponse,
-  showSuccessMessage?: boolean,
+  _showSuccessMessage?: boolean,
 ) => {
   return response.data;
 };

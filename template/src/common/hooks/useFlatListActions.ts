@@ -16,7 +16,7 @@ export function useFlatListActions(
   const dispatch = useAppDispatch();
 
   const loadMore = useCallback(() => {
-    loadState == LoadState.idle && dispatch(request(LoadState.loadingMore));
+    loadState === LoadState.idle && dispatch(request(LoadState.loadingMore));
   }, [dispatch, request, loadState]);
 
   const tryAgain = useCallback(() => {

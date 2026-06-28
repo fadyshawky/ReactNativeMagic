@@ -39,13 +39,15 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   initialTheme,
 }) => {
   const systemColorScheme = useColorScheme();
+  const resolvedSystem: ThemeMode =
+    systemColorScheme === 'dark' ? 'dark' : 'light';
   const [themeMode, setThemeMode] = useState<ThemeMode>(
-    initialTheme || systemColorScheme || 'light',
+    initialTheme || resolvedSystem,
   );
 
   useEffect(() => {
-    if (!initialTheme && systemColorScheme) {
-      setThemeMode(systemColorScheme);
+    if (!initialTheme) {
+      setThemeMode(systemColorScheme === 'dark' ? 'dark' : 'light');
     }
   }, [systemColorScheme, initialTheme]);
 

@@ -44,18 +44,23 @@ function ensureEnvHasPackageIds(envPath, packageName) {
     const eq = line.indexOf('=');
     if (eq === -1) return line;
     const key = line.slice(0, eq).trim();
-    if (key === 'APP_ID' || key === 'ANDROID_APP_ID') {
+    if (key === 'APP_ID' || key === 'ANDROID_APP_ID' || key === 'BUNDLE_ID') {
       return `${key}=${packageName}`;
     }
     return line;
   });
-  const hasAppId = lines.some((l) => /^APP_ID=/.test(l) || /^ANDROID_APP_ID=/.test(l));
-  if (!hasAppId) {
+  const hasAppId = lines.some((l) => /^APP_ID=/.test(l));
+  const hasAndroidAppId = lines.some((l) => /^ANDROID_APP_ID=/.test(l));
+  const hasBundleId = lines.some((l) => /^BUNDLE_ID=/.test(l));
+  const appended = [];
+  if (!hasAppId) appended.push(`APP_ID=${packageName}`);
+  if (!hasAndroidAppId) appended.push(`ANDROID_APP_ID=${packageName}`);
+  if (!hasBundleId) appended.push(`BUNDLE_ID=${packageName}`);
+  if (appended.length) {
     if (updated.length && updated[updated.length - 1] !== '') {
       updated.push('');
     }
-    updated.push(`APP_ID=${packageName}`);
-    updated.push(`ANDROID_APP_ID=${packageName}`);
+    updated.push(...appended);
   }
   fs.writeFileSync(fullPath, updated.join('\n'), 'utf8');
 }

@@ -12,8 +12,8 @@ import DeviceInfo from 'react-native-device-info';
 import {createPerfectSize} from '../../common/utils/createPerfectSize';
 
 const windowDimensions = Dimensions.get('window');
-export const isIos = Platform.OS == 'ios';
-export const isAndroid = Platform.OS == 'android';
+export const isIos = Platform.OS === 'ios';
+export const isAndroid = Platform.OS === 'android';
 export const hasDynamicIsland = DeviceInfo.hasDynamicIsland();
 export const hasNotch = DeviceInfo.hasNotch() || hasDynamicIsland;
 export const isIpad = isIos && (Platform as PlatformIOSStatic).isPad;

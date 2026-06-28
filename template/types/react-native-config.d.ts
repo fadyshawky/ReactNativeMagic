@@ -10,10 +10,8 @@ declare module 'react-native-config' {
   }
 
   // @ts-ignore
-  // eslint-disable-next-line import/no-unused-modules
   export const Config: EnvironmentVariables;
 
   // @ts-ignore
-  // eslint-disable-next-line import/no-default-export,import/no-unused-modules
   export default Config;
 }

@@ -22,7 +22,7 @@ export function useEventRegister(
     return () => {
       listeners.set(
         eventName,
-        callbacks.filter(i => i.id != id),
+        callbacks.filter(i => i.id !== id),
       );
     };
   }, [eventName, callback]);

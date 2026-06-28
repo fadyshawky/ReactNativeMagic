@@ -112,7 +112,7 @@ export const LocalizationProvider: React.FC<LocalizationProviderProps> = ({
       }
 
       return result[key] || key;
-    } catch (error) {
+    } catch {
       console.warn(
         `Translation not found for key: ${key} in section: ${section}`,
       );

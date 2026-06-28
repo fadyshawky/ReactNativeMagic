@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -36,7 +35,7 @@ export const Card = ({
         {backgroundColor: theme.colors.surface},
         createThemedStyles(theme).dropShadow,
         {marginRight: marginRight},
-        {overflow: 'hidden'},
+        styles.cardOverflowHidden,
         cardStyle,
       ]}
       onPress={() => {
@@ -46,15 +45,12 @@ export const Card = ({
         {icon && icon.uri && (
           <FastImage
             source={{uri: icon.uri, cache: FastImage.cacheControl.immutable}}
-            style={{
-              width: '100%',
-              height: '100%',
-            }}
+            style={styles.fastImage}
             resizeMode={FastImage.resizeMode.contain}
           />
         )}
       </View>
-      <Text style={[theme.text.cards, {textAlign: 'center'}]}>{title}</Text>
+      <Text style={[theme.text.cards, styles.titleCentered]}>{title}</Text>
     </TouchableOpacity>
   );
 };
@@ -68,6 +64,16 @@ const styles = StyleSheet.create({
     gap: scaleHeight(10),
     width: scaleWidth(187),
     height: scaleHeight(280),
+  },
+  cardOverflowHidden: {
+    overflow: 'hidden',
+  },
+  fastImage: {
+    width: '100%',
+    height: '100%',
+  },
+  titleCentered: {
+    textAlign: 'center',
   },
   blurContainer: {
     flex: 1,

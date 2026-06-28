@@ -1,14 +1,18 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {
+  BottomTabBarProps,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
 import React from 'react';
 import {useTranslation} from '../common/localization/LocalizationProvider';
 
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Profile} from '../screens';
+import {ComponentsScreen} from '../screens/components/ComponentsScreen';
 import {HomeScreen} from '../screens/home/HomeScreen';
 import {TabBar} from './TabBar';
 
 const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
+
+const renderTabBar = (props: BottomTabBarProps) => <TabBar {...props} />;
 
 export function AppMainNavigator() {
   const t = useTranslation();
@@ -19,6 +23,16 @@ export function AppMainNavigator() {
       component: HomeScreen,
       options: {
         tabBarLabel: t('tabs.Main', 'mainNavigation'),
+        headerShown: false,
+        icon: 0,
+        selectedIcon: 0,
+      },
+    },
+    {
+      id: 'Components',
+      component: ComponentsScreen,
+      options: {
+        tabBarLabel: t('tabs.Components', 'mainNavigation'),
         headerShown: false,
         icon: 0,
         selectedIcon: 0,
@@ -41,9 +55,7 @@ export function AppMainNavigator() {
       initialRouteName="Main"
       backBehavior="history"
       detachInactiveScreens
-      tabBar={props => {
-        return <TabBar {...props} />;
-      }}
+      tabBar={renderTabBar}
       screenOptions={{
         tabBarHideOnKeyboard: true,
       }}>

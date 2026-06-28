@@ -1,7 +1,6 @@
 import React, {useRef, useState} from 'react';
 import {
   StyleSheet,
-  View,
   TextInput,
   NativeSyntheticEvent,
   TextInputKeyPressEventData,

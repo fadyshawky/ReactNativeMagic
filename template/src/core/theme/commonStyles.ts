@@ -282,4 +282,4 @@ export const CommonStyles = createThemedStyles({
     lg: 16,
     xl: 24,
   },
-});
+} as unknown as Theme);

@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>React Native Magic — Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    /* ramp */
+    --indigo-50:#EAF1FF; --indigo-100:#B6D0FF; --indigo-200:#6193FF; --indigo-300:#3E7BFF;
+    --indigo-400:#2F6BFF; --indigo-500:#2356D6; --indigo-600:#1B45B8; --indigo-700:#143186;
+    --cyan:#6193FF; --cyan-soft:#A6C4FF; --violet:#6353F2;
+    /* ink */
+    --bg:#06080F; --surface:#0D1124; --raised:#1A2142;
+    /* neutrals */
+    --white:#FFFFFF; --near-white:#F4F6FE; --n-100:#EAEDF7; --n-200:#D7DCEC; --n-300:#D7DCEC;
+    --muted:#828BB0; --n-500:#59618A; --n-600:#343C63;
+    /* status */
+    --success:#0E9C72; --warning:#D98E1E; --error:#DC2A52; --info:#2F6BFF;
+    /* effects */
+    --grad:linear-gradient(135deg,#1B45B8,#3E7BFF);
+    --grad-violet:linear-gradient(135deg,#6353F2,#2F6BFF);
+    --glow-indigo:0 8px 18px rgba(47,107,255,.5);
+    --glow-cyan:0 8px 18px rgba(97,147,255,.42);
+    --hairline:rgba(130,139,176,.12);
+    --hairline-strong:rgba(130,139,176,.22);
+    --font:"Space Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; font-family:var(--font); color:var(--n-200);
+    background:
+      radial-gradient(1100px 700px at 82% -8%, rgba(97,147,255,.10), transparent 60%),
+      radial-gradient(1200px 800px at 6% 0%, rgba(47,107,255,.20), transparent 55%),
+      radial-gradient(900px 900px at 50% 120%, rgba(99,83,242,.10), transparent 60%),
+      var(--bg);
+    background-attachment:fixed;
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    line-height:1.5;
+  }
+  a{color:var(--cyan-soft); text-decoration:none;}
+  ::selection{background:rgba(47,107,255,.32); color:var(--white);}
+
+  .wrap{max-width:1120px; margin:0 auto; padding:0 28px;}
+  section{padding:78px 0; border-top:1px solid var(--hairline);}
+  section:first-of-type{border-top:0;}
+
+  .eyebrow{
+    font-size:12px; font-weight:500; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--cyan-soft); margin:0 0 14px;
+    display:inline-flex; align-items:center; gap:9px;
+  }
+  .eyebrow::before{content:""; width:22px; height:1px; background:linear-gradient(90deg,var(--indigo-400),transparent);}
+  h2.sec{font-size:32px; line-height:1.25; font-weight:700; color:var(--white); margin:0 0 10px; letter-spacing:-.01em;}
+  .sec-sub{font-size:15px; color:var(--muted); max-width:620px; margin:0 0 38px;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative; overflow:hidden;
+    padding:96px 0 84px; border-top:0;
+  }
+  .hero-grid{position:absolute; inset:0; opacity:.5; pointer-events:none;
+    background-image:linear-gradient(var(--hairline) 1px,transparent 1px),linear-gradient(90deg,var(--hairline) 1px,transparent 1px);
+    background-size:46px 46px; -webkit-mask-image:radial-gradient(700px 460px at 30% 24%, #000 30%, transparent 78%);
+    mask-image:radial-gradient(700px 460px at 30% 24%, #000 30%, transparent 78%);}
+  /* (color tokens updated to Midnight palette) */
+  .hero-inner{position:relative; display:grid; grid-template-columns:1.25fr .9fr; gap:48px; align-items:center;}
+  .hero h1{font-size:60px; line-height:1.04; font-weight:700; letter-spacing:-.025em; color:var(--white); margin:18px 0 0;}
+  .hero h1 .grad{background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent;}
+  .hero p.lede{font-size:17px; color:var(--n-300); max-width:520px; margin:20px 0 0;}
+  .hero .pills{display:flex; flex-wrap:wrap; gap:10px; margin-top:30px;}
+  .meta-pill{font-size:12.5px; padding:7px 13px; border-radius:1000px; border:1px solid var(--hairline-strong);
+    background:rgba(13,17,36,.6); color:var(--n-200); display:inline-flex; gap:7px; align-items:center;}
+  .meta-pill b{color:var(--white); font-weight:500;}
+  .hero-logo{display:flex; justify-content:center;}
+  .logo-stage{
+    position:relative; width:300px; height:300px; border-radius:36px;
+    display:flex; align-items:center; justify-content:center;
+    background:
+      radial-gradient(140px 140px at 50% 38%, rgba(62,123,255,.24), transparent 70%),
+      linear-gradient(160deg, rgba(26,33,66,.85), rgba(6,8,15,.6));
+    border:1px solid var(--hairline-strong);
+    box-shadow:var(--glow-indigo), inset 0 1px 0 rgba(255,255,255,.06);
+  }
+  .logo-stage .ring{position:absolute; inset:26px; border-radius:28px; border:1px dashed rgba(47,107,255,.4);}
+  .logo-stage .ring.two{inset:46px; border-color:rgba(97,147,255,.26);}
+
+  .toc{display:flex; flex-wrap:wrap; gap:8px; margin-top:38px;}
+  .toc a{font-size:13px; padding:8px 14px; border-radius:1000px; border:1px solid var(--hairline);
+    color:var(--n-300); background:rgba(13,17,36,.45); transition:.18s;}
+  .toc a:hover{border-color:rgba(47,107,255,.55); color:var(--white); transform:translateY(-1px);}
+
+  /* ---------- CARDS / PANELS ---------- */
+  .panel{background:linear-gradient(180deg, rgba(13,17,36,.66), rgba(13,17,36,.4));
+    border:1px solid var(--hairline); border-radius:18px; padding:22px;}
+  .grid{display:grid; gap:18px;}
+  .cols-2{grid-template-columns:repeat(2,1fr);}
+  .cols-3{grid-template-columns:repeat(3,1fr);}
+  .cols-4{grid-template-columns:repeat(4,1fr);}
+  .label-row{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px;}
+  .panel h3{font-size:15px; font-weight:500; color:var(--white); margin:0; letter-spacing:.01em;}
+  .tag{font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--muted);
+    border:1px solid var(--hairline-strong); padding:3px 9px; border-radius:1000px;}
+
+  /* ---------- LOGO VARIANTS ---------- */
+  .logo-variants{display:grid; grid-template-columns:repeat(4,1fr); gap:18px;}
+  .lv{background:rgba(13,17,36,.5); border:1px solid var(--hairline); border-radius:16px; padding:24px 18px; text-align:center;}
+  .lv .stagebox{height:128px; display:flex; align-items:center; justify-content:center; margin-bottom:16px;}
+  .lv .name{font-size:13.5px; color:var(--white); font-weight:500;}
+  .lv .desc{font-size:11.5px; color:var(--muted); margin-top:4px; line-height:1.45;}
+  .checker{background-image:linear-gradient(45deg,rgba(255,255,255,.05) 25%,transparent 25%),linear-gradient(-45deg,rgba(255,255,255,.05) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,rgba(255,255,255,.05) 75%),linear-gradient(-45deg,transparent 75%,rgba(255,255,255,.05) 75%); background-size:16px 16px; background-position:0 0,0 8px,8px -8px,-8px 0px; border-radius:12px;}
+
+  /* wordmark */
+  .wordmark{display:flex; align-items:center; gap:18px; padding:26px; border:1px solid var(--hairline); border-radius:16px; background:rgba(13,17,36,.45);}
+  .wordmark .wm-text .big{font-size:26px; font-weight:700; letter-spacing:.04em; color:var(--white); line-height:1;}
+  .wordmark .wm-text .small{font-size:12.5px; letter-spacing:.34em; text-transform:uppercase; margin-top:8px;
+    background:var(--grad); -webkit-background-clip:text; background-clip:text; color:transparent; font-weight:500;}
+
+  /* clearspace */
+  .clearspace{position:relative; display:flex; align-items:center; justify-content:center; height:170px;
+    border:1px solid var(--hairline); border-radius:16px; background:rgba(6,8,15,.5); overflow:hidden;}
+  .cs-box{position:relative; padding:30px; border:1px dashed rgba(97,147,255,.4); border-radius:24px;}
+  .cs-tick{position:absolute; font-size:11px; color:var(--cyan-soft); background:rgba(6,8,15,.85); padding:1px 6px; border-radius:6px;}
+  .cs-tick.t{top:-9px; left:50%; transform:translateX(-50%);}
+  .cs-tick.l{left:-14px; top:50%; transform:translateY(-50%) rotate(-90deg);}
+
+  /* do / dont */
+  .dd{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:18px;}
+  .dd-card{border-radius:14px; padding:18px; border:1px solid var(--hairline); background:rgba(13,17,36,.4);}
+  .dd-head{display:flex; align-items:center; gap:9px; font-size:13px; font-weight:500; margin-bottom:12px;}
+  .dd-ico{width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700;}
+  .do .dd-ico{background:rgba(14,156,114,.18); color:#3FE0A8; border:1px solid rgba(14,156,114,.5);}
+  .dont .dd-ico{background:rgba(220,42,82,.16); color:#FF6E8C; border:1px solid rgba(220,42,82,.5);}
+  .dd-card ul{margin:0; padding-left:18px;}
+  .dd-card li{font-size:13px; color:var(--n-300); margin:7px 0; line-height:1.5;}
+
+  /* ---------- COLOR ---------- */
+  .ramp{display:grid; grid-template-columns:repeat(8,1fr); border-radius:14px; overflow:hidden; border:1px solid var(--hairline);}
+  .sw{height:96px; padding:11px 12px; display:flex; flex-direction:column; justify-content:flex-end; position:relative;}
+  .sw .hex{font-size:12.5px; font-weight:500; letter-spacing:.02em;}
+  .sw .tok{font-size:10.5px; opacity:.82; margin-top:2px; line-height:1.25;}
+  .sw.dark-txt{color:#0A1230;} .sw.light-txt{color:#fff;}
+  .ramp-meta{display:flex; align-items:baseline; gap:10px; margin:0 2px 12px;}
+  .ramp-meta .nm{font-size:14px; color:var(--white); font-weight:500;}
+  .ramp-meta .role{font-size:12px; color:var(--muted);}
+
+  .swatch-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+  .scard{border-radius:14px; border:1px solid var(--hairline); overflow:hidden;}
+  .scard .chip{height:74px;}
+  .scard .info{padding:11px 13px; background:rgba(13,17,36,.5);}
+  .scard .info .hex{font-size:13px; color:var(--white); font-weight:500;}
+  .scard .info .tok{font-size:11px; color:var(--muted); margin-top:2px;}
+
+  .status-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px;}
+  .stat{border-radius:14px; border:1px solid var(--hairline); padding:16px; background:rgba(13,17,36,.45);}
+  .stat .dot{width:34px; height:34px; border-radius:11px; margin-bottom:12px; box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);}
+  .stat .nm{font-size:13.5px; color:var(--white); font-weight:500;}
+  .stat .hex{font-size:12px; color:var(--muted); margin-top:2px;}
+
+  .grad-strip{height:120px; border-radius:16px; display:flex; align-items:flex-end; padding:18px; color:#FFFFFF; font-weight:700; font-size:14px;}
+  .grad-info{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;}
+  .grad-info code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; color:var(--cyan-soft);
+    background:rgba(97,147,255,.08); border:1px solid rgba(97,147,255,.22); padding:6px 10px; border-radius:9px;}
+
+  /* ---------- TYPOGRAPHY ---------- */
+  .type-list .row{display:grid; grid-template-columns:160px 1fr; gap:22px; align-items:baseline;
+    padding:18px 0; border-top:1px solid var(--hairline);}
+  .type-list .row:first-child{border-top:0;}
+  .type-list .meta .tk{font-size:13px; color:var(--white); font-weight:500;}
+  .type-list .meta .px{font-size:12px; color:var(--muted); margin-top:3px;}
+  .type-list .sample{color:var(--n-100); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .h1s{font-size:64px; line-height:72px; font-weight:700; letter-spacing:-.02em;}
+  .h2s{font-size:48px; line-height:56px; font-weight:700; letter-spacing:-.015em;}
+  .h3s{font-size:32px; line-height:40px; font-weight:500;}
+  .h4s{font-size:24px; line-height:32px; font-weight:500;}
+  .h6s{font-size:18px; line-height:24px; font-weight:500;}
+  .bxl{font-size:18px; line-height:26px; font-weight:400;}
+  .bl{font-size:16px; line-height:24px; font-weight:400;}
+  .bm{font-size:14px; line-height:20px; font-weight:400;}
+  .bs{font-size:12px; line-height:16px; font-weight:400;}
+  .weights{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:26px;}
+  .wcard{border:1px solid var(--hairline); border-radius:14px; padding:18px; background:rgba(13,17,36,.45);}
+  .wcard .ag{font-size:38px; color:var(--white); line-height:1;}
+  .wcard .nm{font-size:13px; color:var(--cyan-soft); margin-top:12px; font-weight:500;}
+  .wcard .v{font-size:11.5px; color:var(--muted); margin-top:3px;}
+  .w300{font-weight:300;} .w400{font-weight:400;} .w700{font-weight:700;}
+  .w800{font-weight:700; letter-spacing:.005em;}
+
+  /* ---------- SPACING / RADIUS ---------- */
+  .space-row{display:flex; align-items:flex-end; gap:14px; flex-wrap:wrap;}
+  .sp{text-align:center;}
+  .sp .bar{width:46px; background:var(--grad); border-radius:6px 6px 0 0; box-shadow:0 0 16px rgba(47,107,255,.3);}
+  .sp .v{font-size:12px; color:var(--white); margin-top:8px; font-weight:500;}
+  .sp .u{font-size:10.5px; color:var(--muted);}
+  .radius-row{display:grid; grid-template-columns:repeat(6,1fr); gap:16px;}
+  .rad{text-align:center;}
+  .rad .box{height:84px; border:1.5px solid var(--indigo-300); background:rgba(47,107,255,.12);}
+  .rad .v{font-size:12.5px; color:var(--white); margin-top:10px; font-weight:500;}
+  .rad .u{font-size:11px; color:var(--muted);}
+
+  /* ---------- ELEVATION ---------- */
+  .elev-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:18px;}
+  .elev{border-radius:16px; padding:22px; min-height:128px; display:flex; flex-direction:column; justify-content:space-between;
+    background:linear-gradient(180deg, rgba(26,33,66,.7), rgba(13,17,36,.6)); border:1px solid var(--hairline);}
+  .elev .t{font-size:14px; color:var(--white); font-weight:500;}
+  .elev .d{font-size:11.5px; color:var(--muted); font-family:ui-monospace,Menlo,monospace; line-height:1.5;}
+  .e0{box-shadow:none;}
+  .e1{box-shadow:0 2px 8px rgba(0,0,0,.4);}
+  .e-indigo{box-shadow:var(--glow-indigo); border-color:rgba(47,107,255,.45);}
+  .e-cyan{box-shadow:var(--glow-cyan); border-color:rgba(97,147,255,.4);}
+  .e-violet{box-shadow:0 6px 16px rgba(99,83,242,.42); border-color:rgba(99,83,242,.4);}
+
+  /* ---------- COMPONENTS ---------- */
+  .comp-grid{display:grid; grid-template-columns:1fr 1fr; gap:22px;}
+  .cnote{font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--cyan-soft);
+    background:rgba(97,147,255,.08); border:1px solid rgba(97,147,255,.22); padding:3px 9px; border-radius:1000px; display:inline-block;}
+  .stack{display:flex; flex-direction:column; gap:14px; margin-top:16px;}
+
+  .btn{display:inline-flex; align-items:center; justify-content:center; gap:9px; height:50px; padding:0 22px;
+    border-radius:14px; font-family:var(--font); font-size:15px; font-weight:500; cursor:pointer; border:0; width:100%;
+    transition:transform .12s ease, box-shadow .2s ease;}
+  .btn:hover{transform:translateY(-1px);}
+  .btn-solid{background:var(--grad); color:#FFFFFF; box-shadow:var(--glow-indigo);}
+  .btn-outline{background:transparent; color:var(--white); border:1.5px solid rgba(47,107,255,.55); box-shadow:inset 0 0 18px rgba(47,107,255,.08);}
+  .btn-outline:hover{border-color:var(--cyan); box-shadow:inset 0 0 22px rgba(97,147,255,.12);}
+  .btn-ghost{background:transparent; color:var(--cyan-soft); height:44px; font-weight:500;}
+  .btn-ghost:hover{background:rgba(97,147,255,.07);}
+  .btn-danger{background:linear-gradient(135deg,#E23A5F,#DC2A52); color:#fff; box-shadow:0 6px 16px rgba(220,42,82,.4);}
+  .btn-arrow{font-size:18px; line-height:1;}
+
+  .field{display:flex; flex-direction:column; gap:7px;}
+  .field label{font-size:12.5px; color:var(--n-300); font-weight:500;}
+  .input{height:52px; border-radius:14px; background:rgba(6,8,15,.6); border:1.5px solid var(--hairline-strong);
+    color:var(--white); padding:0 16px; font-family:var(--font); font-size:15px; display:flex; align-items:center; gap:10px;}
+  .input.focus{border-color:var(--cyan); box-shadow:0 0 0 4px rgba(97,147,255,.14);}
+  .input .ph{color:var(--n-500);}
+  .input .ico{color:var(--muted); font-size:16px;}
+  .field .help{font-size:11.5px; color:var(--muted);}
+  .field.err .input{border-color:var(--error); box-shadow:0 0 0 4px rgba(220,42,82,.14);}
+  .field.err .help{color:#FF6E8C;}
+
+  .surface-card{border-radius:18px; padding:22px; background:linear-gradient(150deg, rgba(47,107,255,.16), rgba(97,147,255,.08)), var(--surface);
+    border:1px solid rgba(47,107,255,.4); box-shadow:var(--glow-indigo);}
+  .surface-card .ttl{font-size:13px; color:var(--n-200); letter-spacing:.04em; text-transform:uppercase;}
+  .surface-card .val{font-size:34px; color:var(--white); font-weight:700; margin-top:8px; letter-spacing:-.01em;}
+  .surface-card .sub{font-size:13px; color:var(--cyan-soft); margin-top:6px;}
+
+  .badges{display:flex; flex-wrap:wrap; gap:10px;}
+  .badge{font-size:12.5px; padding:6px 13px; border-radius:1000px; font-weight:500; display:inline-flex; align-items:center; gap:7px;}
+  .b-solid{background:var(--grad); color:#FFFFFF;}
+  .b-indigo{background:rgba(47,107,255,.16); color:#A6C4FF; border:1px solid rgba(47,107,255,.4);}
+  .b-cyan{background:rgba(97,147,255,.14); color:#B6D0FF; border:1px solid rgba(97,147,255,.4);}
+  .b-success{background:rgba(14,156,114,.16); color:#48E2AC; border:1px solid rgba(14,156,114,.45);}
+  .b-warn{background:rgba(217,142,30,.16); color:#F2B65B; border:1px solid rgba(217,142,30,.45);}
+  .b-error{background:rgba(220,42,82,.16); color:#FF7B96; border:1px solid rgba(220,42,82,.45);}
+  .b-dot::before{content:""; width:7px; height:7px; border-radius:50%; background:currentColor;}
+
+  .state-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  .state{border:1px dashed var(--hairline-strong); border-radius:16px; padding:24px 18px; text-align:center; min-height:170px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; background:rgba(6,8,15,.4);}
+  .state .ring{width:54px; height:54px; border-radius:50%; display:flex; align-items:center; justify-content:center;}
+  .state .glyph{font-size:24px;}
+  .state .st{font-size:14px; color:var(--white); font-weight:500;}
+  .state .sd{font-size:12px; color:var(--muted); line-height:1.45; max-width:200px;}
+  .empty .ring{background:rgba(47,107,255,.12); color:var(--indigo-200); border:1px solid rgba(47,107,255,.4);}
+  .loading .ring{border:3px solid rgba(97,147,255,.18); border-top-color:var(--cyan); animation:spin 1s linear infinite;}
+  .error-s .ring{background:rgba(220,42,82,.14); color:#FF7B96; border:1px solid rgba(220,42,82,.45);}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  .shimmer-rows{display:flex; flex-direction:column; gap:12px;}
+  .sh-row{display:flex; align-items:center; gap:14px;}
+  .sh-chip{width:44px; height:44px; border-radius:13px; flex-shrink:0;}
+  .sh-lines{flex:1; display:flex; flex-direction:column; gap:8px;}
+  .sh{border-radius:7px; background:linear-gradient(90deg, rgba(47,107,255,.10) 0%, rgba(47,107,255,.22) 50%, rgba(47,107,255,.10) 100%);
+    background-size:200% 100%; animation:shim 1.5s ease-in-out infinite; height:11px;}
+  .sh.tall{height:44px; border-radius:13px;}
+  .sh.w70{width:70%;} .sh.w40{width:40%;}
+  @keyframes shim{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
+  /* ---------- NEW COMPONENTS ---------- */
+  /* group heading inside components section */
+  .comp-group{font-size:13px; font-weight:500; letter-spacing:.14em; text-transform:uppercase; color:var(--cyan-soft);
+    margin:46px 0 4px; display:flex; align-items:center; gap:11px;}
+  .comp-group::before{content:""; width:18px; height:1px; background:linear-gradient(90deg,var(--indigo-400),transparent);}
+  .comp-group:first-child{margin-top:0;}
+  .comp-group-sub{font-size:13px; color:var(--muted); margin:0 0 20px; max-width:640px;}
+
+  /* shared mini mockup helpers */
+  .mini-row{display:flex; align-items:center; gap:12px;}
+  .mini-label{font-size:13.5px; color:var(--n-200);}
+  .mini-label.sub{font-size:11.5px; color:var(--muted); margin-top:2px;}
+
+  /* AppTextInput — adds focus/error/password rows on top of .input */
+  .ati-eye{margin-left:auto; color:var(--muted); font-size:16px;}
+
+  /* Dropdown */
+  .dd-field{height:52px; border-radius:14px; background:rgba(6,8,15,.6); border:1.5px solid var(--hairline-strong);
+    color:var(--white); padding:0 16px; display:flex; align-items:center; gap:10px; font-size:15px;}
+  .dd-field .chev{margin-left:auto; color:var(--muted); font-size:13px;}
+  .dd-menu{margin-top:10px; border-radius:14px; background:var(--surface); border:1px solid var(--hairline-strong);
+    overflow:hidden; box-shadow:0 14px 34px rgba(0,0,0,.5);}
+  .dd-opt{display:flex; align-items:center; gap:10px; padding:13px 16px; font-size:14.5px; color:var(--n-200);
+    border-top:1px solid var(--hairline);}
+  .dd-opt:first-child{border-top:0;}
+  .dd-opt .ok{margin-left:auto; color:var(--indigo-200); font-size:14px;}
+  .dd-opt.sel{background:rgba(47,107,255,.16); color:var(--white);}
+
+  /* Checkbox */
+  .cbx-row{display:flex; align-items:center; gap:12px;}
+  .cbx{width:24px; height:24px; border-radius:8px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+    border:1.5px solid var(--n-500); color:#fff; font-size:14px; font-weight:700;}
+  .cbx.on{background:var(--indigo-400); border-color:var(--indigo-400); box-shadow:0 4px 12px rgba(47,107,255,.4);}
+
+  /* AppSwitch */
+  .sw-track{width:50px; height:30px; border-radius:1000px; padding:3px; display:flex; align-items:center; flex-shrink:0;
+    background:var(--n-600); transition:.2s;}
+  .sw-track .knob{width:24px; height:24px; border-radius:50%; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,.4);}
+  .sw-track.on{background:var(--indigo-400); justify-content:flex-end; box-shadow:0 4px 12px rgba(47,107,255,.4);}
+
+  /* RadioGroup */
+  .radio{width:22px; height:22px; border-radius:50%; flex-shrink:0; border:1.5px solid var(--n-500);
+    display:flex; align-items:center; justify-content:center;}
+  .radio.on{border-color:var(--indigo-400);}
+  .radio.on::after{content:""; width:11px; height:11px; border-radius:50%; background:var(--indigo-400);
+    box-shadow:0 0 10px rgba(47,107,255,.6);}
+
+  /* SegmentedControl */
+  .seg{display:flex; padding:4px; gap:4px; border-radius:14px; background:rgba(6,8,15,.6);
+    border:1px solid var(--hairline-strong);}
+  .seg .sgm{flex:1; text-align:center; padding:9px 0; font-size:13.5px; font-weight:500; color:var(--muted); border-radius:10px;}
+  .seg .sgm.on{background:var(--grad); color:#fff; box-shadow:var(--glow-indigo);}
+
+  /* Chip */
+  .chips{display:flex; flex-wrap:wrap; gap:10px;}
+  .chp{font-size:13px; font-weight:500; padding:8px 15px; border-radius:1000px;
+    border:1px solid var(--hairline-strong); color:var(--n-200); background:rgba(13,17,36,.5);
+    display:inline-flex; align-items:center; gap:7px;}
+  .chp.on{background:var(--grad); border-color:transparent; color:#fff; box-shadow:var(--glow-indigo);}
+
+  /* Avatar */
+  .avas{display:flex; align-items:center; gap:18px;}
+  .ava{border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700;
+    background:var(--grad); box-shadow:var(--glow-indigo);}
+  .ava.lg{width:64px; height:64px; font-size:23px;}
+  .ava.sm{width:42px; height:42px; font-size:15px;}
+
+  /* ListItem */
+  .li-card{border-radius:16px; border:1px solid var(--hairline); background:rgba(13,17,36,.5); overflow:hidden;}
+  .li{display:flex; align-items:center; gap:14px; padding:14px 16px; border-top:1px solid var(--hairline);}
+  .li:first-child{border-top:0;}
+  .li .li-body{flex:1; min-width:0;}
+  .li .li-title{font-size:14.5px; color:var(--white); font-weight:500;}
+  .li .li-sub{font-size:12.5px; color:var(--muted); margin-top:2px;}
+  .li .chev{color:var(--n-500); font-size:15px;}
+
+  /* Carousel */
+  .carousel{border-radius:18px; min-height:150px; padding:22px; display:flex; flex-direction:column; justify-content:space-between;
+    background:linear-gradient(135deg,#1B45B8,#3E7BFF); box-shadow:var(--glow-indigo);}
+  .carousel .c-kicker{font-size:12px; letter-spacing:.04em; text-transform:uppercase; color:#EAF1FF; opacity:.85;}
+  .carousel .c-ttl{font-size:21px; font-weight:700; color:#fff; margin-top:8px; max-width:300px; line-height:1.25;}
+  .dots{display:flex; gap:7px; margin-top:18px;}
+  .dots .d{width:7px; height:7px; border-radius:1000px; background:rgba(255,255,255,.4);}
+  .dots .d.on{width:22px; background:#fff;}
+
+  /* CardScroller */
+  .scroller{display:flex; gap:14px; overflow:hidden; padding-bottom:4px;}
+  .sc-card{flex:0 0 64%; border-radius:16px; padding:18px; min-height:128px;
+    background:linear-gradient(180deg, rgba(26,33,66,.85), rgba(13,17,36,.7)); border:1px solid var(--hairline-strong);
+    display:flex; flex-direction:column; justify-content:space-between;}
+  .sc-card:nth-child(2){flex-basis:54%;}
+  .sc-card:nth-child(3){flex-basis:42%;}
+  .sc-card .sc-ico{width:38px; height:38px; border-radius:11px; background:rgba(47,107,255,.16);
+    border:1px solid rgba(47,107,255,.4); display:flex; align-items:center; justify-content:center; color:var(--indigo-200); font-size:18px;}
+  .sc-card .sc-ttl{font-size:14.5px; color:var(--white); font-weight:500;}
+  .sc-card .sc-sub{font-size:12px; color:var(--muted); margin-top:3px;}
+
+  /* AppBottomSheet */
+  .sheet-stage{border-radius:18px; background:rgba(6,8,15,.55); border:1px solid var(--hairline);
+    padding:28px 14px 0; display:flex; justify-content:center; align-items:flex-end; min-height:230px; overflow:hidden;}
+  .sheet{width:100%; max-width:400px; border-radius:22px 22px 0 0; background:var(--surface);
+    border:1px solid var(--hairline-strong); border-bottom:0; padding:14px 18px 24px;
+    box-shadow:0 -14px 40px rgba(0,0,0,.5);}
+  .sheet .grabber{width:42px; height:5px; border-radius:1000px; background:var(--n-600); margin:0 auto 16px;}
+  .sheet .sh-ttl{font-size:17px; font-weight:500; color:var(--white); margin-bottom:14px;}
+  .sheet .sh-opt{display:flex; align-items:center; gap:13px; padding:13px 0; border-top:1px solid var(--hairline); font-size:14.5px; color:var(--n-200);}
+  .sheet .sh-opt:first-of-type{border-top:0;}
+  .sheet .sh-opt .ico{width:34px; height:34px; border-radius:11px; flex-shrink:0; background:rgba(47,107,255,.14);
+    border:1px solid rgba(47,107,255,.34); display:flex; align-items:center; justify-content:center; color:var(--indigo-200); font-size:16px;}
+  .sheet .sh-opt .chev{margin-left:auto; color:var(--n-500); font-size:14px;}
+
+  /* ModalDialog */
+  .modal-stage{position:relative; border-radius:18px; overflow:hidden; min-height:240px;
+    display:flex; align-items:center; justify-content:center; padding:24px;
+    background:repeating-linear-gradient(45deg, rgba(6,8,15,.85), rgba(6,8,15,.85) 12px, rgba(13,17,36,.85) 12px, rgba(13,17,36,.85) 24px);
+    border:1px solid var(--hairline);}
+  .modal-stage::before{content:""; position:absolute; inset:0; background:rgba(6,8,15,.55); backdrop-filter:blur(2px);}
+  .modal{position:relative; width:100%; max-width:330px; border-radius:18px; padding:24px 22px;
+    background:linear-gradient(180deg, rgba(26,33,66,.92), rgba(13,17,36,.96)); border:1px solid var(--hairline-strong);
+    box-shadow:0 20px 50px rgba(0,0,0,.6); text-align:center;}
+  .modal .m-ttl{font-size:18px; font-weight:700; color:var(--white);}
+  .modal .m-msg{font-size:13.5px; color:var(--muted); margin-top:9px; line-height:1.5;}
+  .modal .m-actions{display:flex; gap:11px; margin-top:22px;}
+  .modal .m-actions .btn{height:46px; font-size:14px;}
+
+  /* Skeleton (uses existing .sh shimmer) */
+  .sk-card{display:flex; flex-direction:column; gap:13px; padding:18px; border-radius:16px;
+    background:rgba(13,17,36,.5); border:1px solid var(--hairline);}
+
+  /* tab bar */
+  .tabbar-wrap{max-width:430px; margin:0 auto;}
+  .tabbar{display:grid; grid-template-columns:repeat(5,1fr); background:rgba(6,8,15,.82); backdrop-filter:blur(8px);
+    border:1px solid var(--hairline-strong); border-radius:22px; padding:10px 8px; box-shadow:0 12px 34px rgba(0,0,0,.5);}
+  .tab{display:flex; flex-direction:column; align-items:center; gap:6px; padding:6px 0; color:var(--n-500); position:relative;}
+  .tab .ti-ico{width:24px; height:24px;}
+  .tab .lbl{font-size:10.5px; font-weight:500; letter-spacing:.02em;}
+  .tab.active{color:var(--white);}
+  .tab.active .ti-ico path, .tab.active .ti-ico circle{stroke:url(#tabgrad);}
+  .tab.active::before{content:""; position:absolute; top:-10px; width:30px; height:3px; border-radius:1000px; background:var(--grad); box-shadow:var(--glow-cyan);}
+
+  .foot{padding:54px 0 80px; border-top:1px solid var(--hairline); text-align:center;}
+  .foot .fl{display:flex; align-items:center; justify-content:center; gap:14px; margin-bottom:16px;}
+  .foot .ft{font-size:13px; color:var(--muted);}
+  .foot .ft b{color:var(--n-200); font-weight:500;}
+
+  @media (max-width:920px){
+    .hero-inner{grid-template-columns:1fr;}
+    .hero-logo{order:-1;}
+    .hero h1{font-size:46px;}
+    .cols-2,.comp-grid{grid-template-columns:1fr;}
+    .cols-3,.cols-4,.logo-variants,.swatch-grid,.status-grid,.weights,.state-grid,.elev-grid,.dd,.radius-row{grid-template-columns:1fr 1fr;}
+    .ramp{grid-template-columns:repeat(4,1fr);}
+    .h1s{font-size:46px; line-height:54px;} .h2s{font-size:38px; line-height:46px;}
+  }
+  @media (max-width:560px){
+    .wrap{padding:0 18px;} section{padding:54px 0;}
+    .cols-3,.cols-4,.logo-variants,.swatch-grid,.status-grid,.weights,.state-grid,.elev-grid,.radius-row,.dd{grid-template-columns:1fr;}
+    .type-list .row{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- Shared gradient defs for tab icons -->
+<svg width="0" height="0" style="position:absolute"><defs>
+  <linearGradient id="tabgrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3E7BFF"/><stop offset="1" stop-color="#A6C4FF"/></linearGradient>
+</defs></svg>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="hero-grid"></div>
+  <div class="wrap hero-inner">
+    <div>
+      <div class="eyebrow">Brand &amp; UI Reference</div>
+      <h1>React Native <span class="grad">Magic</span><br/>Design System</h1>
+      <p class="lede">The visual language for apps scaffolded from <b style="color:var(--white);font-weight:500">@fadyshawky/react-native-magic</b> — a premium Midnight system of electric blue on deep black, built dark-first for clarity and depth.</p>
+      <div class="pills">
+        <span class="meta-pill"><b>Author</b> Fady Shawky</span>
+        <span class="meta-pill"><b>Tokens</b> Colors · Fonts · CommonSizes</span>
+        <span class="meta-pill"><b>App font</b> Almarai</span>
+      </div>
+      <nav class="toc">
+        <a href="#logo">Logo</a>
+        <a href="#color">Color</a>
+        <a href="#type">Typography</a>
+        <a href="#space">Spacing &amp; Radius</a>
+        <a href="#elevation">Elevation</a>
+        <a href="#components">Components</a>
+      </nav>
+    </div>
+    <div class="hero-logo">
+      <div class="logo-stage">
+        <span class="ring"></span><span class="ring two"></span>
+        <svg width="150" height="150" viewBox="0 0 120 120" fill="none" role="img" aria-label="FS monogram">
+          <defs><linearGradient id="chipHero" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A1230"/><stop offset="1" stop-color="#1B45B8"/></linearGradient></defs>
+          <rect width="120" height="120" rx="30" fill="url(#chipHero)"/>
+          <rect x="25" y="24" width="13" height="72" rx="3" fill="#6BA0FF"/>
+          <rect x="25" y="24" width="33" height="13" rx="3" fill="#6BA0FF"/>
+          <rect x="25" y="52" width="26" height="12" rx="3" fill="#6BA0FF"/>
+          <path d="M101 42 C101 32 91 28 83 28 C73 28 67 35 67 44 C67 52 75 56 84 59 C93 62 101 66 101 76 C101 86 91 91 83 91 C73 91 67 85 66 77" fill="none" stroke="#6BA0FF" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ LOGO ============ -->
+<section id="logo">
+  <div class="wrap">
+    <div class="eyebrow">01 — Identity</div>
+    <h2 class="sec">The FS monogram</h2>
+    <p class="sec-sub">A forward-leaning "FS" mark — the italic stance signals motion and momentum. Four official variants cover dark, mono, light, and mark-only placements.</p>
+
+    <div class="logo-variants">
+      <div class="lv">
+        <div class="stagebox">
+          <svg width="92" height="92" viewBox="0 0 120 120" fill="none" role="img" aria-label="FS gradient logo">
+            <defs><linearGradient id="chip1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A1230"/><stop offset="1" stop-color="#1B45B8"/></linearGradient></defs>
+            <rect width="120" height="120" rx="30" fill="url(#chip1)"/>
+            <rect x="25" y="24" width="13" height="72" rx="3" fill="#6BA0FF"/>
+            <rect x="25" y="24" width="33" height="13" rx="3" fill="#6BA0FF"/>
+            <rect x="25" y="52" width="26" height="12" rx="3" fill="#6BA0FF"/>
+            <path d="M101 42 C101 32 91 28 83 28 C73 28 67 35 67 44 C67 52 75 56 84 59 C93 62 101 66 101 76 C101 86 91 91 83 91 C73 91 67 85 66 77" fill="none" stroke="#6BA0FF" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="name">Primary</div>
+        <div class="desc">Gradient chip, ink strokes. Default everywhere.</div>
+      </div>
+
+      <div class="lv">
+        <div class="stagebox">
+          <svg width="92" height="92" viewBox="0 0 120 120" fill="none" role="img" aria-label="FS mono logo">
+            <rect width="120" height="120" rx="30" fill="#0D1124" stroke="#1A2142" stroke-width="1.5"/>
+            <rect x="25" y="24" width="13" height="72" rx="3" fill="#FFFFFF"/>
+            <rect x="25" y="24" width="33" height="13" rx="3" fill="#FFFFFF"/>
+            <rect x="25" y="52" width="26" height="12" rx="3" fill="#FFFFFF"/>
+            <path d="M101 42 C101 32 91 28 83 28 C73 28 67 35 67 44 C67 52 75 56 84 59 C93 62 101 66 101 76 C101 86 91 91 83 91 C73 91 67 85 66 77" fill="none" stroke="#FFFFFF" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="name">Mono</div>
+        <div class="desc">#0D1124 chip, white strokes. Dark surfaces.</div>
+      </div>
+
+      <div class="lv">
+        <div class="stagebox">
+          <svg width="92" height="92" viewBox="0 0 120 120" fill="none" role="img" aria-label="FS light logo">
+            <rect width="120" height="120" rx="30" fill="#F4F6FE" stroke="#D7DCEC" stroke-width="1.5"/>
+            <rect x="25" y="24" width="13" height="72" rx="3" fill="#0A1230"/>
+            <rect x="25" y="24" width="33" height="13" rx="3" fill="#0A1230"/>
+            <rect x="25" y="52" width="26" height="12" rx="3" fill="#0A1230"/>
+            <path d="M101 42 C101 32 91 28 83 28 C73 28 67 35 67 44 C67 52 75 56 84 59 C93 62 101 66 101 76 C101 86 91 91 83 91 C73 91 67 85 66 77" fill="none" stroke="#0A1230" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="name">Light</div>
+        <div class="desc">#F4F6FE chip, ink strokes. Print &amp; light UI.</div>
+      </div>
+
+      <div class="lv">
+        <div class="stagebox">
+          <svg width="92" height="92" viewBox="0 0 120 120" fill="none" role="img" aria-label="FS mark only">
+            <rect x="25" y="24" width="13" height="72" rx="3" fill="#2F6BFF"/>
+            <rect x="25" y="24" width="33" height="13" rx="3" fill="#2F6BFF"/>
+            <rect x="25" y="52" width="26" height="12" rx="3" fill="#2F6BFF"/>
+            <path d="M101 42 C101 32 91 28 83 28 C73 28 67 35 67 44 C67 52 75 56 84 59 C93 62 101 66 101 76 C101 86 91 91 83 91 C73 91 67 85 66 77" fill="none" stroke="#2F6BFF" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="name">Mark only</div>
+        <div class="desc">#2F6BFF strokes, no chip. Watermarks &amp; favicons.</div>
+      </div>
+    </div>
+
+    <!-- wordmark + clearspace -->
+    <div class="grid cols-2" style="margin-top:18px;">
+      <div class="wordmark">
+        <svg width="68" height="68" viewBox="0 0 120 120" fill="none" role="img" aria-label="FS wordmark logo">
+          <defs><linearGradient id="chip2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A1230"/><stop offset="1" stop-color="#1B45B8"/></linearGradient></defs>
+          <rect width="120" height="120" rx="30" fill="url(#chip2)"/>
+          <rect x="25" y="24" width="13" height="72" rx="3" fill="#6BA0FF"/>
+          <rect x="25" y="24" width="33" height="13" rx="3" fill="#6BA0FF"/>
+          <rect x="25" y="52" width="26" height="12" rx="3" fill="#6BA0FF"/>
+          <path d="M101 42 C101 32 91 28 83 28 C73 28 67 35 67 44 C67 52 75 56 84 59 C93 62 101 66 101 76 C101 86 91 91 83 91 C73 91 67 85 66 77" fill="none" stroke="#6BA0FF" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="wm-text">
+          <div class="big">FADY SHAWKY</div>
+          <div class="small">react native magic</div>
+        </div>
+      </div>
+
+      <div class="clearspace">
+        <span class="cs-tick t">½ chip</span>
+        <span class="cs-tick l">½ chip</span>
+        <div class="cs-box">
+          <svg width="58" height="58" viewBox="0 0 120 120" fill="none" role="img" aria-label="FS clearspace">
+            <defs><linearGradient id="chip3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A1230"/><stop offset="1" stop-color="#1B45B8"/></linearGradient></defs>
+            <rect width="120" height="120" rx="30" fill="url(#chip3)"/>
+            <rect x="25" y="24" width="13" height="72" rx="3" fill="#6BA0FF"/>
+            <rect x="25" y="24" width="33" height="13" rx="3" fill="#6BA0FF"/>
+            <rect x="25" y="52" width="26" height="12" rx="3" fill="#6BA0FF"/>
+            <path d="M101 42 C101 32 91 28 83 28 C73 28 67 35 67 44 C67 52 75 56 84 59 C93 62 101 66 101 76 C101 86 91 91 83 91 C73 91 67 85 66 77" fill="none" stroke="#6BA0FF" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- do / dont -->
+    <div class="dd">
+      <div class="dd-card do">
+        <div class="dd-head"><span class="dd-ico">&#10003;</span> Do</div>
+        <ul>
+          <li>Preserve clear-space of at least half the chip width on every side.</li>
+          <li>Use the mono or light variant when the gradient lacks contrast.</li>
+          <li>Keep the chip's 30/120 corner radius ratio when scaling.</li>
+        </ul>
+      </div>
+      <div class="dd-card dont">
+        <div class="dd-head"><span class="dd-ico">&times;</span> Don't</div>
+        <ul>
+          <li>Recolor the gradient or swap stop order (always blue_600 &rarr; blue_300).</li>
+          <li>Stretch, skew, or rotate the mark away from its lean.</li>
+          <li>Place the gradient chip on busy or low-contrast photography.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COLOR ============ -->
+<section id="color">
+  <div class="wrap">
+    <div class="eyebrow">02 — Color</div>
+    <h2 class="sec">Palette</h2>
+    <p class="sec-sub">An electric-blue primary ramp anchored by light-blue and discover accents, grounded on a deep-black neutral set. Token names map to the app's <code style="color:var(--cyan-soft)">Colors</code> module.</p>
+
+    <!-- Blue ramp -->
+    <div class="ramp-meta"><span class="nm">Primary · Blue</span><span class="role">PlatinateBlue_400 = #2F6BFF</span></div>
+    <div class="ramp" style="margin-bottom:30px;">
+      <div class="sw dark-txt" style="background:#EAF1FF"><span class="hex">#EAF1FF</span><span class="tok">blue_50</span></div>
+      <div class="sw dark-txt" style="background:#B6D0FF"><span class="hex">#B6D0FF</span><span class="tok">blue_100</span></div>
+      <div class="sw dark-txt" style="background:#6193FF"><span class="hex">#6193FF</span><span class="tok">blue_200</span></div>
+      <div class="sw light-txt" style="background:#3E7BFF"><span class="hex">#3E7BFF</span><span class="tok">blue_300</span></div>
+      <div class="sw light-txt" style="background:#2F6BFF"><span class="hex">#2F6BFF</span><span class="tok">PlatinateBlue_400</span></div>
+      <div class="sw light-txt" style="background:#2356D6"><span class="hex">#2356D6</span><span class="tok">blue_500</span></div>
+      <div class="sw light-txt" style="background:#1B45B8"><span class="hex">#1B45B8</span><span class="tok">blue_600</span></div>
+      <div class="sw light-txt" style="background:#143186"><span class="hex">#143186</span><span class="tok">blue_700</span></div>
+    </div>
+
+    <!-- accents + ink in two columns -->
+    <div class="grid cols-2">
+      <div>
+        <div class="ramp-meta"><span class="nm">Accents</span><span class="role">lightBlue · lightBlueSoft · discover</span></div>
+        <div class="swatch-grid" style="grid-template-columns:repeat(3,1fr);">
+          <div class="scard"><div class="chip" style="background:#6193FF"></div><div class="info"><div class="hex">#6193FF</div><div class="tok">BrandColors.lightBlue</div></div></div>
+          <div class="scard"><div class="chip" style="background:#A6C4FF"></div><div class="info"><div class="hex">#A6C4FF</div><div class="tok">lightBlueSoft</div></div></div>
+          <div class="scard"><div class="chip" style="background:#6353F2"></div><div class="info"><div class="hex">#6353F2</div><div class="tok">discover_300</div></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="ramp-meta"><span class="nm">Black · Dark surfaces</span><span class="role">bg · surface · raised</span></div>
+        <div class="swatch-grid" style="grid-template-columns:repeat(3,1fr);">
+          <div class="scard"><div class="chip" style="background:#06080F"></div><div class="info"><div class="hex">#06080F</div><div class="tok">midnightBlack_900</div></div></div>
+          <div class="scard"><div class="chip" style="background:#0D1124"></div><div class="info"><div class="hex">#0D1124</div><div class="tok">surface</div></div></div>
+          <div class="scard"><div class="chip" style="background:#1A2142"></div><div class="info"><div class="hex">#1A2142</div><div class="tok">raised</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- cool neutrals -->
+    <div class="ramp-meta" style="margin-top:30px;"><span class="nm">Cool neutrals</span><span class="role">grayScale_0 &rarr; grayScale_200 / 600</span></div>
+    <div class="ramp" style="margin-bottom:30px;">
+      <div class="sw dark-txt" style="background:#FFFFFF;box-shadow:inset 0 0 0 1px #E5E9F7"><span class="hex">#FFFFFF</span><span class="tok">grayScale_0</span></div>
+      <div class="sw dark-txt" style="background:#F4F6FE"><span class="hex">#F4F6FE</span><span class="tok">nearWhite</span></div>
+      <div class="sw dark-txt" style="background:#EAEDF7"><span class="hex">#EAEDF7</span><span class="tok">n_100</span></div>
+      <div class="sw dark-txt" style="background:#D7DCEC"><span class="hex">#D7DCEC</span><span class="tok">n_200</span></div>
+      <div class="sw light-txt" style="background:#828BB0"><span class="hex">#828BB0</span><span class="tok">muted · grayScale_200</span></div>
+      <div class="sw light-txt" style="background:#59618A"><span class="hex">#59618A</span><span class="tok">n_500</span></div>
+      <div class="sw light-txt" style="background:#343C63"><span class="hex">#343C63</span><span class="tok">n_600</span></div>
+      <div class="sw light-txt" style="background:#1A2142"><span class="hex">#1A2142</span><span class="tok">raised</span></div>
+    </div>
+
+    <!-- status -->
+    <div class="ramp-meta"><span class="nm">Status</span><span class="role">semantic feedback</span></div>
+    <div class="status-grid" style="margin-bottom:30px;">
+      <div class="stat"><div class="dot" style="background:#0E9C72"></div><div class="nm">Success</div><div class="hex">#0E9C72</div></div>
+      <div class="stat"><div class="dot" style="background:#D98E1E"></div><div class="nm">Warning</div><div class="hex">#D98E1E</div></div>
+      <div class="stat"><div class="dot" style="background:#DC2A52"></div><div class="nm">Error</div><div class="hex">#DC2A52</div></div>
+      <div class="stat"><div class="dot" style="background:#2F6BFF"></div><div class="nm">Info</div><div class="hex">#2F6BFF</div></div>
+    </div>
+
+    <!-- gradient -->
+    <div class="ramp-meta"><span class="nm">Signature gradient</span><span class="role">brand surfaces, CTAs, glow</span></div>
+    <div class="grad-strip" style="background:linear-gradient(135deg,#1B45B8,#3E7BFF)">blue_600 &rarr; blue_300</div>
+    <div class="grad-info">
+      <code>linear-gradient(135deg, #1B45B8, #3E7BFF)</code>
+      <code>glow · 0 8px 18px rgba(47,107,255,.5)</code>
+      <code>discover · #6353F2</code>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TYPOGRAPHY ============ -->
+<section id="type">
+  <div class="wrap">
+    <div class="eyebrow">03 — Typography</div>
+    <h2 class="sec">Type scale</h2>
+    <p class="sec-sub">Sizes ship in the <code style="color:var(--cyan-soft)">CommonSizes</code> token set as <em>size / line-height</em> pairs. The product font is Almarai; this reference renders in Space Grotesk.</p>
+
+    <div class="type-list panel">
+      <div class="row"><div class="meta"><div class="tk">heading1</div><div class="px">64 / 72 · bold</div></div><div class="sample h1s">Magic</div></div>
+      <div class="row"><div class="meta"><div class="tk">heading2</div><div class="px">48 / 56 · bold</div></div><div class="sample h2s">Build faster</div></div>
+      <div class="row"><div class="meta"><div class="tk">heading3</div><div class="px">32 / 40 · regular</div></div><div class="sample h3s">Futuristic by default</div></div>
+      <div class="row"><div class="meta"><div class="tk">heading4</div><div class="px">24 / 32 · regular</div></div><div class="sample h4s">Section headings stay crisp</div></div>
+      <div class="row"><div class="meta"><div class="tk">heading6</div><div class="px">18 / 24 · regular</div></div><div class="sample h6s">Compact subsection titles for dense layouts</div></div>
+      <div class="row"><div class="meta"><div class="tk">bodyXLarge</div><div class="px">18 / 26 · regular</div></div><div class="sample bxl">Lead paragraphs introduce a screen with room to breathe.</div></div>
+      <div class="row"><div class="meta"><div class="tk">bodyLarge</div><div class="px">16 / 24 · regular</div></div><div class="sample bl">The default reading size across most content and list rows.</div></div>
+      <div class="row"><div class="meta"><div class="tk">bodyMedium</div><div class="px">14 / 20 · regular</div></div><div class="sample bm">Supporting copy, captions, and secondary metadata.</div></div>
+      <div class="row"><div class="meta"><div class="tk">bodySmall</div><div class="px">12 / 16 · regular</div></div><div class="sample bs">Fine print, timestamps, and helper text at the smallest size.</div></div>
+    </div>
+
+    <div class="weights">
+      <div class="wcard"><div class="ag w300">Aa</div><div class="nm">Light</div><div class="v">weight 300</div></div>
+      <div class="wcard"><div class="ag w400">Aa</div><div class="nm">Regular</div><div class="v">weight 400</div></div>
+      <div class="wcard"><div class="ag w700">Aa</div><div class="nm">Bold</div><div class="v">weight 700</div></div>
+      <div class="wcard"><div class="ag w800">Aa</div><div class="nm">Extra Bold</div><div class="v">weight 800</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SPACING & RADIUS ============ -->
+<section id="space">
+  <div class="wrap">
+    <div class="eyebrow">04 — Layout</div>
+    <h2 class="sec">Spacing &amp; radius</h2>
+    <p class="sec-sub">A consistent step scale keeps rhythm predictable. Spacing and radius both live in <code style="color:var(--cyan-soft)">CommonSizes</code>.</p>
+
+    <div class="grid cols-2">
+      <div class="panel">
+        <div class="label-row"><h3>Spacing scale</h3><span class="tag">px steps</span></div>
+        <div class="space-row">
+          <div class="sp"><div class="bar" style="height:6px"></div><div class="v">2</div><div class="u">spacing.xxs</div></div>
+          <div class="sp"><div class="bar" style="height:12px"></div><div class="v">4</div><div class="u">spacing.xs</div></div>
+          <div class="sp"><div class="bar" style="height:22px"></div><div class="v">8</div><div class="u">spacing.s</div></div>
+          <div class="sp"><div class="bar" style="height:34px"></div><div class="v">12</div><div class="u">spacing.sm</div></div>
+          <div class="sp"><div class="bar" style="height:46px"></div><div class="v">16</div><div class="u">spacing.m</div></div>
+          <div class="sp"><div class="bar" style="height:66px"></div><div class="v">24</div><div class="u">spacing.l</div></div>
+          <div class="sp"><div class="bar" style="height:88px"></div><div class="v">32</div><div class="u">spacing.xl</div></div>
+          <div class="sp"><div class="bar" style="height:118px"></div><div class="v">48</div><div class="u">spacing.xxl</div></div>
+        </div>
+        <div class="space-row" style="margin-top:20px;">
+          <div class="sp"><div class="bar" style="height:150px"></div><div class="v">64</div><div class="u">spacing.huge</div></div>
+          <div class="sp"><div class="bar" style="height:182px"></div><div class="v">80</div><div class="u">spacing.giant</div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="label-row"><h3>Corner radius</h3><span class="tag">radius</span></div>
+        <div class="radius-row" style="grid-template-columns:repeat(3,1fr);">
+          <div class="rad"><div class="box" style="border-radius:4px"></div><div class="v">4</div><div class="u">radius.xs</div></div>
+          <div class="rad"><div class="box" style="border-radius:8px"></div><div class="v">8</div><div class="u">radius.s</div></div>
+          <div class="rad"><div class="box" style="border-radius:12px"></div><div class="v">12</div><div class="u">radius.m</div></div>
+          <div class="rad"><div class="box" style="border-radius:16px"></div><div class="v">16</div><div class="u">radius.l</div></div>
+          <div class="rad"><div class="box" style="border-radius:24px"></div><div class="v">24</div><div class="u">radius.xl</div></div>
+          <div class="rad"><div class="box" style="border-radius:1000px"></div><div class="v">full</div><div class="u">radius.full · 1000</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ELEVATION ============ -->
+<section id="elevation">
+  <div class="wrap">
+    <div class="eyebrow">05 — Depth</div>
+    <h2 class="sec">Elevation &amp; glow</h2>
+    <p class="sec-sub">Depth comes from soft shadow plus a colored glow on brand surfaces. Use glow sparingly — reserve it for primary actions and hero cards.</p>
+    <div class="elev-grid">
+      <div class="elev e0"><div class="t">Flat</div><div class="d">box-shadow: none<br/>base surfaces</div></div>
+      <div class="elev e1"><div class="t">Raised</div><div class="d">0 2px 8px<br/>rgba(0,0,0,.4)</div></div>
+      <div class="elev e-indigo"><div class="t">Blue glow</div><div class="d">0 8px 18px<br/>rgba(47,107,255,.5)</div></div>
+      <div class="elev e-cyan"><div class="t">Light-blue glow</div><div class="d">0 8px 18px<br/>rgba(97,147,255,.42)</div></div>
+      <div class="elev e-violet"><div class="t">Discover glow</div><div class="d">0 8px 18px<br/>rgba(99,83,242,.42)</div></div>
+      <div class="elev" style="background:linear-gradient(135deg,#1B45B8,#3E7BFF); box-shadow:var(--glow-indigo); border-color:transparent;">
+        <div class="t" style="color:#FFFFFF">Gradient + glow</div><div class="d" style="color:#EAF1FF;opacity:.8">primary CTA recipe</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COMPONENTS ============ -->
+<section id="components">
+  <div class="wrap">
+    <div class="eyebrow">06 — Components</div>
+    <h2 class="sec">Component library</h2>
+    <p class="sec-sub">Reference styling for the core UI primitives. Each block notes the matching React Native component name from the template.</p>
+
+    <div class="comp-grid">
+      <!-- BUTTONS -->
+      <div class="panel">
+        <div class="label-row"><h3>Buttons</h3><span class="cnote">PrimaryButton</span></div>
+        <div class="stack">
+          <button class="btn btn-solid">Continue <span class="btn-arrow">&rarr;</span></button>
+          <button class="btn btn-outline">Outline action</button>
+          <button class="btn btn-ghost">Borderless link</button>
+          <button class="btn btn-danger">Delete account</button>
+        </div>
+      </div>
+
+      <!-- TEXT INPUT -->
+      <div class="panel">
+        <div class="label-row"><h3>Text input</h3><span class="cnote">PrimaryTextInput</span></div>
+        <div class="stack">
+          <div class="field">
+            <label>Email</label>
+            <div class="input"><span class="ico">&#9993;</span><span>you@studio.dev</span></div>
+            <span class="help">We never share your address.</span>
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <div class="input focus"><span class="ico">&#128274;</span><span class="ph">Enter password</span></div>
+            <span class="help" style="color:var(--cyan-soft)">Focused state · blue ring</span>
+          </div>
+          <div class="field err">
+            <label>Phone</label>
+            <div class="input"><span class="ico">&#9742;</span><span>+20 100 000</span></div>
+            <span class="help">Enter a valid phone number.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SURFACE / CARD -->
+      <div class="panel">
+        <div class="label-row"><h3>Surface card</h3><span class="cnote">Container</span></div>
+        <div class="stack">
+          <div class="surface-card">
+            <div class="ttl">Available balance</div>
+            <div class="val">$ 12,480.00</div>
+            <div class="sub">&#8599; +4.2% this month</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BADGES -->
+      <div class="panel">
+        <div class="label-row"><h3>Badges &amp; pills</h3><span class="cnote">Badge</span></div>
+        <div class="badges" style="margin-top:6px;">
+          <span class="badge b-solid">Pro</span>
+          <span class="badge b-indigo b-dot">Active</span>
+          <span class="badge b-cyan b-dot">New</span>
+          <span class="badge b-success b-dot">Paid</span>
+          <span class="badge b-warn b-dot">Pending</span>
+          <span class="badge b-error b-dot">Failed</span>
+        </div>
+        <div class="badges" style="margin-top:16px;">
+          <span class="badge b-indigo">#design-system</span>
+          <span class="badge b-indigo">#mobile</span>
+          <span class="badge b-indigo">#react-native</span>
+        </div>
+      </div>
+
+      <!-- LIST STATES -->
+      <div class="panel" style="grid-column:1 / -1;">
+        <div class="label-row"><h3>List states</h3><span class="cnote">FlatListWrapper</span></div>
+        <div class="state-grid">
+          <div class="state empty">
+            <div class="ring"><span class="glyph">&#9783;</span></div>
+            <div class="st">Nothing here yet</div>
+            <div class="sd">Empty state — your first item will appear here.</div>
+          </div>
+          <div class="state loading">
+            <div class="ring"></div>
+            <div class="st">Loading</div>
+            <div class="sd">Fetching the latest data from the server.</div>
+          </div>
+          <div class="state error-s">
+            <div class="ring"><span class="glyph">&#9888;</span></div>
+            <div class="st">Something went wrong</div>
+            <div class="sd">Error state — pull to refresh or retry.</div>
+          </div>
+        </div>
+        <div class="shimmer-rows" style="margin-top:20px;">
+          <div class="sh-row"><div class="sh tall sh-chip"></div><div class="sh-lines"><div class="sh w70"></div><div class="sh w40"></div></div></div>
+          <div class="sh-row"><div class="sh tall sh-chip"></div><div class="sh-lines"><div class="sh w70"></div><div class="sh w40"></div></div></div>
+        </div>
+      </div>
+
+      <!-- TAB BAR -->
+      <div class="panel" style="grid-column:1 / -1;">
+        <div class="label-row"><h3>Bottom tab bar</h3><span class="cnote">TabBar</span></div>
+        <div class="tabbar-wrap" style="margin-top:6px;">
+          <div class="tabbar">
+            <div class="tab active">
+              <svg class="ti-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l-2 0 9-9 9 9-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"/><path d="M9 21v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6"/></svg>
+              <span class="lbl">Home</span>
+            </div>
+            <div class="tab">
+              <svg class="ti-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M21 21l-6-6"/></svg>
+              <span class="lbl">Search</span>
+            </div>
+            <div class="tab">
+              <svg class="ti-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19a8 8 0 0 1 16 0"/><circle cx="12" cy="7" r="4"/></svg>
+              <span class="lbl">Wallet</span>
+            </div>
+            <div class="tab">
+              <svg class="ti-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5a2 2 0 0 1 4 0 7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6"/><path d="M9 17v1a3 3 0 0 0 6 0v-1"/></svg>
+              <span class="lbl">Alerts</span>
+            </div>
+            <div class="tab">
+              <svg class="ti-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+              <span class="lbl">Profile</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Form controls ===== -->
+    <div class="comp-group">Form controls</div>
+    <p class="comp-group-sub">Inputs and selections that capture data — built on the same dark field surface with a blue focus ring and red error state.</p>
+    <div class="comp-grid">
+
+      <!-- AppTextInput -->
+      <div class="panel">
+        <div class="label-row"><h3>App text input</h3><span class="cnote">AppTextInput</span></div>
+        <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Label + field with default, focused, error, and password states.</p>
+        <div class="stack">
+          <div class="field">
+            <label>Full name</label>
+            <div class="input"><span>Jane Cooper</span></div>
+          </div>
+          <div class="field">
+            <label>Email</label>
+            <div class="input focus"><span>jane@studio.dev</span></div>
+            <span class="help" style="color:var(--cyan-soft)">Focused · blue border #2F6BFF</span>
+          </div>
+          <div class="field err">
+            <label>Phone</label>
+            <div class="input"><span>+20 100</span></div>
+            <span class="help">Enter a valid phone number.</span>
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <div class="input"><span class="ph">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</span><span class="ati-eye">&#128065;</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dropdown -->
+      <div class="panel">
+        <div class="label-row"><h3>Dropdown</h3><span class="cnote">Dropdown</span></div>
+        <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Selected value + chevron; opens a menu card with the active row in blue.</p>
+        <div class="stack">
+          <div class="field">
+            <label>Country</label>
+            <div class="dd-field"><span>Egypt</span><span class="chev">&#9662;</span></div>
+          </div>
+          <div class="dd-menu">
+            <div class="dd-opt">United States</div>
+            <div class="dd-opt sel">Egypt <span class="ok">&#10003;</span></div>
+            <div class="dd-opt">United Kingdom</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Checkbox -->
+      <div class="panel">
+        <div class="label-row"><h3>Checkbox</h3><span class="cnote">Checkbox</span></div>
+        <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Blue fill + white check when on; hairline outline when off.</p>
+        <div class="stack">
+          <div class="cbx-row"><span class="cbx on">&#10003;</span><span class="mini-label">Email me product updates</span></div>
+          <div class="cbx-row"><span class="cbx"></span><span class="mini-label">Subscribe to the newsletter</span></div>
+        </div>
+      </div>
+
+      <!-- AppSwitch -->
+      <div class="panel">
+        <div class="label-row"><h3>Switch</h3><span class="cnote">AppSwitch</span></div>
+        <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Blue track when on, neutral track when off.</p>
+        <div class="stack">
+          <div class="mini-row"><span class="sw-track on"><span class="knob"></span></span><span class="mini-label">Push notifications</span></div>
+          <div class="mini-row"><span class="sw-track"><span class="knob"></span></span><span class="mini-label">Face ID unlock</span></div>
+        </div>
+      </div>
+
+      <!-- RadioGroup -->
+      <div class="panel">
+        <div class="label-row"><h3>Radio group</h3><span class="cnote">RadioGroup</span></div>
+        <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">One option selected with a glowing blue dot.</p>
+        <div class="stack">
+          <div class="mini-row"><span class="radio on"></span><span class="mini-label">Standard delivery</span></div>
+          <div class="mini-row"><span class="radio"></span><span class="mini-label">Express delivery</span></div>
+          <div class="mini-row"><span class="radio"></span><span class="mini-label">Pick up in store</span></div>
+        </div>
+      </div>
+
+      <!-- SegmentedControl -->
+      <div class="panel">
+        <div class="label-row"><h3>Segmented control</h3><span class="cnote">SegmentedControl</span></div>
+        <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Active segment filled with the signature gradient + white label.</p>
+        <div class="stack">
+          <div class="seg">
+            <div class="sgm on">Day</div>
+            <div class="sgm">Week</div>
+            <div class="sgm">Month</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Selection & display ===== -->
+    <div class="comp-group">Selection &amp; display</div>
+    <p class="comp-group-sub">Compact elements that summarize, filter, or identify — chips, avatars, badges, and rows.</p>
+    <div class="comp-grid">
+
+      <!-- Chip -->
+      <div class="panel">
+        <div class="label-row"><h3>Chip</h3><span class="cnote">Chip</span></div>
+        <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Filter pills — one selected in blue, the rest outlined.</p>
+        <div class="chips">
+          <span class="chp on">All</span>
+          <span class="chp">Design</span>
+          <span class="chp">Mobile</span>
+          <span class="chp">Web</span>
+          <span class="chp">AI</span>
+        </div>
+      </div>
+
+      <!-- Avatar -->
+      <div class="panel">
+        <div class="label-row"><h3>Avatar</h3><span class="cnote">Avatar</span></div>
+        <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Initials on the blue gradient, in two sizes.</p>
+        <div class="avas">
+          <span class="ava lg">JC</span>
+          <span class="ava sm">FS</span>
+        </div>
+      </div>
+
+      <!-- Badge -->
+      <div class="panel">
+        <div class="label-row"><h3>Badge</h3><span class="cnote">Badge</span></div>
+        <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Status counters — primary, success, error, and neutral.</p>
+        <div class="badges" style="margin-top:6px;">
+          <span class="badge b-solid">Primary</span>
+          <span class="badge b-success">Success</span>
+          <span class="badge b-error">Error</span>
+          <span class="badge" style="background:rgba(130,139,176,.16);color:var(--n-200);border:1px solid var(--hairline-strong);">128</span>
+        </div>
+      </div>
+
+      <!-- ListItem -->
+      <div class="panel">
+        <div class="label-row"><h3>List item</h3><span class="cnote">ListItem</span></div>
+        <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Leading avatar/icon, title + subtitle, trailing chevron or switch.</p>
+        <div class="li-card">
+          <div class="li">
+            <span class="ava sm" style="width:40px;height:40px;font-size:14px;">JC</span>
+            <div class="li-body"><div class="li-title">Jane Cooper</div><div class="li-sub">Product designer</div></div>
+            <span class="chev">&#8250;</span>
+          </div>
+          <div class="li">
+            <span class="ava sm" style="width:40px;height:40px;font-size:14px;background:var(--grad-violet);">RT</span>
+            <div class="li-body"><div class="li-title">Robert Fox</div><div class="li-sub">Last seen 2h ago</div></div>
+            <span class="chev">&#8250;</span>
+          </div>
+          <div class="li">
+            <span class="sc-ico" style="width:40px;height:40px;">&#128276;</span>
+            <div class="li-body"><div class="li-title">Notifications</div><div class="li-sub">Push, email &amp; SMS</div></div>
+            <span class="sw-track on" style="margin-left:auto;"><span class="knob"></span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Carousel ===== -->
+    <div class="comp-group">Carousel</div>
+    <p class="comp-group-sub">Horizontally paged and scrolling surfaces for featured content and card decks.</p>
+    <div class="comp-grid">
+
+      <!-- Carousel -->
+      <div class="panel">
+        <div class="label-row"><h3>Carousel</h3><span class="cnote">Carousel</span></div>
+        <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Full-bleed gradient slide with pagination — active dot elongated in blue.</p>
+        <div class="carousel">
+          <div>
+            <div class="c-kicker">Featured</div>
+            <div class="c-ttl">Ship your next idea with Magic</div>
+          </div>
+          <div class="dots"><span class="d on"></span><span class="d"></span><span class="d"></span></div>
+        </div>
+      </div>
+
+      <!-- CardScroller -->
+      <div class="panel">
+        <div class="label-row"><h3>Card scroller</h3><span class="cnote">CardScroller</span></div>
+        <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Horizontally arranged cards that peek to hint at scroll.</p>
+        <div class="scroller">
+          <div class="sc-card">
+            <span class="sc-ico">&#9889;</span>
+            <div><div class="sc-ttl">Quick start</div><div class="sc-sub">Scaffold in seconds</div></div>
+          </div>
+          <div class="sc-card">
+            <span class="sc-ico">&#9670;</span>
+            <div><div class="sc-ttl">Tokens</div><div class="sc-sub">Colors &amp; sizes</div></div>
+          </div>
+          <div class="sc-card">
+            <span class="sc-ico">&#9788;</span>
+            <div><div class="sc-ttl">Themes</div><div class="sc-sub">Light &amp; dark</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Overlays & feedback ===== -->
+    <div class="comp-group">Overlays &amp; feedback</div>
+    <p class="comp-group-sub">Sheets, dialogs, and loading placeholders that layer over content or stand in while it loads.</p>
+    <div class="comp-grid">
+
+      <!-- AppBottomSheet -->
+      <div class="panel">
+        <div class="label-row"><h3>Bottom sheet</h3><span class="cnote">AppBottomSheet</span></div>
+        <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Rounded-top dark card with a grabber handle, title, and rows.</p>
+        <div class="sheet-stage">
+          <div class="sheet">
+            <div class="grabber"></div>
+            <div class="sh-ttl">Share to</div>
+            <div class="sh-opt"><span class="ico">&#128279;</span>Copy link<span class="chev">&#8250;</span></div>
+            <div class="sh-opt"><span class="ico">&#9993;</span>Send via email<span class="chev">&#8250;</span></div>
+            <div class="sh-opt"><span class="ico">&#11015;</span>Download<span class="chev">&#8250;</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ModalDialog -->
+      <div class="panel">
+        <div class="label-row"><h3>Modal dialog</h3><span class="cnote">ModalDialog</span></div>
+        <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Centered card over a dim backdrop with a destructive primary action.</p>
+        <div class="modal-stage">
+          <div class="modal">
+            <div class="m-ttl">Delete account?</div>
+            <div class="m-msg">This permanently removes your account and all associated data. This action can't be undone.</div>
+            <div class="m-actions">
+              <button class="btn btn-outline">Cancel</button>
+              <button class="btn btn-danger">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skeleton -->
+      <div class="panel">
+        <div class="label-row"><h3>Skeleton</h3><span class="cnote">Skeleton</span></div>
+        <p style="font-size:12px;color:var(--muted);margin:0 0 14px;">Shimmering placeholder bars in the muted surface colour.</p>
+        <div class="sk-card">
+          <div class="sh" style="height:14px;width:55%;"></div>
+          <div class="sh" style="height:11px;"></div>
+          <div class="sh" style="height:11px;width:80%;"></div>
+          <div class="sh" style="height:11px;width:40%;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="fl">
+      <svg width="40" height="40" viewBox="0 0 120 120" fill="none" role="img" aria-label="FS logo">
+        <defs><linearGradient id="chipFoot" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0A1230"/><stop offset="1" stop-color="#1B45B8"/></linearGradient></defs>
+        <rect width="120" height="120" rx="30" fill="url(#chipFoot)"/>
+        <rect x="25" y="24" width="13" height="72" rx="3" fill="#6BA0FF"/>
+        <rect x="25" y="24" width="33" height="13" rx="3" fill="#6BA0FF"/>
+        <rect x="25" y="52" width="26" height="12" rx="3" fill="#6BA0FF"/>
+        <path d="M101 42 C101 32 91 28 83 28 C73 28 67 35 67 44 C67 52 75 56 84 59 C93 62 101 66 101 76 C101 86 91 91 83 91 C73 91 67 85 66 77" fill="none" stroke="#6BA0FF" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="ft"><b>React Native Magic</b> · Design System · by Fady Shawky</div>
+    <div class="ft" style="margin-top:6px; font-size:12px;">@fadyshawky/react-native-magic</div>
+  </div>
+</footer>
+
+</body>
+</html>

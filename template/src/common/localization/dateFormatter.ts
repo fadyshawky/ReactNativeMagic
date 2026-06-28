@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-// eslint-disable-next-line import/no-unassigned-import
 import 'dayjs/locale/en';
 import calendar from 'dayjs/plugin/calendar';
 import {ICalendarSpec} from '../../../types';

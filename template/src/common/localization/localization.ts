@@ -67,5 +67,5 @@ export function setLanguage(language?: Languages): void {
   setDateLocale(localizationLanguage);
 }
 
-// Default language is Arabic
-export const DEFAULT_LANGUAGE = Languages.ar;
+// Default language is English (LTR). Arabic/RTL stays available and switchable.
+export const DEFAULT_LANGUAGE = Languages.en;

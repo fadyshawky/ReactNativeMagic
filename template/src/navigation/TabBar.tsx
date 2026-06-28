@@ -32,7 +32,7 @@ export function TabBar({state, descriptors, navigation}: BottomTabBarProps) {
   const {theme} = useTheme();
   const t = useTranslation();
   const isRTL = useRTL();
-  const tabArray = ['Main', 'Financials', 'Account'];
+  const tabArray = ['Main', 'Components', 'Account'];
 
   // Create a copy of routes array to avoid modifying the original
   const routesToRender = [...state.routes].filter(r =>
@@ -102,11 +102,7 @@ export function TabBar({state, descriptors, navigation}: BottomTabBarProps) {
               onLongPress={onLongPress}
               style={styles.tabButton}>
               <Image
-                style={{
-                  width: scaleWidth(57),
-                  height: scaleHeight(63),
-                  resizeMode: 'contain',
-                }}
+                style={styles.tabIcon}
                 source={isFocused ? options.selectedIcon : options.icon}
               />
               <RTLAwareText style={[theme.text.navBar]}>
@@ -138,6 +134,11 @@ const styles = StyleSheet.create({
   tabButton: {
     flex: 1,
     alignItems: 'center',
+  },
+  tabIcon: {
+    width: scaleWidth(57),
+    height: scaleHeight(63),
+    resizeMode: 'contain',
   },
   label: {},
   labelFocused: {

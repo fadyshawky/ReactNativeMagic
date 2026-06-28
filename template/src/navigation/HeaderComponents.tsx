@@ -20,7 +20,7 @@ export function HeaderBack({onPress}: {onPress: () => void}) {
     <View style={styles.headerWithBack}>
       <BackButton onPress={onPress} />
       <Image source={0} style={styles.logo} />
-      <View style={{width: 40}} />
+      <View style={styles.spacer} />
     </View>
   );
 }
@@ -30,13 +30,13 @@ export function HeaderButton({onPress}: {onPress: () => void}) {
     <View style={styles.headerWithBack}>
       <BackButton onPress={onPress} />
       <View style={styles.logo} />
-      <View style={{width: 40}} />
+      <View style={styles.spacer} />
     </View>
   );
 }
 
 export function WebViewHeader({
-  navigation,
+  navigation: _navigation,
 }: {
   navigation: NativeStackNavigationProp<RootStackParamList>;
 }) {
@@ -94,6 +94,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'absolute',
     zIndex: 0,
+  },
+  spacer: {
+    width: 40,
   },
   backButton: {
     width: 40,

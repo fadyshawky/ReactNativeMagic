@@ -1,37 +1,50 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { cloneDeep, uniqBy } from 'lodash';
-import { LoadState } from '../../../../types';
-import { newState } from '../../../common/utils/newState';
-import { handleErrorResponse } from '../../api/responseHandlers';
-import {
-  userLogin
-} from './userActions';
-import { UserInitialState,  UserState } from './userState';
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {LoadState} from '../../../../types';
+import {newState} from '../../../common/utils/newState';
+import {handleErrorResponse} from '../../api/responseHandlers';
+import {refreshUserToken, userLogin, verifyOTP} from './userActions';
+import {UserInitialState, UserState} from './userState';
 
-function loginHandler(state: UserState, payload: {payload: any}) {
+function loginHandler(state: UserState, action: PayloadAction<any>) {
+  const payload = action.payload ?? {};
   return newState(state, {
-    loginLoading: LoadState['allIsLoaded'],
+    accessToken: payload.accessToken ?? state.accessToken,
+    refreshToken: payload.refreshToken ?? state.refreshToken,
+    user: payload.user ?? state.user,
+    loginLoading: LoadState.allIsLoaded,
   });
 }
+
 function loginLoadingHandler(state: UserState) {
   return newState(state, {
-    loginLoading: LoadState['pullToRefresh'],
+    loginLoading: LoadState.pullToRefresh,
   });
 }
 
-function loginErrorHandler(
-  state: UserState,
-  payload: {payload: {message: string}},
-) {
-  console.error('payload: ', JSON.stringify(payload));
-  handleErrorResponse((payload.payload.message as string) || 'Login failed');
+function loginErrorHandler(state: UserState, action: any) {
+  console.error('payload: ', JSON.stringify(action.payload));
+  handleErrorResponse((action.payload?.message as string) || 'Login failed');
   return newState(state, {
-    loginLoading: LoadState['error'],
+    loginLoading: LoadState.error,
   });
 }
 
-function logoutHandler(state: UserState) {
-  return newState(state, UserInitialState);
+function logoutHandler() {
+  return UserInitialState;
+}
+
+function setFcmTokenHandler(state: UserState, action: PayloadAction<string>) {
+  return newState(state, {fcmToken: action.payload});
+}
+
+function setTokensHandler(
+  state: UserState,
+  action: PayloadAction<{accessToken: string; refreshToken?: string}>,
+) {
+  return newState(state, {
+    accessToken: action.payload.accessToken,
+    refreshToken: action.payload.refreshToken ?? state.refreshToken,
+  });
 }
 
 export const {reducer: UserReducer, actions} = createSlice({
@@ -39,15 +52,25 @@ export const {reducer: UserReducer, actions} = createSlice({
   initialState: UserInitialState,
   reducers: {
     setLogout: logoutHandler,
+    updateFcmToken: setFcmTokenHandler,
+    setTokens: setTokensHandler,
   },
   extraReducers: builder => {
     builder
       .addCase(userLogin.fulfilled, loginHandler)
       .addCase(userLogin.rejected, loginErrorHandler)
-      .addCase(userLogin.pending, loginLoadingHandler);
+      .addCase(userLogin.pending, loginLoadingHandler)
+      .addCase(verifyOTP.fulfilled, loginHandler)
+      .addCase(verifyOTP.rejected, loginErrorHandler)
+      .addCase(verifyOTP.pending, loginLoadingHandler)
+      .addCase(refreshUserToken.fulfilled, (state, action) => {
+        const payload = action.payload ?? {};
+        return newState(state, {
+          accessToken: payload.accessToken ?? state.accessToken,
+          refreshToken: payload.refreshToken ?? state.refreshToken,
+        });
+      });
   },
 });
 
-export const {
-  setLogout,
-} = actions;
+export const {setLogout, updateFcmToken, setTokens} = actions;

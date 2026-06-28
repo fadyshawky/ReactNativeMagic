@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {I18nManager, Platform, NativeModules} from 'react-native';
+import {I18nManager} from 'react-native';
 import {useAppSelector} from '../../core/store/reduxHelpers';
 import {Languages} from './localization';
 

@@ -21,10 +21,11 @@ export const SafeText: React.FC<SafeTextProps> = ({children, ...props}) => {
 
     // If it's a React element, process its children
     if (React.isValidElement(node)) {
+      const element = node as React.ReactElement<{children?: React.ReactNode}>;
       return React.cloneElement(
-        node,
-        node.props,
-        React.Children.map(node.props.children, processChildren),
+        element,
+        element.props,
+        React.Children.map(element.props.children, processChildren),
       );
     }
 

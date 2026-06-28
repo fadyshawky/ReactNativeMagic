@@ -5,23 +5,20 @@ import {RootStackParamList} from './types';
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
 export function navigate<T extends keyof RootStackParamList>(
-  name: never,
+  name: T,
   params?: RootStackParamList[T],
 ) {
   if (navigationRef.isReady()) {
-    // Type assertion is not needed since name and params are already properly typed
-    navigationRef.current?.navigate(name, params);
+    (navigationRef.current as any)?.navigate(name as never, params as never);
   }
 }
 
-// Function to reset the navigation stack and navigate to the "Home" screen
+// Reset the navigation stack to the main (authenticated) screen.
 export const resetToHomeScreen = () => {
   navigationRef.dispatch(
     CommonActions.reset({
       index: 0,
-      routes: [{name: 'Home'}],
+      routes: [{name: 'Main'}],
     }),
   );
 };
-
-// Call the function to reset the navigation stack and navigate to the "Home" screen
