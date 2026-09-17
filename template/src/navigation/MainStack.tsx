@@ -3,6 +3,7 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import React from 'react';
+import {IconName} from '../common/components/Icon';
 import {useTranslation} from '../common/localization/LocalizationProvider';
 
 import {Profile} from '../screens';
@@ -24,8 +25,7 @@ export function AppMainNavigator() {
       options: {
         tabBarLabel: t('tabs.Main', 'mainNavigation'),
         headerShown: false,
-        icon: 0,
-        selectedIcon: 0,
+        icon: 'house' as IconName,
       },
     },
     {
@@ -34,8 +34,7 @@ export function AppMainNavigator() {
       options: {
         tabBarLabel: t('tabs.Components', 'mainNavigation'),
         headerShown: false,
-        icon: 0,
-        selectedIcon: 0,
+        icon: 'layout-grid' as IconName,
       },
     },
     {
@@ -44,8 +43,7 @@ export function AppMainNavigator() {
       options: {
         tabBarLabel: t('tabs.Account', 'mainNavigation'),
         headerShown: false,
-        icon: 0,
-        selectedIcon: 0,
+        icon: 'user' as IconName,
       },
     },
   ];

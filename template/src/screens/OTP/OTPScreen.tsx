@@ -86,81 +86,75 @@ export function OTPScreen(): JSX.Element {
     <Container
       ref={scroll}
       testID={'OTPScreenID'}
-      contentContainerStyle={styles.contentContainer}
       style={styles.container}
       backgroundImage={0}
-      withoutPadding
-      extendedBackground
-      backgroundColor={theme.colors.background_2}>
+      backgroundColor={theme.colors.bgCanvas}>
       <HeaderBack onPress={() => navigation.goBack()} />
-      <RTLAwareText style={[theme.text.header1, styles.center]}>
-        {t('title', 'otp')}
-      </RTLAwareText>
-      <RTLAwareText style={[theme.text.body2, styles.center]}>
-        {t('subtitle', 'otp')}
-      </RTLAwareText>
-      <View style={styles.inputContainer}>
-        <OTPInput value={otp} onChange={setOTP} error={otpError} />
-        {otpError && (
-          <RTLAwareText style={[theme.text.body2, styles.errorText]}>
-            {otpError}
-          </RTLAwareText>
-        )}
-      </View>
-      <RTLAwareView style={styles.resendContainer}>
-        <RTLAwareText style={{...theme.text.body2}}>
-          {resendDisabled
-            ? t('resendIn', 'otp').replace('{0}', timer?.toString())
-            : t('didntReceiveCode', 'otp')}
+      <View style={styles.titleBlock}>
+        <RTLAwareText style={[theme.text.h1, styles.center]}>
+          {t('title', 'otp')}
         </RTLAwareText>
+        <RTLAwareText
+          style={[
+            theme.text.body,
+            styles.center,
+            {color: theme.colors.textSecondary},
+          ]}>
+          {t('subtitle', 'otp')}
+        </RTLAwareText>
+      </View>
+      <View style={styles.form}>
+        <View style={styles.inputContainer}>
+          <OTPInput value={otp} onChange={setOTP} error={otpError} />
+          {otpError && (
+            <RTLAwareText
+              style={[
+                theme.text.bodySm,
+                styles.errorText,
+                {color: theme.colors.dangerFg},
+              ]}>
+              {otpError}
+            </RTLAwareText>
+          )}
+        </View>
+        <RTLAwareView style={styles.resendContainer}>
+          <RTLAwareText
+            style={[theme.text.bodySm, {color: theme.colors.textTertiary}]}>
+            {resendDisabled
+              ? t('resendIn', 'otp').replace('{0}', timer?.toString())
+              : t('didntReceiveCode', 'otp')}
+          </RTLAwareText>
+          <PrimaryButton
+            label={t('resend', 'otp')}
+            onPressIn={handleResendOTP}
+            disabled={resendDisabled}
+            type={ButtonType.borderless}
+            size="sm"
+          />
+        </RTLAwareView>
         <PrimaryButton
-          label={t('resend', 'otp')}
-          onPressIn={handleResendOTP}
-          disabled={resendDisabled}
-          type={ButtonType.borderless}
-          style={styles.resendButton}
+          label={t('verify', 'otp')}
+          onPressIn={handleVerifyOTP}
+          isLoading={loading}
+          disabled={loading || otp.length < 4}
+          type={ButtonType.solid}
         />
-      </RTLAwareView>
-      <PrimaryButton
-        label={t('verify', 'otp')}
-        onPressIn={handleVerifyOTP}
-        isLoading={loading}
-        disabled={loading || otp.length < 4}
-        type={ButtonType.solid}
-      />
+      </View>
     </Container>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    borderTopRightRadius: CommonSizes.spacing.large,
-    borderTopLeftRadius: CommonSizes.spacing.large,
-    paddingHorizontal: CommonSizes.spacing.medium,
-    gap: 8,
-    justifyContent: 'flex-start',
-  },
-  contentContainer: {
-    flexGrow: 1,
-  },
+  container: {paddingHorizontal: CommonSizes.layout.gutterAuth},
+  titleBlock: {gap: CommonSizes.layout.titleToBody},
+  form: {gap: CommonSizes.layout.stack},
   center: {textAlign: 'center'},
-  inputContainer: {
-    width: '100%',
-    marginTop: CommonSizes.spacing.large,
-  },
+  inputContainer: {gap: CommonSizes.layout.field},
   resendContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: CommonSizes.spacing.small,
+    gap: CommonSizes.spacing.small,
   },
-  resendButton: {
-    marginLeft: CommonSizes.spacing.small,
-  },
-  errorText: {
-    color: '#FF4444',
-    marginTop: CommonSizes.spacing.small,
-    textAlign: 'center',
-  },
+  errorText: {textAlign: 'center'},
 });

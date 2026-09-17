@@ -1,15 +1,10 @@
 import React, {FC, memo} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TextStyle,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {PrimaryColors} from '../../core/theme/colors';
+import {StyleSheet, Text, View} from 'react-native';
+import {ButtonType} from '../../../types';
 import {CommonSizes} from '../../core/theme/commonSizes';
-import {CommonStyles} from '../../core/theme/commonStyles';
+import {useTheme} from '../../core/theme/ThemeProvider';
 import {localization} from '../localization/localization';
+import {PrimaryButton} from './PrimaryButton';
 
 interface IProps {
   onPress?: () => void;
@@ -18,15 +13,18 @@ interface IProps {
 
 export const TryAgain: FC<IProps> = memo(
   ({onPress, errorText = localization.errors.unknownErrorHasOccurred}) => {
+    const {theme} = useTheme();
     return (
-      <View style={[CommonStyles.flexCenter, styles.container]}>
-        <Text style={styles.title}>{errorText}</Text>
+      <View style={styles.container}>
+        <Text style={[theme.text.body, styles.center]}>{errorText}</Text>
         {onPress != null && (
-          <TouchableOpacity onPressIn={onPress}>
-            <Text style={styles.description}>
-              {localization.errors.tryAgain}
-            </Text>
-          </TouchableOpacity>
+          <PrimaryButton
+            label={localization.errors.tryAgain}
+            type={ButtonType.outline}
+            size="md"
+            fullWidth={false}
+            onPress={onPress}
+          />
         )}
       </View>
     );
@@ -35,17 +33,11 @@ export const TryAgain: FC<IProps> = memo(
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'transparent',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: CommonSizes.layout.stack,
+    padding: CommonSizes.spacing.xxLarge,
   },
-  title: {
-    ...CommonStyles.normalText,
-    textAlign: 'center',
-    marginBottom: CommonSizes.spacing.xSmall,
-  } as TextStyle,
-  description: {
-    ...CommonStyles.normalText,
-    color: PrimaryColors.PlatinateBlue_400,
-    textAlign: 'center',
-    textDecorationLine: 'underline',
-  } as TextStyle,
+  center: {textAlign: 'center'},
 });

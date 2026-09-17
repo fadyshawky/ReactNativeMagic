@@ -1,7 +1,7 @@
 import React, {FC, memo} from 'react';
-import {StyleSheet, Text, TextStyle, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {CommonSizes} from '../../core/theme/commonSizes';
-import {CommonStyles} from '../../core/theme/commonStyles';
+import {useTheme} from '../../core/theme/ThemeProvider';
 
 interface IProps {
   title: string;
@@ -9,23 +9,22 @@ interface IProps {
 }
 
 export const EmptyView: FC<IProps> = memo(({title, description}) => {
+  const {theme} = useTheme();
   return (
-    <View style={CommonStyles.flexCenter}>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.description}>{description}</Text>
+    <View style={styles.container}>
+      <Text style={[theme.text.h4, styles.center]}>{title}</Text>
+      <Text style={[theme.text.bodySm, styles.center]}>{description}</Text>
     </View>
   );
 });
 
 const styles = StyleSheet.create({
-  title: {
-    ...CommonStyles.normalText,
-    fontWeight: '600',
-    textAlign: 'center',
-    marginBottom: CommonSizes.spacing.xSmall,
-  } as TextStyle,
-  description: {
-    ...CommonStyles.normalText,
-    textAlign: 'center',
-  } as TextStyle,
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: CommonSizes.layout.related,
+    padding: CommonSizes.spacing.xxLarge,
+  },
+  center: {textAlign: 'center'},
 });

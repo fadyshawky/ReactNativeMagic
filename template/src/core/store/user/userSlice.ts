@@ -22,11 +22,8 @@ function loginLoadingHandler(state: UserState) {
 }
 
 function loginErrorHandler(state: UserState, action: any) {
-  console.error('payload: ', JSON.stringify(action.payload));
   handleErrorResponse((action.payload?.message as string) || 'Login failed');
-  return newState(state, {
-    loginLoading: LoadState.error,
-  });
+  return newState(state, {loginLoading: LoadState.error});
 }
 
 function logoutHandler() {

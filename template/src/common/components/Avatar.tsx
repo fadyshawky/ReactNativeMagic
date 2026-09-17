@@ -1,7 +1,8 @@
 import React from 'react';
-import {Image, StyleSheet} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import {BrandGradients, GradientDirection} from '../../core/theme/brand';
+import {Image, StyleSheet, View} from 'react-native';
+import {CommonSizes} from '../../core/theme/commonSizes';
+import {Fonts} from '../../core/theme/fonts';
+import {useTheme} from '../../core/theme/ThemeProvider';
 import {RTLAwareText} from './RTLAwareText';
 
 interface AvatarProps {
@@ -27,49 +28,68 @@ function getInitials(name?: string): string {
 }
 
 /**
- * A circular avatar. With `uri` it renders the image; otherwise it shows the
- * name's initials (1–2 letters, '?' when absent) in white on a gradient circle.
- * Initials scale with `size`.
+ * A circular avatar. With `uri` it renders the image; otherwise the name's
+ * initials (1–2 letters, '?' when absent) in Geist Mono on an accent-subtle
+ * circle. Initials scale with `size`.
  */
-export function Avatar({name, uri, size = DEFAULT_SIZE}: AvatarProps): JSX.Element {
+export function Avatar({
+  name,
+  uri,
+  size = DEFAULT_SIZE,
+}: AvatarProps): JSX.Element {
+  const {theme} = useTheme();
   const circleStyle = {
     width: size,
     height: size,
-    borderRadius: size / 2,
+    borderRadius: CommonSizes.borderRadius.full,
   };
 
   if (uri) {
-    return <Image source={{uri}} style={[circleStyle, styles.image]} />;
+    return (
+      <Image
+        source={{uri}}
+        style={[
+          circleStyle,
+          styles.image,
+          {borderColor: theme.colors.borderSubtle},
+        ]}
+      />
+    );
   }
 
   return (
-    <LinearGradient
-      colors={BrandGradients.primary}
-      start={GradientDirection.start}
-      end={GradientDirection.end}
-      style={[circleStyle, styles.gradient]}>
+    <View
+      style={[
+        circleStyle,
+        styles.initialsWrap,
+        {backgroundColor: theme.colors.accentSubtle},
+      ]}>
       <RTLAwareText
         style={[
           styles.initials,
-          {fontSize: size * 0.4, lineHeight: size * 0.5},
+          {
+            color: theme.colors.textAccent,
+            fontSize: Math.round(size * 0.32),
+            lineHeight: Math.round(size * 0.4),
+          },
         ]}>
         {getInitials(name)}
       </RTLAwareText>
-    </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   image: {
     resizeMode: 'cover',
+    borderWidth: CommonSizes.borderWidth.hairline,
   },
-  gradient: {
+  initialsWrap: {
     alignItems: 'center',
     justifyContent: 'center',
   },
   initials: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
+    fontFamily: Fonts.monoMedium,
     textAlign: 'center',
   },
 });

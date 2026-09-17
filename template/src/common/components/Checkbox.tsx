@@ -1,8 +1,8 @@
 import React from 'react';
 import {Pressable, StyleSheet, View, ViewStyle} from 'react-native';
-import Svg, {Path} from 'react-native-svg';
 import {useTheme} from '../../core/theme/ThemeProvider';
 import {CommonSizes} from '../../core/theme/commonSizes';
+import {Icon} from './Icon';
 import {RTLAwareText} from './RTLAwareText';
 import {RTLAwareView} from './RTLAwareView';
 
@@ -13,35 +13,20 @@ interface CheckboxProps {
   disabled?: boolean;
 }
 
-function CheckMark({color}: {color: string}): JSX.Element {
-  return (
-    <Svg width={14} height={14} viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M5 12.5L10 17.5L19 7"
-        stroke={color}
-        strokeWidth={2.6}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
-}
-
 export function Checkbox(props: CheckboxProps): JSX.Element {
   const {checked, onChange, label, disabled} = props;
   const {theme} = useTheme();
 
   const boxStyle: ViewStyle = {
-    width: 22,
-    height: 22,
-    borderRadius: CommonSizes.borderRadius.small,
+    width: 18,
+    height: 18,
+    borderRadius: CommonSizes.borderRadius.xs,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: checked ? theme.colors.PlatinateBlue_400 : 'transparent',
-    borderWidth: CommonSizes.borderWidth.medium,
-    borderColor: checked
-      ? theme.colors.PlatinateBlue_400
-      : theme.colors.grayScale_50,
+    backgroundColor: checked ? theme.colors.accent : theme.colors.surfaceCard,
+    borderWidth: CommonSizes.borderWidth.hairline,
+    borderColor: checked ? theme.colors.accent : theme.colors.borderDefault,
+    boxShadow: theme.shadows.xs,
   };
 
   const boxOpacity = {opacity: disabled ? 0.5 : 1};
@@ -56,15 +41,12 @@ export function Checkbox(props: CheckboxProps): JSX.Element {
       style={boxOpacity}>
       <RTLAwareView style={styles.row}>
         <View style={boxStyle}>
-          {checked ? <CheckMark color={'#FFFFFF'} /> : null}
+          {checked ? (
+            <Icon name="check" size={13} color="#FFFFFF" strokeWidth={2.5} />
+          ) : null}
         </View>
         {label ? (
-          <RTLAwareText
-            style={[
-              theme.text.bodyLargeRegular,
-              styles.label,
-              {color: theme.colors.grayScale_700},
-            ]}>
+          <RTLAwareText style={[theme.text.body, styles.label]}>
             {label}
           </RTLAwareText>
         ) : null}
@@ -79,7 +61,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   } as ViewStyle,
   label: {
-    marginStart: CommonSizes.spacing.large,
+    marginStart: 10,
     flexShrink: 1,
   },
 });

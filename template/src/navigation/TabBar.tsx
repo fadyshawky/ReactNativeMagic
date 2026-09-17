@@ -4,53 +4,44 @@ import {
 } from '@react-navigation/bottom-tabs';
 import {toString} from 'lodash';
 import React from 'react';
-import {
-  Image,
-  ImageSourcePropType,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, TouchableOpacity} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {Icon, IconName} from '../common/components/Icon';
 import {RTLAwareText} from '../common/components/RTLAwareText';
 import {RTLAwareView} from '../common/components/RTLAwareView';
-import {
-  useRTL,
-  useTranslation,
-} from '../common/localization/LocalizationProvider';
-import {PrimaryColors} from '../core/theme/colors';
+import {useTranslation} from '../common/localization/LocalizationProvider';
 import {CommonSizes} from '../core/theme/commonSizes';
-import {CommonStyles} from '../core/theme/commonStyles';
-import {scaleHeight, scaleWidth} from '../core/theme/scaling';
+import {Fonts} from '../core/theme/fonts';
 import {useTheme} from '../core/theme/ThemeProvider';
 
 interface TabBarOptions extends BottomTabNavigationOptions {
-  selectedIcon: ImageSourcePropType;
-  icon: ImageSourcePropType;
+  icon: IconName;
   tabBarTestID?: string;
 }
 
 export function TabBar({state, descriptors, navigation}: BottomTabBarProps) {
   const {theme} = useTheme();
   const t = useTranslation();
-  const isRTL = useRTL();
+  const insets = useSafeAreaInsets();
   const tabArray = ['Main', 'Components', 'Account'];
 
   // Create a copy of routes array to avoid modifying the original
-  const routesToRender = [...state.routes].filter(r =>
-    tabArray.includes(r.name),
-  );
-
-  // If RTL, reverse the order of tabs
-  if (isRTL) {
-    routesToRender.reverse();
-  }
+  // Native RTL mirrors the row, so tabs keep their declared order.
+  const routesToRender = state.routes.filter(r => tabArray.includes(r.name));
 
   return (
     state.index <= 3 && (
-      <RTLAwareView style={styles.container}>
-        {routesToRender.map((route, index) => {
-          // Calculate the correct index in the original array for focused state
-          const originalIndex = isRTL ? state.routes.length - 1 - index : index;
-          const isFocused = state.index === originalIndex;
+      <RTLAwareView
+        style={[
+          styles.container,
+          {
+            paddingBottom: insets.bottom,
+            backgroundColor: theme.colors.bgCanvas,
+            borderTopColor: theme.colors.borderSubtle,
+          },
+        ]}>
+        {routesToRender.map(route => {
+          const isFocused = state.routes[state.index]?.key === route.key;
 
           const {options} = descriptors[route.key] as unknown as {
             options: TabBarOptions;
@@ -82,6 +73,10 @@ export function TabBar({state, descriptors, navigation}: BottomTabBarProps) {
             }
           };
 
+          const tint = isFocused
+            ? theme.colors.textAccent
+            : theme.colors.textTertiary;
+
           const onLongPress = () => {
             navigation.emit({
               type: 'tabLongPress',
@@ -101,11 +96,8 @@ export function TabBar({state, descriptors, navigation}: BottomTabBarProps) {
               onPressIn={onPress}
               onLongPress={onLongPress}
               style={styles.tabButton}>
-              <Image
-                style={styles.tabIcon}
-                source={isFocused ? options.selectedIcon : options.icon}
-              />
-              <RTLAwareText style={[theme.text.navBar]}>
+              <Icon name={options.icon} size={21} color={tint} />
+              <RTLAwareText style={[styles.label, {color: tint}]}>
                 {toString(label)}
               </RTLAwareText>
             </TouchableOpacity>
@@ -119,29 +111,19 @@ export function TabBar({state, descriptors, navigation}: BottomTabBarProps) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    alignItems: 'center',
-    height: scaleHeight(130),
-    borderTopLeftRadius: CommonSizes.borderRadius.xxLarge,
-    borderTopRightRadius: CommonSizes.borderRadius.xxLarge,
-    justifyContent: 'space-evenly',
-    ...CommonStyles.dropShadow,
-    backgroundColor: PrimaryColors.PlatinateBlue_600,
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+    alignItems: 'stretch',
+    borderTopWidth: CommonSizes.borderWidth.hairline,
   },
   tabButton: {
     flex: 1,
+    height: CommonSizes.tabBarHeight,
     alignItems: 'center',
+    justifyContent: 'center',
+    gap: 3,
   },
-  tabIcon: {
-    width: scaleWidth(57),
-    height: scaleHeight(63),
-    resizeMode: 'contain',
-  },
-  label: {},
-  labelFocused: {
-    color: PrimaryColors.PlatinateBlue_400,
+  label: {
+    fontFamily: Fonts.medium,
+    fontSize: 10,
+    lineHeight: 12,
   },
 });

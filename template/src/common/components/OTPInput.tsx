@@ -1,9 +1,8 @@
-import React, {useRef, useState} from 'react';
+import React, {useRef} from 'react';
 import {
   StyleSheet,
-  TextInput,
-  NativeSyntheticEvent,
-  TextInputKeyPressEventData,
+  TextInputInstance,
+  TextInputKeyPressEvent,
   ViewStyle,
 } from 'react-native';
 import {useTheme} from '../../core/theme/ThemeProvider';
@@ -22,12 +21,11 @@ interface OTPInputProps {
 export const OTPInput: React.FC<OTPInputProps> = ({
   value,
   onChange,
-  error,
+  error: _error, // rendered by the screen below the row
   style,
 }) => {
   const {theme} = useTheme();
-  const inputRefs = useRef<Array<TextInput | null>>([]);
-  const [focused, setFocused] = useState<number>(-1);
+  const inputRefs = useRef<Array<TextInputInstance | null>>([]);
 
   const handleChange = (text: string, index: number) => {
     const newValue = value.split('');
@@ -40,21 +38,10 @@ export const OTPInput: React.FC<OTPInputProps> = ({
     }
   };
 
-  const handleKeyPress = (
-    e: NativeSyntheticEvent<TextInputKeyPressEventData>,
-    index: number,
-  ) => {
+  const handleKeyPress = (e: TextInputKeyPressEvent, index: number) => {
     if (e.nativeEvent.key === 'Backspace' && index > 0 && !value[index]) {
       inputRefs.current[index - 1]?.focus();
     }
-  };
-
-  const handleFocus = (index: number) => {
-    setFocused(index);
-  };
-
-  const handleBlur = () => {
-    setFocused(-1);
   };
 
   return (
@@ -64,24 +51,12 @@ export const OTPInput: React.FC<OTPInputProps> = ({
           width={scaleWidth(78)}
           key={index}
           inputRef={ref => (inputRefs.current[index] = ref)}
-          style={[
-            styles.input,
-            {
-              borderColor: error
-                ? theme.colors.mutedLavender
-                : focused === index
-                ? theme.colors.indigoBlue
-                : theme.colors.mutedLavender30,
-              backgroundColor: theme.colors.backgroundOpacity,
-            },
-          ]}
+          style={[styles.input, theme.text.amount, styles.digit]}
           maxLength={1}
           keyboardType="number-pad"
           value={value[index] || ''}
           onChangeText={text => handleChange(text, index)}
           onKeyPress={e => handleKeyPress(e, index)}
-          onFocus={() => handleFocus(index)}
-          onBlur={handleBlur}
           selectTextOnFocus
         />
       ))}
@@ -99,9 +74,9 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    height: CommonSizes.spacing.xxxLarge,
-    borderWidth: 1,
-    borderRadius: CommonSizes.borderRadius.medium,
     textAlign: 'center',
+    paddingStart: 0,
+    paddingEnd: 0,
   },
+  digit: {fontSize: 20, lineHeight: undefined},
 });

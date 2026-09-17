@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import {useColorScheme} from 'react-native';
+import {Appearance, useColorScheme} from 'react-native';
 import {Theme, ThemeMode} from './types';
 import {darkTheme, lightTheme} from './themes';
 
@@ -41,19 +41,26 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
   const systemColorScheme = useColorScheme();
   const resolvedSystem: ThemeMode =
     systemColorScheme === 'dark' ? 'dark' : 'light';
-  const [themeMode, setThemeMode] = useState<ThemeMode>(
+  const [themeMode, setMode] = useState<ThemeMode>(
     initialTheme || resolvedSystem,
   );
 
   useEffect(() => {
     if (!initialTheme) {
-      setThemeMode(systemColorScheme === 'dark' ? 'dark' : 'light');
+      setMode(systemColorScheme === 'dark' ? 'dark' : 'light');
     }
   }, [systemColorScheme, initialTheme]);
 
-  const toggleTheme = useCallback(() => {
-    setThemeMode(prev => (prev === 'light' ? 'dark' : 'light'));
+  // A manual choice overrides the native appearance too, so the iOS status bar
+  // (view-controller based), keyboard and system alerts match the app theme.
+  const setThemeMode = useCallback((mode: ThemeMode) => {
+    Appearance.setColorScheme(mode);
+    setMode(mode);
   }, []);
+
+  const toggleTheme = useCallback(() => {
+    setThemeMode(themeMode === 'light' ? 'dark' : 'light');
+  }, [setThemeMode, themeMode]);
 
   const theme = themeMode === 'dark' ? darkTheme : lightTheme;
 

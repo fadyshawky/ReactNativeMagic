@@ -21,32 +21,36 @@ export function Splash(): JSX.Element {
   }, [navigation]);
 
   return (
-    <View
-      style={[styles.container, {backgroundColor: theme.colors.background_2}]}>
-      <Logo size={112} variant="gradient" />
-      <RTLAwareText
-        style={[
-          theme.text.bodySmallExtraBold,
-          styles.tagline,
-          {color: theme.colors.grayScale_200},
-        ]}>
-        REACT NATIVE MAGIC
-      </RTLAwareText>
-      <ActivityIndicator
-        color={theme.colors.PlatinateBlue_400}
-        style={styles.spinner}
-      />
+    <View style={[styles.container, {backgroundColor: theme.colors.bgCanvas}]}>
+      {/* Dead centre at MARK pt: the native launch screens (LaunchScreen.storyboard,
+          Android splash_mark) draw the same mark there, so the handoff can't jump. */}
+      <Logo size={MARK} variant="mark" />
+      <View style={styles.below}>
+        <RTLAwareText style={theme.text.eyebrow}>
+          React Native Magic
+        </RTLAwareText>
+        <ActivityIndicator color={theme.colors.accent} style={styles.spinner} />
+      </View>
     </View>
   );
 }
+
+const MARK = 88;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: CommonSizes.spacing.large,
   },
-  tagline: {letterSpacing: 2},
-  spinner: {marginTop: CommonSizes.spacing.large},
+  below: {
+    position: 'absolute',
+    top: '50%',
+    left: 0,
+    right: 0,
+    marginTop: MARK / 2 + CommonSizes.spacing.xLarge,
+    alignItems: 'center',
+    gap: CommonSizes.spacing.xLarge,
+  },
+  spinner: {marginTop: CommonSizes.spacing.medium},
 });

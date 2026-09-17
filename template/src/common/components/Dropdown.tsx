@@ -6,11 +6,13 @@ import {
   StyleSheet,
   ViewStyle,
 } from 'react-native';
-import Svg, {Path} from 'react-native-svg';
 import {useTheme} from '../../core/theme/ThemeProvider';
 import {CommonSizes} from '../../core/theme/commonSizes';
+import {Fonts} from '../../core/theme/fonts';
+import {Icon} from './Icon';
 import {RTLAwareText} from './RTLAwareText';
 import {RTLAwareView} from './RTLAwareView';
+import {useTranslation} from '../localization/LocalizationProvider';
 
 interface DropdownOption {
   label: string;
@@ -26,37 +28,11 @@ interface DropdownProps {
   error?: string | null;
 }
 
-function ChevronDown({color}: {color: string}): JSX.Element {
-  return (
-    <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M6 9L12 15L18 9"
-        stroke={color}
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
-}
-
-function CheckIcon({color}: {color: string}): JSX.Element {
-  return (
-    <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M5 12.5L10 17.5L19 7"
-        stroke={color}
-        strokeWidth={2.2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
-}
-
 export function Dropdown(props: DropdownProps): JSX.Element {
   const {label, value, placeholder, options, onSelect, error} = props;
   const {theme} = useTheme();
+  const t = useTranslation();
+  const {colors} = theme;
   const [open, setOpen] = useState(false);
 
   const selected = useMemo(
@@ -65,30 +41,31 @@ export function Dropdown(props: DropdownProps): JSX.Element {
   );
 
   const valueColorStyle = {
-    color: selected
-      ? theme.colors.grayScale_700
-      : theme.colors.grayScale_200,
+    color: selected ? colors.textPrimary : colors.textTertiary,
   };
 
   const fieldStyle: ViewStyle = {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: theme.colors.grayScale_0,
-    borderColor: error ? theme.colors.error_400 : theme.colors.grayScale_50,
-    borderWidth: CommonSizes.borderWidth.medium,
-    borderRadius: CommonSizes.borderRadius.large,
-    paddingHorizontal: CommonSizes.spacing.xLarge,
-    paddingVertical: CommonSizes.spacing.xLarge,
+    gap: CommonSizes.spacing.medium,
+    height: CommonSizes.control.lg,
+    backgroundColor: colors.surfaceCard,
+    borderColor: error
+      ? colors.danger
+      : open
+        ? colors.borderAccent
+        : colors.borderDefault,
+    borderWidth: CommonSizes.borderWidth.hairline,
+    borderRadius: CommonSizes.borderRadius.sm,
+    paddingHorizontal: CommonSizes.spacing.large,
+    boxShadow: open ? `0 0 0 3px ${colors.accentRing}` : theme.shadows.xs,
   };
 
   return (
     <RTLAwareView style={styles.container}>
       {label ? (
-        <RTLAwareText
-          style={[theme.text.bodyMediumBold, {color: theme.colors.grayScale_700}]}>
-          {label}
-        </RTLAwareText>
+        <RTLAwareText style={theme.text.label}>{label}</RTLAwareText>
       ) : null}
 
       <Pressable
@@ -97,43 +74,46 @@ export function Dropdown(props: DropdownProps): JSX.Element {
         accessibilityLabel={label ?? placeholder ?? 'Dropdown'}>
         <RTLAwareView style={fieldStyle}>
           <RTLAwareText
-            style={[
-              theme.text.bodyLargeRegular,
-              styles.flex1,
-              valueColorStyle,
-            ]}>
-            {selected ? selected.label : placeholder ?? ''}
+            numberOfLines={1}
+            style={[theme.text.body, styles.flex1, valueColorStyle]}>
+            {selected ? selected.label : (placeholder ?? '')}
           </RTLAwareText>
-          <ChevronDown color={theme.colors.grayScale_200} />
+          <Icon
+            name="chevron-down"
+            size={CommonSizes.icon.sm}
+            color={colors.textTertiary}
+          />
         </RTLAwareView>
       </Pressable>
 
       {error ? (
-        <RTLAwareText
-          style={[theme.text.bodySmallRegular, {color: theme.colors.error_400}]}>
+        <RTLAwareText style={[theme.text.bodySm, {color: colors.dangerFg}]}>
           {error}
         </RTLAwareText>
       ) : null}
 
       <Modal transparent visible={open} animationType="fade">
         <Pressable
-          style={styles.backdrop}
+          style={[styles.backdrop, {backgroundColor: colors.surfaceScrim}]}
           onPress={() => setOpen(false)}
           accessibilityRole="button"
-          accessibilityLabel="Close dropdown">
+          accessibilityLabel={t('close')}>
           <Pressable
             style={[
               styles.card,
-              {backgroundColor: theme.colors.grayScale_0},
+              {
+                backgroundColor: colors.surfaceOverlay,
+                borderColor: colors.borderDefault,
+                boxShadow: theme.shadows.md,
+              },
             ]}
             onPress={() => {}}>
             <ScrollView bounces={false}>
               {options.map(option => {
                 const isSelected = option.value === value;
                 const optionColorStyle = {
-                  color: isSelected
-                    ? theme.colors.PlatinateBlue_400
-                    : theme.colors.grayScale_700,
+                  color: isSelected ? colors.textAccent : colors.textPrimary,
+                  fontFamily: isSelected ? Fonts.medium : Fonts.regular,
                 };
                 return (
                   <Pressable
@@ -143,18 +123,30 @@ export function Dropdown(props: DropdownProps): JSX.Element {
                       setOpen(false);
                     }}
                     accessibilityRole="button"
-                    style={styles.optionRow}>
+                    accessibilityState={{selected: isSelected}}
+                    style={({pressed}) => [
+                      styles.optionRow,
+                      isSelected
+                        ? {backgroundColor: colors.selectedVeil}
+                        : pressed
+                          ? {backgroundColor: colors.pressVeil}
+                          : null,
+                    ]}>
                     <RTLAwareView style={styles.optionInner}>
                       <RTLAwareText
                         style={[
-                          theme.text.bodyLargeRegular,
+                          theme.text.body,
                           styles.flex1,
                           optionColorStyle,
                         ]}>
                         {option.label}
                       </RTLAwareText>
                       {isSelected ? (
-                        <CheckIcon color={theme.colors.PlatinateBlue_400} />
+                        <Icon
+                          name="check"
+                          size={CommonSizes.icon.sm}
+                          color={colors.textAccent}
+                        />
                       ) : null}
                     </RTLAwareView>
                   </Pressable>
@@ -172,11 +164,10 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     flexDirection: 'column',
-    gap: CommonSizes.spacing.medium,
+    gap: CommonSizes.layout.field,
   } as ViewStyle,
   backdrop: {
     flex: 1,
-    backgroundColor: 'rgba(6, 8, 15, 0.55)',
     alignItems: 'center',
     justifyContent: 'center',
     padding: CommonSizes.spacing.xxLarge,
@@ -184,13 +175,16 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     maxHeight: '60%',
-    borderRadius: CommonSizes.borderRadius.large,
+    borderRadius: CommonSizes.borderRadius.lg,
+    borderWidth: CommonSizes.borderWidth.hairline,
     overflow: 'hidden',
-    paddingVertical: CommonSizes.spacing.small,
+    padding: CommonSizes.spacing.small,
   },
   optionRow: {
-    paddingHorizontal: CommonSizes.spacing.xLarge,
-    paddingVertical: CommonSizes.spacing.xLarge,
+    minHeight: CommonSizes.control.lg,
+    justifyContent: 'center',
+    paddingHorizontal: CommonSizes.spacing.large,
+    borderRadius: CommonSizes.borderRadius.md,
   },
   optionInner: {
     flexDirection: 'row',

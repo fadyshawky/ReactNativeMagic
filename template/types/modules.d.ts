@@ -4,6 +4,3 @@
 declare module 'lodash';
 declare module 'lodash/omit';
 declare module 'intl';
-declare module 'react-native-vector-icons/MaterialIcons';
-declare module 'react-native-vector-icons/Ionicons';
-declare module 'react-native-vector-icons/Icon';

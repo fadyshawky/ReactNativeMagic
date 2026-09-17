@@ -1,8 +1,9 @@
 import React from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
-import Svg, {Path} from 'react-native-svg';
 import {CommonSizes} from '../../core/theme/commonSizes';
+import {Fonts} from '../../core/theme/fonts';
 import {useTheme} from '../../core/theme/ThemeProvider';
+import {Icon} from './Icon';
 import {RTLAwareText} from './RTLAwareText';
 import {RTLAwareView} from './RTLAwareView';
 
@@ -34,20 +35,23 @@ export function ListItem({
     right != null ? (
       right
     ) : showChevron ? (
-      <Chevron color={theme.colors.grayScale_200} />
+      <Icon
+        name="chevron-right"
+        size={CommonSizes.icon.sm}
+        color={theme.colors.textDisabled}
+      />
     ) : null;
 
   const content = (
     <RTLAwareView style={styles.row}>
       {left != null ? <View>{left}</View> : null}
       <View style={styles.textColumn}>
-        <RTLAwareText style={theme.text.bodyLargeBold}>{title}</RTLAwareText>
+        <RTLAwareText style={[theme.text.body, styles.title]}>
+          {title}
+        </RTLAwareText>
         {subtitle != null ? (
           <RTLAwareText
-            style={[
-              theme.text.bodySmallRegular,
-              {color: theme.colors.grayScale_200},
-            ]}>
+            style={[theme.text.bodySm, {color: theme.colors.textTertiary}]}>
             {subtitle}
           </RTLAwareText>
         ) : null}
@@ -57,24 +61,19 @@ export function ListItem({
   );
 
   if (onPress) {
-    return <Pressable onPress={onPress}>{content}</Pressable>;
+    return (
+      <Pressable
+        onPress={onPress}
+        accessibilityRole="button"
+        style={({pressed}) =>
+          pressed ? {backgroundColor: theme.colors.pressVeil} : null
+        }>
+        {content}
+      </Pressable>
+    );
   }
 
   return content;
-}
-
-function Chevron({color}: {color: string}): JSX.Element {
-  return (
-    <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M9 6l6 6-6 6"
-        stroke={color}
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
 }
 
 const styles = StyleSheet.create({
@@ -82,9 +81,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: CommonSizes.spacing.large,
+    minHeight: CommonSizes.layout.rowMinHeight,
     paddingVertical: CommonSizes.spacing.large,
   },
   textColumn: {
     flex: 1,
+  },
+  title: {
+    fontFamily: Fonts.medium,
   },
 });

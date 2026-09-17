@@ -1,19 +1,22 @@
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {Fonts} from '../../core/theme/fonts';
 import {CommonSizes} from '../../core/theme/commonSizes';
+import {useTheme} from '../../core/theme/ThemeProvider';
 
 export const NetworkBanner = () => {
+  const {theme} = useTheme();
   const [offline, setOffline] = useState(false);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener((state: NetInfoState) => {
-      const connected = !!state.isConnected && state.isInternetReachable !== false;
+      const connected =
+        !!state.isConnected && state.isInternetReachable !== false;
       setOffline(!connected);
     });
     NetInfo.fetch().then(state => {
-      const connected = !!state.isConnected && state.isInternetReachable !== false;
+      const connected =
+        !!state.isConnected && state.isInternetReachable !== false;
       setOffline(!connected);
     });
     return unsubscribe;
@@ -22,8 +25,13 @@ export const NetworkBanner = () => {
   if (!offline) return null;
 
   return (
-    <View style={styles.banner} pointerEvents="none">
-      <Text style={styles.text}>No internet connection</Text>
+    <View
+      style={[styles.banner, {backgroundColor: theme.colors.danger}]}
+      pointerEvents="none"
+      accessibilityLiveRegion="polite">
+      <Text style={[theme.text.label, {color: theme.colors.textOnAccent}]}>
+        No internet connection
+      </Text>
     </View>
   );
 };
@@ -34,14 +42,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#D32F2F',
-    paddingVertical: 8,
+    paddingVertical: CommonSizes.spacing.medium,
     alignItems: 'center',
     zIndex: 9999,
-  },
-  text: {
-    color: '#fff',
-    fontFamily: Fonts.bold,
-    fontSize: CommonSizes.font.bodySmall,
   },
 });

@@ -1,7 +1,7 @@
 export const loginLocalization = {
   en: {
     Login: 'Login',
-    welcome: 'Welcome Back',
+    welcome: 'Welcome back',
     welcome_description: 'Sign in to your account to continue',
     signIn: 'Sign in',
     needHelp: 'Need help?',
@@ -55,6 +55,24 @@ export const loginLocalization = {
     EnterCountryCode: 'أدخل رمز الدولة',
     CountrySelector: 'اختر الدولة',
     EnterCountrySelector: 'أدخل اختيار الدولة',
+    forgetPassword: 'نسيت كلمة المرور؟',
+    continue: 'متابعة',
+    notMember: 'لست عضواً؟',
+    registration: {
+      title: 'إنشاء حساب',
+      fullName: 'الاسم الكامل',
+      email: 'البريد الإلكتروني',
+      password: 'كلمة المرور',
+      confirmPassword: 'تأكيد كلمة المرور',
+      register: 'تسجيل',
+      alreadyHaveAccount: 'لديك حساب بالفعل؟',
+    },
+    forgotPassword: {
+      title: 'نسيت كلمة المرور',
+      description: 'أدخل بريدك الإلكتروني لإعادة تعيين كلمة المرور',
+      resetPassword: 'إعادة تعيين كلمة المرور',
+      backToLogin: 'العودة لتسجيل الدخول',
+    },
     register_1: 'ليس لديك حساب؟',
     register_2: 'سجل الآن',
   },

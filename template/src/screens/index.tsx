@@ -7,4 +7,3 @@ export {HomeScreen as Home} from './home/HomeScreen';
 export {ComponentsScreen as Components} from './components/ComponentsScreen';
 export {Profile} from './profile/Profile';
 export {Splash} from './splash/Splash';
-

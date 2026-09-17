@@ -93,6 +93,26 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 
+// --- Application ID resolution ---------------------------------------------
+// On `init`, the React Native CLI renames the "reactnativemagic" token (here and
+// in `namespace` below) to your app name, so a freshly-generated app installs AND
+// launches under ONE consistent id even when you don't pass `--package-name`.
+// Set APP_ID / ANDROID_APP_ID in your .env files to override per environment; the
+// "com.yourcompany.*" placeholder defaults (and empty values) fall back to this id
+// so the build is always launchable. Keep this literal in sync with `namespace`.
+def defaultApplicationId = "com.reactnativemagic"
+def resolveApplicationId = { String key ->
+    def value = project.env.get(key)
+    if (value == null) {
+        return defaultApplicationId
+    }
+    value = value.toString().trim()
+    if (value.isEmpty() || value.startsWith("com.yourcompany")) {
+        return defaultApplicationId
+    }
+    return value
+}
+
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -102,30 +122,30 @@ android {
     productFlavors {
         production {
             minSdkVersion rootProject.ext.minSdkVersion
-            applicationId project.env.get("APP_ID")
+            applicationId resolveApplicationId("APP_ID")
             targetSdkVersion rootProject.ext.targetSdkVersion
         }
         staging {
             minSdkVersion rootProject.ext.minSdkVersion
-            applicationId project.env.get("APP_ID")
+            applicationId resolveApplicationId("APP_ID")
             targetSdkVersion rootProject.ext.targetSdkVersion
         }
         development {
             minSdkVersion rootProject.ext.minSdkVersion
-            applicationId project.env.get("APP_ID")
+            applicationId resolveApplicationId("APP_ID")
             targetSdkVersion rootProject.ext.targetSdkVersion
         }
     }
 
     namespace "com.reactnativemagic"
     defaultConfig {
-        applicationId  project.env.get("ANDROID_APP_ID")
+        applicationId  resolveApplicationId("ANDROID_APP_ID")
         minSdkVersion rootProject.ext.minSdkVersion
         multiDexEnabled true
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode  project.env.get("ANDROID_VERSION_CODE")?.toInteger() ?: 1
         versionName  project.env.get("ANDROID_VERSION_NAME") ?: "1.0.0"
-        resValue "string", "build_config_package", project.env.get("ANDROID_APP_ID")
+        resValue "string", "build_config_package", resolveApplicationId("ANDROID_APP_ID")
 
         ndk {
             abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
@@ -155,7 +175,7 @@ android {
             // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
     }
 
@@ -166,10 +186,10 @@ android {
                 // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
                 
 
-                def projectName = project.env.get("PROJECT_NAME")
+                def projectName = project.env.get("PROJECT_NAME") ?: rootProject.name
                 def SEP = "_"
-                
-                def newApkName = projectName + SEP + project.env.get("ENV") + SEP + (project.env.get("ANDROID_VERSION_NAME") ?: "1.0.0") + SEP + (project.env.get("ANDROID_VERSION_CODE")?.toInteger() ?: 1) + ".apk"
+                def envName = project.env.get("ENV") ?: project.env.get("ENVIRONMENT") ?: variant.name
+                def newApkName = projectName + SEP + envName + SEP + (project.env.get("ANDROID_VERSION_NAME") ?: "1.0.0") + SEP + (project.env.get("ANDROID_VERSION_CODE")?.toInteger() ?: 1) + ".apk"
                 
 
                 println "Naming File ... " + newApkName                        

@@ -1,5 +1,5 @@
 import {AxiosResponse} from 'axios';
-import Snackbar from 'react-native-snackbar';
+import {Snackbar} from 'react-native-snackbar';
 
 export const handleFetchJsonResponse = (
   response: AxiosResponse,

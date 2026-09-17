@@ -1,6 +1,7 @@
-import React, {FC, memo, useMemo} from 'react';
-import {StyleSheet, View, ViewStyle} from 'react-native';
-import {PrimaryColors} from '../../core/theme/colors';
+import React, {FC, memo} from 'react';
+import {StyleSheet, View} from 'react-native';
+import {CommonSizes} from '../../core/theme/commonSizes';
+import {useTheme} from '../../core/theme/ThemeProvider';
 
 interface IProps {
   isSelected: boolean;
@@ -8,47 +9,40 @@ interface IProps {
 }
 
 export const RadioIcon: FC<IProps> = memo(({isSelected, disabled}) => {
-  const outerCircleStyle = useMemo(() => {
-    return disabled
-      ? styles.outerCircle
-      : isSelected
-      ? styles.outerCircleSelected
-      : styles.outerCircle;
-  }, [isSelected, disabled]);
-
+  const {theme} = useTheme();
   return (
-    <View style={outerCircleStyle}>
-      {isSelected && <View style={styles.innerCircle} />}
+    <View
+      style={[
+        styles.ring,
+        {
+          backgroundColor: theme.colors.surfaceCard,
+          borderColor:
+            isSelected && !disabled
+              ? theme.colors.accent
+              : theme.colors.borderDefault,
+        },
+        disabled && styles.disabled,
+      ]}>
+      {isSelected && (
+        <View style={[styles.dot, {backgroundColor: theme.colors.accent}]} />
+      )}
     </View>
   );
 });
 
-const commonOuterCircle: ViewStyle = {
-  width: 16,
-  height: 16,
-  borderRadius: 8,
-  borderWidth: 2,
-  justifyContent: 'center',
-  alignItems: 'center',
-};
-
-const commonInnerCircle: ViewStyle = {
-  width: 8,
-  height: 8,
-  borderRadius: 4,
-};
-
 const styles = StyleSheet.create({
-  outerCircle: {
-    ...commonOuterCircle,
-    borderColor: PrimaryColors.PlatinateBlue_400,
-  } as ViewStyle,
-  outerCircleSelected: {
-    ...commonOuterCircle,
-    borderColor: PrimaryColors.PlatinateBlue_400,
-  } as ViewStyle,
-  innerCircle: {
-    ...commonInnerCircle,
-    backgroundColor: PrimaryColors.PlatinateBlue_400,
-  } as ViewStyle,
+  ring: {
+    width: 18,
+    height: 18,
+    borderRadius: CommonSizes.borderRadius.full,
+    borderWidth: CommonSizes.borderWidth.hairline,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  disabled: {opacity: 0.5},
+  dot: {
+    width: 9,
+    height: 9,
+    borderRadius: CommonSizes.borderRadius.full,
+  },
 });

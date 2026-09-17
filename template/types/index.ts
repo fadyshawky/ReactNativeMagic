@@ -1,8 +1,6 @@
-import {ColorValue, PressableProps, TextStyle, ViewStyle} from 'react-native';
+import {PressableProps, ViewStyle} from 'react-native';
 import {RehydrateAction} from 'redux-persist';
-import {SFSymbolProps} from 'react-native-sfsymbols';
 import {RootState} from '../src/core/store/rootReducer';
-import {SFSymbols} from '../resources/symbols/SFSymbols';
 
 export interface ICalendarSpec {
   sameDay: string;
@@ -11,14 +9,6 @@ export interface ICalendarSpec {
   nextWeek: string;
   lastWeek: string;
   sameElse: string;
-}
-
-export interface IIconPlatformProps extends Omit<SFSymbolProps, 'name'> {
-  iosName?: SFSymbols;
-  androidName?: string;
-  color?: ColorValue;
-  size?: number;
-  style?: TextStyle | ViewStyle;
 }
 
 export enum AppEnvironment {
@@ -36,7 +26,7 @@ export interface INavigationPage {
 export interface IOnboardingData {
   header: string;
   body: string;
-  icon: SFSymbols | string;
+  icon: string;
 }
 
 export enum LoadState {
@@ -55,11 +45,13 @@ export interface TouchablePlatformProps extends Omit<PressableProps, 'style'> {
   style?: ViewStyle;
 }
 
+/** Design-system button variants: primary, secondary, ghost, danger, link. */
 export enum ButtonType {
-  solid = 'solid',
-  borderless = 'borderless',
-  outline = 'outline',
-  outlineNegative = 'outlineNegative',
+  solid = 'solid', // primary — the one accent action on screen
+  outline = 'outline', // secondary
+  ghost = 'ghost',
+  danger = 'danger',
+  borderless = 'borderless', // link
 }
 
 export interface IListState<T> {

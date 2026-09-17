@@ -108,6 +108,72 @@ function updateIosBundleId(packageName) {
   }
 }
 
+function removeDirIfEmptyUpTo(startDir, stopDir) {
+  let dir = startDir;
+  while (
+    dir.startsWith(stopDir) &&
+    dir !== stopDir &&
+    fs.existsSync(dir) &&
+    fs.readdirSync(dir).length === 0
+  ) {
+    fs.rmdirSync(dir);
+    dir = path.dirname(dir);
+  }
+}
+
+/**
+ * Align the Android applicationId with the chosen bundle id.
+ *
+ * The RN CLI derives the launch package from the Gradle `namespace` (it can't
+ * read our env-driven applicationId), so namespace MUST equal the installed
+ * applicationId or `run-android` fails with "Activity class ... does not exist".
+ * This rewrites the namespace + the defaultApplicationId fallback literal, moves
+ * the Kotlin/Java sources into the new package dir, and updates their `package`
+ * declarations so a custom bundle id is fully launchable. Idempotent + defensive.
+ */
+function applyAndroidPackage(packageName) {
+  const root = process.cwd();
+  const gradlePath = path.join(root, 'android', 'app', 'build.gradle');
+  if (!fs.existsSync(gradlePath)) return;
+
+  const gradle = fs.readFileSync(gradlePath, 'utf8');
+  const nsMatch = gradle.match(/namespace\s+["']([^"']+)["']/);
+  if (!nsMatch) return;
+  const oldPackage = nsMatch[1];
+
+  // Keep namespace + the defaultApplicationId fallback literal in sync with the
+  // chosen bundle id (safe to run even if they are already correct).
+  const nextGradle = gradle
+    .replace(/namespace\s+["'][^"']+["']/, `namespace "${packageName}"`)
+    .replace(
+      /def\s+defaultApplicationId\s*=\s*["'][^"']+["']/,
+      `def defaultApplicationId = "${packageName}"`
+    );
+  if (nextGradle !== gradle) {
+    fs.writeFileSync(gradlePath, nextGradle, 'utf8');
+  }
+
+  if (oldPackage === packageName) return;
+
+  const oldSegments = oldPackage.split('.');
+  const newSegments = packageName.split('.');
+  for (const lang of ['java', 'kotlin']) {
+    const baseDir = path.join(root, 'android', 'app', 'src', 'main', lang);
+    const oldDir = path.join(baseDir, ...oldSegments);
+    if (!fs.existsSync(oldDir)) continue;
+    const newDir = path.join(baseDir, ...newSegments);
+    fs.mkdirSync(newDir, { recursive: true });
+    for (const entry of fs.readdirSync(oldDir)) {
+      const oldFile = path.join(oldDir, entry);
+      if (!fs.statSync(oldFile).isFile()) continue;
+      const src = fs.readFileSync(oldFile, 'utf8').split(oldPackage).join(packageName);
+      fs.writeFileSync(path.join(newDir, entry), src, 'utf8');
+      fs.unlinkSync(oldFile);
+    }
+    removeDirIfEmptyUpTo(oldDir, baseDir);
+  }
+}
+
 async function main() {
   const existingBundleId = getCurrentIosBundleId();
   if (existingBundleId) {
@@ -123,7 +189,12 @@ async function main() {
         ensureEnvHasPackageIds(f, existingBundleId);
       }
     }
-    console.log(`\nSynced package name ${existingBundleId} to .env (Android).\n`);
+    try {
+      applyAndroidPackage(existingBundleId);
+    } catch (e) {
+      console.warn('Could not update Android package automatically:', e.message);
+    }
+    console.log(`\nSynced package name ${existingBundleId} to .env + Android.\n`);
     return;
   }
 
@@ -160,11 +231,26 @@ async function main() {
   }
 
   updateIosBundleId(packageName);
+  try {
+    applyAndroidPackage(packageName);
+  } catch (e) {
+    console.warn('Could not update Android package automatically:', e.message);
+  }
 
-  console.log(`\nSet package name to ${packageName} in .env and iOS project.\n`);
+  console.log(`\nSet package name to ${packageName} in .env, iOS, and Android.\n`);
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  applyAndroidPackage,
+  ensureEnvHasPackageIds,
+  getCurrentIosBundleId,
+  updateIosBundleId,
+  validatePackageName,
+};

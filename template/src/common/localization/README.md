@@ -165,40 +165,7 @@ export function TabBar({state, descriptors, navigation}) {
 
 ### 3. RTL Support in TabBar
 
-The TabBar component has full RTL support, automatically adjusting the tab order and layout for RTL languages:
-
-```typescript
-export function TabBar({state, descriptors, navigation}) {
-  const isRTL = useRTL();
-
-  // Create a copy of routes array to avoid modifying the original
-  const routesToRender = [...state.routes];
-
-  // If RTL, reverse the order of tabs
-  if (isRTL) {
-    routesToRender.reverse();
-  }
-
-  return (
-    <RTLAwareView style={styles.container}>
-      {routesToRender.map((route, index) => {
-        // Calculate the correct index in the original array for focused state
-        const originalIndex = isRTL ? state.routes.length - 1 - index : index;
-        const isFocused = state.index === originalIndex;
-
-        // ... render tab
-      })}
-    </RTLAwareView>
-  );
-}
-```
-
-This implementation ensures that:
-
-- Tabs are displayed in the correct order for both LTR and RTL languages
-- The focused state is preserved when switching between LTR and RTL
-- Tab labels are properly aligned based on the text direction
-- The entire tab bar layout adapts to the current language direction
+The TabBar needs no RTL code. Native RTL lays its row out right to left, so the first tab sits on the right in Arabic. Tabs keep their declared order, and focus is matched by route key.
 
 ### 4. Adding New Screen Names
 
@@ -256,78 +223,38 @@ export const mainNavigationLocalization = {
 
 ## RTL Support
 
-The application supports Right-to-Left (RTL) languages like Arabic. The system automatically handles RTL layout when the language is set to Arabic.
+RTL is **native**. `RTLInitializer` keeps `I18nManager` in step with the chosen language, restarting the app once when the direction changes. React Native then mirrors the whole layout for you:
 
-### 1. Using RTL-aware Components
+- `flexDirection: 'row'` runs right to left
+- `start` / `end` (`paddingStart`, `marginEnd`, …) and `left` / `right` swap sides
+- Text aligns right, and `textAlign: 'left' | 'right'` is swapped
 
-Use the provided RTL-aware components to automatically handle RTL layout:
-
-```typescript
-import {RTLAwareText} from '../../common/components/RTLAwareText';
-import {RTLAwareView} from '../../common/components/RTLAwareView';
-import {useRTL} from '../../common/localization/LocalizationProvider';
-
-function MyComponent() {
-  const isRTL = useRTL();
-
-  return (
-    <RTLAwareView style={{flexDirection: 'row'}}>
-      <RTLAwareText style={{textAlign: 'left'}}>
-        This text will be properly aligned in RTL mode
-      </RTLAwareText>
-    </RTLAwareView>
-  );
-}
-```
-
-### 2. Using the `useRTL` Hook
-
-You can use the `useRTL` hook to check if the current language is RTL:
+**Write every layout for LTR, and don't flip anything yourself.** A manual `isRTL ? 'row-reverse' : 'row'` mirrors the layout a second time and puts it back to LTR.
 
 ```typescript
-import {useRTL} from '../../common/localization/LocalizationProvider';
-
-function MyComponent() {
-  const isRTL = useRTL();
-
+function Row({title, value}: {title: string; value: string}) {
+  const {theme} = useTheme();
   return (
-    <View
-      style={{
-        flexDirection: isRTL ? 'row-reverse' : 'row',
-        alignItems: 'center',
-      }}>
-      {/* Your content */}
+    <View style={{flexDirection: 'row', alignItems: 'center', gap: CommonSizes.spacing.large}}>
+      <Text style={[theme.text.body, {flex: 1}]}>{title}</Text>
+      <Text style={theme.text.bodySm}>{value}</Text>
+      <Icon name="chevron-right" size={16} />
     </View>
   );
 }
 ```
 
-### 3. Using the `rtlStyles` Helper
+In Arabic, the title sits on the right, the value on its left and the chevron at the far left, pointing left.
 
-You can use the `rtlStyles` helper to create RTL-aware styles:
+What still needs care:
 
-```typescript
-import {useRTL} from '../../common/localization/LocalizationProvider';
-import {rtlStyles} from '../../common/components/RTLAwareView';
+- **Directional icons.** `Icon` mirrors `arrow-left`, `chevron-left` and `chevron-right` in RTL. Add any new directional glyph to its `DIRECTIONAL` set.
+- **Text inputs.** React Native swaps `textAlign` for `Text`, not `TextInput`. Inputs use `inputTextAlign` (`core/theme/commonConsts`), which names the physical side under RTL; otherwise Arabic placeholders sit on the left.
+- **Transforms and animations.** `translateX` is not mirrored. Negate the travel under `I18nManager.isRTL` (see `AppSwitch`).
+- **Typography.** On iOS, text aligns by writing direction rather than layout direction, so the theme's text roles set `writingDirection: 'rtl'` in RTL. Text that doesn't use a `theme.text` role stays left-aligned; give it one. Arabic joins its letters, so the roles also drop letter-spacing and uppercase, and the eyebrow switches from Geist Mono to Geist. Don't set Arabic words in `mono`/`amount`: Geist Mono is for numbers and has no Arabic glyphs.
+- **Behaviour, not layout.** `useRTL()` returns the stored direction, for logic such as choosing a keyboard language.
 
-function MyComponent() {
-  const isRTL = useRTL();
-  const rtlStyle = rtlStyles(isRTL);
-
-  return (
-    <View style={[rtlStyle.row, rtlStyle.textLeft]}>{/* Your content */}</View>
-  );
-}
-```
-
-### 4. RTL in Navigation Components
-
-Navigation components like the TabBar have special RTL handling to ensure proper layout and interaction:
-
-- Tab order is reversed in RTL mode
-- Focus state is preserved when switching between LTR and RTL
-- Text alignment is automatically adjusted
-- Icons and other visual elements are properly positioned
+`RTLAwareView`, `RTLAwareText` and `RTLAwareTouchableOpacity` are plain `View` / `Text` / `TouchableOpacity`, kept so existing screens compile.
 
 ## Adding New Translations
 
@@ -450,7 +377,7 @@ This provides a better user experience by informing the user about the restart b
 
 ## Best Practices
 
-1. **Use RTL-aware components**: Always use `RTLAwareText` and `RTLAwareView` instead of regular `Text` and `View` for content that needs to adapt to RTL languages.
+1. **Let native RTL do the mirroring**: write layouts for LTR with `start`/`end`; never add `row-reverse` or left/right swaps for RTL.
 2. **Use the translation hook**: Always use the `useTranslation` hook instead of directly accessing the localization object.
 3. **Organize translations by feature**: Keep translations organized by feature to make them easier to maintain.
 4. **Use meaningful keys**: Use descriptive keys that make it clear what the translation is for.
@@ -459,7 +386,7 @@ This provides a better user experience by informing the user about the restart b
 7. **Test in both LTR and RTL modes**: Always test your UI in both Left-to-Right and Right-to-Left modes to ensure it looks correct in both.
 8. **Localize screen labels**: Always localize screen titles and tab names for a consistent user experience.
 9. **Separate navigation translations**: Keep auth navigation and main navigation translations separate for better organization.
-10. **Handle RTL in navigation components**: Ensure navigation components like TabBar properly handle RTL layout and interaction.
+10. **Mirror only what native RTL can't**: directional icons and `translateX` animations.
 
 ## Adding a New Language
 

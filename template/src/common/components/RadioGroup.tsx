@@ -25,13 +25,15 @@ export function RadioGroup(props: RadioGroupProps): JSX.Element {
       {options.map(option => {
         const isSelected = option.value === value;
         const ringStyle: ViewStyle = {
-          width: 20,
-          height: 20,
+          width: 18,
+          height: 18,
           borderRadius: CommonSizes.borderRadius.full,
-          borderWidth: CommonSizes.borderWidth.medium,
+          borderWidth: CommonSizes.borderWidth.hairline,
           borderColor: isSelected
-            ? theme.colors.PlatinateBlue_400
-            : theme.colors.grayScale_50,
+            ? theme.colors.accent
+            : theme.colors.borderDefault,
+          backgroundColor: theme.colors.surfaceCard,
+          boxShadow: theme.shadows.xs,
           alignItems: 'center',
           justifyContent: 'center',
         };
@@ -47,19 +49,11 @@ export function RadioGroup(props: RadioGroupProps): JSX.Element {
               <View style={ringStyle}>
                 {isSelected ? (
                   <View
-                    style={[
-                      styles.dot,
-                      {backgroundColor: theme.colors.PlatinateBlue_400},
-                    ]}
+                    style={[styles.dot, {backgroundColor: theme.colors.accent}]}
                   />
                 ) : null}
               </View>
-              <RTLAwareText
-                style={[
-                  theme.text.bodyLargeRegular,
-                  styles.label,
-                  {color: theme.colors.grayScale_700},
-                ]}>
+              <RTLAwareText style={[theme.text.body, styles.label]}>
                 {option.label}
               </RTLAwareText>
             </RTLAwareView>
@@ -84,12 +78,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   } as ViewStyle,
   dot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    width: 9,
+    height: 9,
+    borderRadius: CommonSizes.borderRadius.full,
   },
   label: {
-    marginStart: CommonSizes.spacing.large,
+    marginStart: 10,
     flexShrink: 1,
   },
 });

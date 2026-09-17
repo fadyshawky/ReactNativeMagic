@@ -1,9 +1,10 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {NaturalColors, PrimaryColors} from '../../core/theme/colors';
-import {Fonts} from '../../core/theme/fonts';
+import {LightColors} from '../../core/theme/colors';
 import {CommonSizes} from '../../core/theme/commonSizes';
+import {lightTheme} from '../../core/theme/themes';
 
+// Mounted above ThemeProvider, so it uses the static light theme.
 interface Props {
   children: React.ReactNode;
   fallback?: (reset: () => void, error: Error) => React.ReactNode;
@@ -41,7 +42,10 @@ export class ErrorBoundary extends React.Component<Props, State> {
         <Text style={styles.message} numberOfLines={6}>
           {this.state.error.message}
         </Text>
-        <TouchableOpacity style={styles.button} onPress={this.reset}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={this.reset}
+          accessibilityRole="button">
           <Text style={styles.buttonText}>Try again</Text>
         </TouchableOpacity>
       </View>
@@ -54,29 +58,29 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 24,
-    backgroundColor: NaturalColors.background_2,
+    padding: CommonSizes.spacing.xxLarge,
+    backgroundColor: LightColors.bgCanvas,
   },
   title: {
-    fontFamily: Fonts.bold,
-    fontSize: CommonSizes.font.bodyXLarge,
-    marginBottom: 12,
+    ...lightTheme.text.h2,
+    marginBottom: CommonSizes.spacing.large,
   },
   message: {
-    fontFamily: Fonts.regular,
-    fontSize: CommonSizes.font.bodyMedium,
+    ...lightTheme.text.mono,
+    color: LightColors.textSecondary,
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: CommonSizes.spacing.xxLarge,
   },
   button: {
-    backgroundColor: PrimaryColors.PlatinateBlue_400,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
+    height: CommonSizes.control.lg,
+    justifyContent: 'center',
+    backgroundColor: LightColors.accent,
+    paddingHorizontal: 20,
+    borderRadius: CommonSizes.borderRadius.sm,
   },
   buttonText: {
-    color: '#fff',
-    fontFamily: Fonts.bold,
-    fontSize: CommonSizes.font.bodyMedium,
+    ...lightTheme.text.label,
+    fontSize: 15,
+    color: LightColors.textOnAccent,
   },
 });

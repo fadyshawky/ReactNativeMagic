@@ -1,8 +1,10 @@
 import React from 'react';
 import {Modal, Pressable, StyleSheet, View, ViewStyle} from 'react-native';
-import {useTheme} from '../../core/theme/ThemeProvider';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {CommonSizes} from '../../core/theme/commonSizes';
+import {useTheme} from '../../core/theme/ThemeProvider';
 import {RTLAwareText} from './RTLAwareText';
+import {useTranslation} from '../localization/LocalizationProvider';
 
 interface AppBottomSheetProps {
   visible: boolean;
@@ -12,9 +14,9 @@ interface AppBottomSheetProps {
 }
 
 /**
- * A bottom-anchored sheet built on react-native's Modal.
- * Slides up from the bottom with a dimmed midnight backdrop; tapping the
- * backdrop closes it while taps on the card are absorbed.
+ * A bottom sheet on react-native's Modal: overlay surface, 16px top radius,
+ * hairline border, `lg` shadow over the scrim. Tapping the scrim closes it
+ * while taps on the sheet are absorbed.
  */
 export function AppBottomSheet({
   visible,
@@ -23,20 +25,15 @@ export function AppBottomSheet({
   children,
 }: AppBottomSheetProps): JSX.Element {
   const {theme} = useTheme();
+  const t = useTranslation();
+  const {colors} = theme;
+  const insets = useSafeAreaInsets();
 
-  const cardStyle: ViewStyle = {
-    backgroundColor: theme.colors.grayScale_0,
-    borderTopLeftRadius: CommonSizes.borderRadius.xLarge,
-    borderTopRightRadius: CommonSizes.borderRadius.xLarge,
-    padding: CommonSizes.spacing.large,
-    paddingBottom: CommonSizes.spacing.xxxLarge,
-  };
-
-  const handleStyle: ViewStyle = {
-    width: 40,
-    height: 4,
-    borderRadius: CommonSizes.borderRadius.full,
-    backgroundColor: theme.colors.grayScale_50,
+  const sheetStyle: ViewStyle = {
+    backgroundColor: colors.surfaceOverlay,
+    borderColor: colors.borderDefault,
+    boxShadow: theme.shadows.lg,
+    paddingBottom: Math.max(insets.bottom, CommonSizes.spacing.xLarge),
   };
 
   return (
@@ -47,19 +44,22 @@ export function AppBottomSheet({
       onRequestClose={onClose}>
       <View style={styles.container}>
         <Pressable
-          style={styles.backdrop}
+          style={[styles.scrim, {backgroundColor: colors.surfaceScrim}]}
           onPress={onClose}
           accessibilityRole="button"
-          accessibilityLabel="Close"
+          accessibilityLabel={t('close')}
         />
-        <Pressable style={cardStyle} onPress={event => event.stopPropagation()}>
+        <Pressable
+          style={[styles.sheet, sheetStyle]}
+          onPress={event => event.stopPropagation()}
+          accessibilityViewIsModal>
           <View style={styles.handleWrapper}>
-            <View style={handleStyle} />
+            <View
+              style={[styles.handle, {backgroundColor: colors.borderStrong}]}
+            />
           </View>
           {title ? (
-            <RTLAwareText style={[theme.text.bodyXLargeBold, styles.title]}>
-              {title}
-            </RTLAwareText>
+            <RTLAwareText style={theme.text.h3}>{title}</RTLAwareText>
           ) : null}
           {children}
         </Pressable>
@@ -73,15 +73,25 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
   },
-  backdrop: {
+  scrim: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: 'rgba(6,8,15,0.6)',
+  },
+  sheet: {
+    gap: CommonSizes.layout.stack,
+    paddingHorizontal: CommonSizes.layout.gutter,
+    paddingTop: CommonSizes.spacing.medium,
+    borderTopLeftRadius: CommonSizes.borderRadius.xl,
+    borderTopRightRadius: CommonSizes.borderRadius.xl,
+    borderWidth: CommonSizes.borderWidth.hairline,
+    borderBottomWidth: 0,
   },
   handleWrapper: {
     alignItems: 'center',
-    marginBottom: CommonSizes.spacing.large,
+    paddingVertical: CommonSizes.spacing.small,
   },
-  title: {
-    marginBottom: CommonSizes.spacing.medium,
+  handle: {
+    width: 36,
+    height: 4,
+    borderRadius: CommonSizes.borderRadius.full,
   },
 });

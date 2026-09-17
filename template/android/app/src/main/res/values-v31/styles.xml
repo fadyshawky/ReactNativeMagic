@@ -1,0 +1,9 @@
+<resources>
+
+    <!-- Android 12+ draws its own launch splash: same mark, same background. -->
+    <style name="AppTheme" parent="BaseAppTheme">
+        <item name="android:windowSplashScreenBackground">@color/splash_background</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_mark</item>
+    </style>
+
+</resources>

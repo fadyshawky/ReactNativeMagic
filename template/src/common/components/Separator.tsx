@@ -1,6 +1,5 @@
 import React, {FC, useMemo} from 'react';
 import {StyleSheet, View, ViewStyle} from 'react-native';
-import {hairlineWidth} from '../../core/theme/commonConsts';
 import {CommonSizes} from '../../core/theme/commonSizes';
 import {useTheme} from '../../core/theme/ThemeProvider';
 interface IProps {
@@ -15,13 +14,13 @@ export const Separator: FC<IProps> = ({isFull = true}) => {
 
   return (
     <View
-      style={[containerStyle, {backgroundColor: theme.colors.indigoBlue}]}
+      style={[containerStyle, {backgroundColor: theme.colors.borderSubtle}]}
     />
   );
 };
 
 const sharedStyle: ViewStyle = {
-  height: hairlineWidth,
+  height: CommonSizes.borderWidth.hairline,
 };
 
 const styles = StyleSheet.create({

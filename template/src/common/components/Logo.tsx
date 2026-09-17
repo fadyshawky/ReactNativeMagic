@@ -1,77 +1,127 @@
 import React from 'react';
-import Svg, {Defs, LinearGradient, Path, Rect, Stop} from 'react-native-svg';
+import Svg, {
+  Defs,
+  G,
+  LinearGradient,
+  Polygon,
+  Rect,
+  Stop,
+} from 'react-native-svg';
+import {Blue, Silver} from '../../core/theme/colors';
+import {useTheme} from '../../core/theme/ThemeProvider';
 
 /**
- * Fady Shawky "FS" brand mark — a bold filled F beside a clean S, in a rounded
- * chip. Premium "Midnight" black + blue treatment. Pure geometry (filled rects
- * for the F, one stroked path for the S), so it renders identically in
- * react-native-svg and plain SVG and stays legible at small sizes.
+ * Fady Shawky brand marks, drawn from the same geometry as
+ * `src/assets/brand/fs-*.svg`: an angular interlocked F and S on a 14° slant.
+ * Never re-space, re-colour, re-slant or re-draw it.
  *
  * variants:
- *  - 'gradient' (default): blue-black chip, blue mark — the primary logo
- *  - 'mono':  dark chip, white mark — for dark UI
- *  - 'light': near-white chip, ink mark — for light UI
- *  - 'mark':  no chip, blue mark — inline / nav usage
+ *  - 'mark' (default): contained rounded-square mark, follows the theme
+ *    (silver on dark chip in light mode, dark on white chip in dark mode)
+ *  - 'mark-silver' | 'mark-white' | 'mark-black' | 'mark-blue': pinned mark
+ *  - 'monogram-blue' | 'monogram-white' | 'monogram-black' | 'monogram-silver':
+ *    bare monogram for large brand moments. Silver is dark-ground only.
  */
-export type LogoVariant = 'gradient' | 'mono' | 'light' | 'mark';
+export type LogoVariant =
+  | 'mark'
+  | 'mark-silver'
+  | 'mark-white'
+  | 'mark-black'
+  | 'mark-blue'
+  | 'monogram-blue'
+  | 'monogram-white'
+  | 'monogram-black'
+  | 'monogram-silver';
 
 interface LogoProps {
+  /** Width in px; the monogram keeps its 122:64 aspect. */
   size?: number;
   variant?: LogoVariant;
 }
 
-const S_PATH =
-  'M101 42 C101 32 91 28 83 28 C73 28 67 35 67 44 C67 52 75 56 84 59 C93 62 101 66 101 76 C101 86 91 91 83 91 C73 91 67 85 66 77';
+const INK = '#10151F';
+const SILVER = 'url(#fsSilver)';
+const SKEW = Math.tan((-14 * Math.PI) / 180);
 
-function chipFill(variant: LogoVariant): string | undefined {
-  switch (variant) {
-    case 'gradient':
-      return 'url(#fsChip)';
-    case 'mono':
-      return '#0D1124';
-    case 'light':
-      return '#F4F6FE';
-    case 'mark':
-      return undefined;
+// skewX(-14) applied up front: x' = x + tan(-14°)·y.
+const POLYGONS = [
+  [10, 0, 24, 0, 24, 60, 10, 60],
+  [10, 0, 60, 0, 60, 14, 10, 14],
+  [10, 23, 52, 23, 52, 37, 10, 37],
+  [66, 0, 110, 0, 110, 14, 80, 14, 80, 23, 66, 23],
+  [66, 23, 110, 23, 110, 37, 66, 37],
+  [96, 37, 110, 37, 110, 60, 56, 60, 56, 46, 96, 46],
+].map(p => {
+  const pairs: string[] = [];
+  for (let i = 0; i < p.length; i += 2) {
+    pairs.push(`${(p[i] + SKEW * p[i + 1]).toFixed(3)},${p[i + 1]}`);
   }
-}
+  return pairs.join(' ');
+});
 
-function markColor(variant: LogoVariant): string {
-  switch (variant) {
-    case 'gradient':
-      return '#6BA0FF';
-    case 'mono':
-      return '#FFFFFF';
-    case 'light':
-      return '#0A1230';
-    case 'mark':
-      return '#2F6BFF';
-  }
-}
+const MARKS: Record<string, {chip: string; glyph: string}> = {
+  'mark-silver': {chip: INK, glyph: SILVER},
+  'mark-white': {chip: '#FFFFFF', glyph: INK},
+  'mark-black': {chip: INK, glyph: '#FFFFFF'},
+  'mark-blue': {chip: Blue[600], glyph: '#FFFFFF'},
+};
 
-export function Logo({size = 96, variant = 'gradient'}: LogoProps) {
-  const fill = chipFill(variant);
-  const c = markColor(variant);
+const MONOGRAMS: Record<string, string> = {
+  'monogram-blue': Blue[600],
+  'monogram-white': '#FFFFFF',
+  'monogram-black': INK,
+  'monogram-silver': SILVER,
+};
+
+function SilverGradient(): JSX.Element {
   return (
-    <Svg width={size} height={size} viewBox="0 0 120 120" fill="none">
-      <Defs>
-        <LinearGradient id="fsChip" x1="0" y1="0" x2="1" y2="1">
-          <Stop offset="0" stopColor="#0A1230" />
-          <Stop offset="1" stopColor="#1B45B8" />
-        </LinearGradient>
-      </Defs>
-      {fill ? <Rect x="0" y="0" width="120" height="120" rx="30" fill={fill} /> : null}
-      <Rect x="25" y="24" width="13" height="72" rx="3" fill={c} />
-      <Rect x="25" y="24" width="33" height="13" rx="3" fill={c} />
-      <Rect x="25" y="52" width="26" height="12" rx="3" fill={c} />
-      <Path
-        d={S_PATH}
-        stroke={c}
-        strokeWidth={13}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
+    <Defs>
+      <LinearGradient id="fsSilver" x1="0" y1="0" x2="1" y2="1">
+        <Stop offset="0" stopColor={Silver.hi} />
+        <Stop offset="0.5" stopColor={Silver.mid} />
+        <Stop offset="1" stopColor={Silver.lo} />
+      </LinearGradient>
+    </Defs>
+  );
+}
+
+function Monogram({fill}: {fill: string}): JSX.Element {
+  return (
+    <>
+      {POLYGONS.map(points => (
+        <Polygon key={points} points={points} fill={fill} />
+      ))}
+    </>
+  );
+}
+
+export function Logo({size = 96, variant = 'mark'}: LogoProps): JSX.Element {
+  const {theme} = useTheme();
+
+  const monogramFill = MONOGRAMS[variant];
+  if (monogramFill) {
+    return (
+      <Svg width={size} height={(size * 64) / 122} viewBox="-8 -2 122 64">
+        {monogramFill === SILVER ? <SilverGradient /> : null}
+        <Monogram fill={monogramFill} />
+      </Svg>
+    );
+  }
+
+  const resolved =
+    variant === 'mark'
+      ? theme.mode === 'dark'
+        ? 'mark-white'
+        : 'mark-silver'
+      : variant;
+  const {chip, glyph} = MARKS[resolved];
+  return (
+    <Svg width={size} height={size} viewBox="0 0 100 100">
+      {glyph === SILVER ? <SilverGradient /> : null}
+      <Rect width="100" height="100" rx="22" fill={chip} />
+      <G transform="translate(18 26) scale(0.56)">
+        <Monogram fill={glyph} />
+      </G>
     </Svg>
   );
 }

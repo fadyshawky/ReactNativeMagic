@@ -18,10 +18,8 @@ import {
   ViewStyle,
 } from 'react-native';
 import {useTheme} from '../../core/theme/ThemeProvider';
-import {PrimaryColors, AlertColors} from '../../core/theme/colors';
+import {inputTextAlign} from '../../core/theme/commonConsts';
 import {CommonSizes} from '../../core/theme/commonSizes';
-import {CommonStyles} from '../../core/theme/commonStyles';
-import {scaleHeight} from '../../core/theme/scaling';
 import {regexValidation} from '../validations/regexValidator';
 
 interface IProps extends TextInputProps {
@@ -136,16 +134,22 @@ export const PrimaryTextInput: FC<IProps> = memo(
     const inputWrapperStyle: ViewStyle = {
       ...styles.inputWrapper,
       borderColor: error
-        ? theme.colors.red
+        ? theme.colors.danger
         : isFocused
-        ? theme.colors.indigoBlue
-        : theme.colors.strokeDeactive,
-      height: height ?? scaleHeight(84),
-      backgroundColor: theme.colors.backgroundOpacity,
+          ? theme.colors.borderAccent
+          : theme.colors.borderDefault,
+      height: height ?? CommonSizes.control.lg,
+      backgroundColor: editable
+        ? theme.colors.surfaceCard
+        : theme.colors.surfaceInset,
+      boxShadow: isFocused
+        ? `0 0 0 3px ${theme.colors.accentRing}`
+        : theme.shadows.xs,
     };
 
     const textInputStyle: TextStyle = {
-      ...theme.text.body1,
+      ...theme.text.body,
+      lineHeight: undefined,
       paddingStart: CommonSizes.spacing.medium,
       ...Platform.select({
         android: {
@@ -159,7 +163,7 @@ export const PrimaryTextInput: FC<IProps> = memo(
         <View style={inputWrapperStyle}>
           <TextInput
             disableFullscreenUI={true}
-            selectionColor={selectionColor}
+            selectionColor={theme.colors.accent}
             {...props}
             pointerEvents={pointerEvents}
             ref={inputRef}
@@ -167,7 +171,7 @@ export const PrimaryTextInput: FC<IProps> = memo(
             onBlur={onLocalBlur}
             style={[styles.textInput, textInputStyle, style]}
             onChangeText={handleChangeText}
-            placeholderTextColor={theme.colors.tintColor}
+            placeholderTextColor={theme.colors.textTertiary}
             autoCapitalize="none"
             autoComplete="off"
             keyboardType={keyboardType}
@@ -185,93 +189,38 @@ const BottomText: FC<{error?: string | null; hint?: string}> = memo(
     const {theme} = useTheme();
     if (error != null) {
       return (
-        <Text style={{...theme.text.body2, color: theme.colors.red}}>
+        <Text style={[theme.text.bodySm, {color: theme.colors.dangerFg}]}>
           {error}
         </Text>
       );
     } else if (hint != null) {
-      return <Text style={styles.hint}>{hint}</Text>;
+      return (
+        <Text style={[theme.text.bodySm, {color: theme.colors.textTertiary}]}>
+          {hint}
+        </Text>
+      );
     } else {
       return null;
     }
   },
 );
 
-const selectionColor = PrimaryColors.PlatinateBlue_400;
-
-const commonInputContainer: TextStyle = {
-  flexDirection: 'row',
-  alignItems: 'center',
-  justifyContent: 'center',
-  minHeight: CommonSizes.spacing.xxxLarge,
-  textAlignVertical: 'center',
-  textAlign: 'center',
-  width: '100%',
-  borderRadius: CommonSizes.borderRadius.medium,
-};
-
 const styles = StyleSheet.create({
   outerContainer: {
     justifyContent: 'space-between',
-    gap: CommonSizes.spacing.small,
+    gap: CommonSizes.layout.field,
   } as ViewStyle,
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: CommonSizes.borderWidth.small,
-    borderRadius: CommonSizes.borderRadius.medium,
+    borderWidth: CommonSizes.borderWidth.hairline,
+    borderRadius: CommonSizes.borderRadius.sm,
     width: '100%',
   } as ViewStyle,
   textInput: {
     width: '100%',
     flex: 1,
+    textAlign: inputTextAlign,
     textAlignVertical: 'center',
-  } as TextStyle,
-  container: {
-    flexDirection: 'column',
-  } as ViewStyle,
-  input: {
-    flex: 1,
-    textAlignVertical: 'center',
-    paddingStart: CommonSizes.spacing.medium,
-    ...Platform.select({
-      android: {
-        paddingEnd: CommonSizes.spacing.medium,
-      },
-    }),
-  } as TextStyle,
-  inputContainer: {
-    ...commonInputContainer,
-    ...Platform.select({
-      ios: {
-        paddingEnd: CommonSizes.spacing.medium,
-      },
-    }),
-  } as TextStyle,
-  errorInputContainer: {
-    ...commonInputContainer,
-    ...Platform.select({
-      android: {
-        borderColor: AlertColors.error_400,
-      },
-    }),
-  } as TextStyle,
-  disabledInputContainer: {
-    ...commonInputContainer,
-  } as TextStyle,
-  focusedInputContainer: {
-    ...commonInputContainer,
-  } as TextStyle,
-  label: {
-    ...CommonStyles.body_regular,
-  } as TextStyle,
-  hint: {
-    ...CommonStyles.normalText,
-    fontWeight: '200',
-    lineHeight: CommonSizes.lineHeight.small,
-  } as TextStyle,
-  error: {
-    ...CommonStyles.normalText,
-    lineHeight: CommonSizes.lineHeight.small,
   } as TextStyle,
 });

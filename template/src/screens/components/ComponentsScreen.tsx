@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {StyleSheet, TextStyle, View, ViewStyle} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 import {ButtonType} from '../../../types';
 import {AppBottomSheet} from '../../common/components/AppBottomSheet';
 import {AppSwitch} from '../../common/components/AppSwitch';
@@ -19,22 +18,14 @@ import {PrimaryButton} from '../../common/components/PrimaryButton';
 import {RadioGroup} from '../../common/components/RadioGroup';
 import {RTLAwareText} from '../../common/components/RTLAwareText';
 import {RTLAwareView} from '../../common/components/RTLAwareView';
+import {useTranslation} from '../../common/localization/LocalizationProvider';
 import {SegmentedControl} from '../../common/components/SegmentedControl';
 import {Skeleton} from '../../common/components/Skeleton';
-import {BrandGradients, GradientDirection} from '../../core/theme/brand';
 import {CommonSizes} from '../../core/theme/commonSizes';
 import {useTheme} from '../../core/theme/ThemeProvider';
 
-const SLIDES = [
-  {title: 'Build fast', sub: 'Scaffolded for you'},
-  {title: 'Stay consistent', sub: 'One design system'},
-  {title: 'Ship anywhere', sub: 'iOS · Android'},
-];
-const CARDS = [
-  {title: 'Getting started', sub: 'Set up your env'},
-  {title: 'Theming', sub: 'Tokens & gradients'},
-  {title: 'Navigation', sub: 'Token-gated stacks'},
-];
+const SLIDES = ['Build', 'Consistent', 'Ship'];
+const CARDS = ['Start', 'Theme', 'Nav'];
 
 const Section = ({
   title,
@@ -55,6 +46,16 @@ const Section = ({
 
 export function ComponentsScreen(): JSX.Element {
   const {theme} = useTheme();
+  const tr = useTranslation();
+  const t = (key: string) => tr(key, 'components');
+  const slides = SLIDES.map(k => ({
+    title: t(`slide${k}Title`),
+    sub: t(`slide${k}Sub`),
+  }));
+  const cards = CARDS.map(k => ({
+    title: t(`card${k}Title`),
+    sub: t(`card${k}Sub`),
+  }));
   const [name, setName] = useState('');
   const [pass, setPass] = useState('');
   const [notes, setNotes] = useState('');
@@ -67,83 +68,108 @@ export function ComponentsScreen(): JSX.Element {
   const [sheet, setSheet] = useState(false);
   const [dialog, setDialog] = useState(false);
 
+  const {colors} = theme;
   const cardStyle = [
     styles.card,
     {
-      backgroundColor: theme.colors.grayScale_0,
-      borderColor: theme.colors.grayScale_50,
+      backgroundColor: colors.surfaceCard,
+      borderColor: colors.borderDefault,
+      boxShadow: theme.shadows.sm,
     },
   ];
-  const titleStyle = [theme.text.bodyXLargeBold, styles.h];
+  const titleStyle = theme.text.eyebrow;
 
   return (
     <Container
       testID={'ComponentsScreenID'}
       backgroundImage={0}
-      backgroundColor={theme.colors.background_2}
-      contentContainerStyle={styles.content}>
-      <RTLAwareText style={theme.text.header3}>Components</RTLAwareText>
+      backgroundColor={colors.bgCanvas}
+      style={styles.content}>
+      <RTLAwareText style={theme.text.h1}>{t('title')}</RTLAwareText>
 
-      <Section title="Text inputs" cardStyle={cardStyle} titleStyle={titleStyle}>
-        <AppTextInput label="Name" value={name} onChangeText={setName} placeholder="Your name" />
+      <Section
+        title={t('textInputs')}
+        cardStyle={cardStyle}
+        titleStyle={titleStyle}>
         <AppTextInput
-          label="Password"
+          label={t('name')}
+          value={name}
+          onChangeText={setName}
+          placeholder={t('namePlaceholder')}
+        />
+        <AppTextInput
+          label={t('password')}
           value={pass}
           onChangeText={setPass}
           placeholder="••••••••"
           secureTextEntry
         />
         <AppTextInput
-          label="Notes"
+          label={t('notes')}
           value={notes}
           onChangeText={setNotes}
-          placeholder="Write something…"
+          placeholder={t('notesPlaceholder')}
           multiline
         />
         <Dropdown
-          label="Country"
+          label={t('country')}
           value={country}
-          placeholder="Select a country"
+          placeholder={t('countryPlaceholder')}
           options={[
-            {label: 'Egypt', value: 'eg'},
-            {label: 'United Arab Emirates', value: 'ae'},
-            {label: 'Saudi Arabia', value: 'sa'},
+            {label: t('egypt'), value: 'eg'},
+            {label: t('uae'), value: 'ae'},
+            {label: t('saudi'), value: 'sa'},
           ]}
           onSelect={setCountry}
         />
       </Section>
 
-      <Section title="Toggles" cardStyle={cardStyle} titleStyle={titleStyle}>
-        <Checkbox checked={agree} onChange={setAgree} label="I agree to the terms" />
+      <Section
+        title={t('toggles')}
+        cardStyle={cardStyle}
+        titleStyle={titleStyle}>
+        <Checkbox checked={agree} onChange={setAgree} label={t('agreeTerms')} />
         <RTLAwareView style={styles.row}>
-          <RTLAwareText style={theme.text.bodyLargeRegular}>Notifications</RTLAwareText>
+          <RTLAwareText style={theme.text.body}>
+            {t('notifications')}
+          </RTLAwareText>
           <AppSwitch value={notify} onValueChange={setNotify} />
         </RTLAwareView>
         <RadioGroup
           value={plan}
           options={[
-            {label: 'Starter', value: 'a'},
-            {label: 'Pro', value: 'b'},
-            {label: 'Team', value: 'c'},
+            {label: t('starter'), value: 'a'},
+            {label: t('pro'), value: 'b'},
+            {label: t('team'), value: 'c'},
           ]}
           onChange={setPlan}
         />
       </Section>
 
       <Section
-        title="Selection & display"
+        title={t('selectionDisplay')}
         cardStyle={cardStyle}
         titleStyle={titleStyle}>
-        <SegmentedControl segments={['All', 'Active', 'Done']} index={seg} onChange={setSeg} />
+        <SegmentedControl
+          segments={[t('segmentAll'), t('segmentActive'), t('segmentDone')]}
+          index={seg}
+          onChange={setSeg}
+        />
         <RTLAwareView style={styles.chips}>
-          {['all', 'design', 'code', 'launch'].map(c => (
-            <Chip key={c} label={c} selected={chip === c} onPress={() => setChip(c)} />
+          {['All', 'Design', 'Code', 'Launch'].map(c => (
+            <Chip
+              key={c}
+              label={t(`chip${c}`)}
+              selected={chip === c}
+              onPress={() => setChip(c)}
+            />
           ))}
         </RTLAwareView>
         <RTLAwareView style={styles.row}>
-          <Badge label="New" variant="primary" />
-          <Badge label="Live" variant="success" />
-          <Badge label="Error" variant="error" />
+          <Badge label={t('badgeNew')} variant="accent" />
+          <Badge label={t('badgeLive')} variant="success" dot />
+          <Badge label={t('badgeLowStock')} variant="warning" />
+          <Badge label={t('badgeFailed')} variant="danger" dot />
           <Badge count={128} variant="neutral" />
         </RTLAwareView>
         <RTLAwareView style={styles.row}>
@@ -153,44 +179,48 @@ export function ComponentsScreen(): JSX.Element {
         </RTLAwareView>
       </Section>
 
-      <Section title="Carousel" cardStyle={cardStyle} titleStyle={titleStyle}>
+      <Section
+        title={t('carousel')}
+        cardStyle={cardStyle}
+        titleStyle={titleStyle}>
         <Carousel
-          data={SLIDES}
+          data={slides}
           height={130}
           renderItem={({item}) => (
-            <LinearGradient
-              colors={BrandGradients.primary}
-              start={GradientDirection.start}
-              end={GradientDirection.end}
-              style={styles.slide}>
-              <RTLAwareText style={[theme.text.header4, styles.onGradientText]}>
-                {item.title}
-              </RTLAwareText>
-              <RTLAwareText
-                style={[theme.text.bodyMediumRegular, styles.onGradientText]}>
-                {item.sub}
-              </RTLAwareText>
-            </LinearGradient>
+            <View
+              style={[
+                styles.slide,
+                {
+                  backgroundColor: colors.surfaceInset,
+                  borderColor: colors.borderSubtle,
+                },
+              ]}>
+              <RTLAwareText style={theme.text.h3}>{item.title}</RTLAwareText>
+              <RTLAwareText style={theme.text.bodySm}>{item.sub}</RTLAwareText>
+            </View>
           )}
         />
       </Section>
 
-      <Section title="Card scroller" cardStyle={cardStyle} titleStyle={titleStyle}>
+      <Section
+        title={t('cardScroller')}
+        cardStyle={cardStyle}
+        titleStyle={titleStyle}>
         <CardScroller
-          data={CARDS}
+          data={cards}
           cardWidth={220}
           renderItem={({item}) => (
             <View
               style={[
                 styles.scard,
                 {
-                  backgroundColor: theme.colors.background_2,
-                  borderColor: theme.colors.grayScale_50,
+                  backgroundColor: colors.surfaceCard,
+                  borderColor: colors.borderDefault,
                 },
               ]}>
-              <RTLAwareText style={theme.text.bodyLargeBold}>{item.title}</RTLAwareText>
+              <RTLAwareText style={theme.text.h4}>{item.title}</RTLAwareText>
               <RTLAwareText
-                style={{...theme.text.bodySmallRegular, color: theme.colors.grayScale_200}}>
+                style={[theme.text.bodySm, {color: colors.textTertiary}]}>
                 {item.sub}
               </RTLAwareText>
             </View>
@@ -198,60 +228,86 @@ export function ComponentsScreen(): JSX.Element {
         />
       </Section>
 
-      <Section title="List rows" cardStyle={cardStyle} titleStyle={titleStyle}>
+      <Section
+        title={t('listRows')}
+        cardStyle={cardStyle}
+        titleStyle={titleStyle}>
         <ListItem
-          title="Profile"
-          subtitle="Edit your details"
+          title={t('profile')}
+          subtitle={t('editDetails')}
           left={<Avatar name="Fady Shawky" size={36} />}
           showChevron
           onPress={() => {}}
         />
-        <ListItem title="Notifications" right={<AppSwitch value={notify} onValueChange={setNotify} />} />
-        <ListItem title="Language" subtitle="English" showChevron onPress={() => {}} />
+        <ListItem
+          title={t('notifications')}
+          right={<AppSwitch value={notify} onValueChange={setNotify} />}
+        />
+        <ListItem
+          title={t('language')}
+          subtitle={t('languageValue')}
+          showChevron
+          onPress={() => {}}
+        />
       </Section>
 
       <Section
-        title="Overlays & loading"
+        title={t('overlays')}
         cardStyle={cardStyle}
         titleStyle={titleStyle}>
         <PrimaryButton
-          label="Open bottom sheet"
+          label={t('openSheet')}
           type={ButtonType.solid}
           onPressIn={() => setSheet(true)}
         />
         <PrimaryButton
-          label="Open dialog"
+          label={t('openDialog')}
           type={ButtonType.outline}
           onPressIn={() => setDialog(true)}
         />
         <View style={styles.skeletons}>
           <Skeleton height={16} />
           <Skeleton height={16} width="70%" />
-          <Skeleton height={80} radius={CommonSizes.borderRadius.large} />
+          <Skeleton height={80} radius={CommonSizes.borderRadius.lg} />
         </View>
       </Section>
 
-      <AppBottomSheet visible={sheet} onClose={() => setSheet(false)} title="Choose a plan">
+      <AppBottomSheet
+        visible={sheet}
+        onClose={() => setSheet(false)}
+        title={t('choosePlan')}>
         <RadioGroup
           value={plan}
           options={[
-            {label: 'Starter', value: 'a'},
-            {label: 'Pro', value: 'b'},
-            {label: 'Team', value: 'c'},
+            {label: t('starter'), value: 'a'},
+            {label: t('pro'), value: 'b'},
+            {label: t('team'), value: 'c'},
           ]}
           onChange={setPlan}
         />
-        <PrimaryButton label="Done" type={ButtonType.solid} onPressIn={() => setSheet(false)} />
+        <PrimaryButton
+          label={t('done')}
+          type={ButtonType.solid}
+          onPressIn={() => setSheet(false)}
+        />
       </AppBottomSheet>
 
       <ModalDialog
         visible={dialog}
         onClose={() => setDialog(false)}
-        title="Delete item?"
-        message="This action cannot be undone."
+        title={t('deleteTitle')}
+        message={t('deleteMessage')}
         actions={[
-          {label: 'Cancel', onPress: () => setDialog(false), variant: 'ghost'},
-          {label: 'Delete', onPress: () => setDialog(false), variant: 'destructive'},
+          {
+            label: t('cancel'),
+            onPress: () => setDialog(false),
+            variant: 'ghost',
+          },
+          {
+            label: t('deleteItem'),
+            onPress: () => setDialog(false),
+            variant: 'destructive',
+          },
         ]}
       />
     </Container>
@@ -259,20 +315,13 @@ export function ComponentsScreen(): JSX.Element {
 }
 
 const styles = StyleSheet.create({
-  content: {
-    paddingHorizontal: CommonSizes.spacing.large,
-    paddingTop: CommonSizes.spacing.large,
-    paddingBottom: CommonSizes.spacing.xxxLarge,
-    gap: CommonSizes.spacing.xLarge,
-  },
-  section: {gap: CommonSizes.spacing.medium},
-  h: {marginBottom: CommonSizes.spacing.small},
-  onGradientText: {color: '#EAF0FF'},
+  content: {gap: CommonSizes.layout.sectionLoose},
+  section: {gap: CommonSizes.layout.related},
   card: {
-    borderRadius: CommonSizes.borderRadius.large,
-    borderWidth: CommonSizes.borderWidth.small,
-    padding: CommonSizes.spacing.large,
-    gap: CommonSizes.spacing.large,
+    borderRadius: CommonSizes.borderRadius.lg,
+    borderWidth: CommonSizes.borderWidth.hairline,
+    padding: CommonSizes.layout.cardPadding.md,
+    gap: CommonSizes.spacing.xLargePlus,
   },
   row: {
     flexDirection: 'row',
@@ -281,20 +330,25 @@ const styles = StyleSheet.create({
     gap: CommonSizes.spacing.medium,
     flexWrap: 'wrap',
   },
-  chips: {flexDirection: 'row', flexWrap: 'wrap', gap: CommonSizes.spacing.small},
+  chips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: CommonSizes.spacing.small,
+  },
   slide: {
     flex: 1,
     height: 130,
-    borderRadius: CommonSizes.borderRadius.large,
+    borderRadius: CommonSizes.borderRadius.lg,
+    borderWidth: CommonSizes.borderWidth.hairline,
     alignItems: 'center',
     justifyContent: 'center',
     gap: CommonSizes.spacing.small,
   },
   scard: {
     width: 220,
-    borderRadius: CommonSizes.borderRadius.large,
-    borderWidth: CommonSizes.borderWidth.small,
-    padding: CommonSizes.spacing.large,
+    borderRadius: CommonSizes.borderRadius.lg,
+    borderWidth: CommonSizes.borderWidth.hairline,
+    padding: CommonSizes.layout.cardPadding.sm,
     gap: CommonSizes.spacing.small,
   },
   skeletons: {gap: CommonSizes.spacing.medium},

@@ -1,0 +1,4 @@
+<resources>
+    <!-- bgCanvas (src/core/theme/colors.ts) -->
+    <color name="splash_background">#FFFFFF</color>
+</resources>

@@ -29,17 +29,15 @@ export function Profile(): JSX.Element {
   const cardStyle = [
     styles.card,
     {
-      backgroundColor: theme.colors.grayScale_0,
-      borderColor: theme.colors.grayScale_50,
+      backgroundColor: theme.colors.surfaceCard,
+      borderColor: theme.colors.borderDefault,
+      boxShadow: theme.shadows.sm,
     },
   ];
-  const valueText = {
-    ...theme.text.bodyMediumBold,
-    color: theme.colors.PlatinateBlue_400,
-  };
+  const valueText = [theme.text.bodySm, {color: theme.colors.textTertiary}];
   const dividerStyle = [
     styles.divider,
-    {backgroundColor: theme.colors.grayScale_50},
+    {backgroundColor: theme.colors.borderSubtle},
   ];
 
   const onToggleLanguage = () =>
@@ -61,19 +59,15 @@ export function Profile(): JSX.Element {
     <Container
       testID={'ProfileScreenID'}
       backgroundImage={0}
-      contentContainerStyle={styles.content}
-      backgroundColor={theme.colors.background_2}>
+      backgroundColor={theme.colors.bgCanvas}>
       <RTLAwareView style={styles.headerRow}>
-        <Avatar name={user?.full_name || 'U'} size={64} />
+        <Avatar name={user?.full_name || 'U'} size={48} />
         <View style={styles.flex}>
-          <RTLAwareText style={theme.text.header4} numberOfLines={1}>
+          <RTLAwareText style={theme.text.h3} numberOfLines={1}>
             {user?.full_name || t('account', 'profile')}
           </RTLAwareText>
           <RTLAwareText
-            style={{
-              ...theme.text.bodyMediumRegular,
-              color: theme.colors.grayScale_200,
-            }}>
+            style={[theme.text.mono, {color: theme.colors.textTertiary}]}>
             {user?.mobile_number || '—'}
           </RTLAwareText>
         </View>
@@ -101,7 +95,9 @@ export function Profile(): JSX.Element {
           onPress={toggleTheme}
           right={
             <RTLAwareText style={valueText}>
-              {theme.mode === 'dark' ? t('dark', 'profile') : t('light', 'profile')}
+              {theme.mode === 'dark'
+                ? t('dark', 'profile')
+                : t('light', 'profile')}
             </RTLAwareText>
           }
         />
@@ -115,18 +111,13 @@ export function Profile(): JSX.Element {
       <PrimaryButton
         label={t('logout', 'profile')}
         onPressIn={onLogout}
-        type={ButtonType.outlineNegative}
+        type={ButtonType.outline}
       />
     </Container>
   );
 }
 
 const styles = StyleSheet.create({
-  content: {
-    paddingHorizontal: CommonSizes.spacing.large,
-    paddingTop: CommonSizes.spacing.large,
-    gap: CommonSizes.spacing.xLarge,
-  },
   flex: {flex: 1},
   headerRow: {
     flexDirection: 'row',
@@ -134,9 +125,9 @@ const styles = StyleSheet.create({
     gap: CommonSizes.spacing.large,
   },
   card: {
-    borderRadius: CommonSizes.borderRadius.large,
-    borderWidth: CommonSizes.borderWidth.small,
-    paddingHorizontal: CommonSizes.spacing.large,
+    borderRadius: CommonSizes.borderRadius.lg,
+    borderWidth: CommonSizes.borderWidth.hairline,
+    paddingHorizontal: CommonSizes.spacing.xLarge,
   },
-  divider: {height: CommonSizes.borderWidth.small, width: '100%'},
+  divider: {height: CommonSizes.borderWidth.hairline, width: '100%'},
 });

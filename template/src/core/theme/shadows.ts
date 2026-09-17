@@ -1,135 +1,31 @@
-export interface ShadowConfig {
-  shadowColor: string;
-  shadowOffset: {
-    width: number;
-    height: number;
-  };
-  shadowOpacity: number;
-  shadowRadius: number;
-  elevation?: number; // For Android
-}
+/**
+ * Elevation — cool, low shadows (`tokens/elevation.css`). Navy-tinted in
+ * light mode, deeper near-black in dark mode where a tint would vanish.
+ * Values are RN `boxShadow` strings (New Architecture), spread as
+ * `{boxShadow: theme.shadows.sm}`. The 1px border does the structural work;
+ * the shadow only hints at layering.
+ *
+ * Usage: cards `sm`, popovers/menus `md`, sheets `lg`, dialogs `dialog`.
+ */
+export type ShadowLevel = 'none' | 'xs' | 'sm' | 'md' | 'lg' | 'dialog';
 
-export interface ElevationShadow {
-  primary: ShadowConfig;
-  secondary: ShadowConfig;
-}
+export type ShadowTokens = Record<ShadowLevel, string>;
 
-export const Shadows: Record<number, ElevationShadow> = {
-  1: {
-    primary: {
-      shadowColor: '#000000',
-      shadowOffset: {
-        width: 0,
-        height: 1,
-      },
-      shadowOpacity: 0.02, // 2%
-      shadowRadius: 1,
-      elevation: 1,
-    },
-    secondary: {
-      shadowColor: '#000000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.04, // 4%
-      shadowRadius: 4,
-      elevation: 1,
-    },
-  },
-  2: {
-    primary: {
-      shadowColor: '#000000',
-      shadowOffset: {
-        width: 0,
-        height: 1,
-      },
-      shadowOpacity: 0.04, // 4%
-      shadowRadius: 4,
-      elevation: 2,
-    },
-    secondary: {
-      shadowColor: '#000000',
-      shadowOffset: {
-        width: 0,
-        height: 4,
-      },
-      shadowOpacity: 0.08, // 8%
-      shadowRadius: 10,
-      elevation: 2,
-    },
-  },
-  3: {
-    primary: {
-      shadowColor: '#000000',
-      shadowOffset: {
-        width: 0,
-        height: 2,
-      },
-      shadowOpacity: 0.04, // 4%
-      shadowRadius: 20,
-      elevation: 3,
-    },
-    secondary: {
-      shadowColor: '#000000',
-      shadowOffset: {
-        width: 0,
-        height: 8,
-      },
-      shadowOpacity: 0.08, // 8%
-      shadowRadius: 32,
-      elevation: 3,
-    },
-  },
-  4: {
-    primary: {
-      shadowColor: '#000000',
-      shadowOffset: {
-        width: 0,
-        height: 8,
-      },
-      shadowOpacity: 0.06, // 6%
-      shadowRadius: 20,
-      elevation: 4,
-    },
-    secondary: {
-      shadowColor: '#000000',
-      shadowOffset: {
-        width: 0,
-        height: 24,
-      },
-      shadowOpacity: 0.12, // 12%
-      shadowRadius: 60,
-      elevation: 4,
-    },
-  },
+export const LightShadows: ShadowTokens = {
+  none: 'none',
+  xs: '0 1px 2px rgba(10,13,20,0.05)',
+  sm: '0 1px 3px rgba(10,13,20,0.07), 0 1px 2px -1px rgba(10,13,20,0.06)',
+  md: '0 4px 12px -3px rgba(10,13,20,0.09), 0 2px 4px -2px rgba(10,13,20,0.05)',
+  lg: '0 12px 32px -10px rgba(10,13,20,0.14), 0 4px 10px -4px rgba(10,13,20,0.07)',
+  dialog:
+    '0 24px 64px -20px rgba(10,13,20,0.24), 0 8px 20px -8px rgba(10,13,20,0.1)',
 };
 
-// Helper function to get shadow styles for a specific elevation
-export const getShadowStyle = (
-  elevation: number,
-  useSecondary = false,
-): ShadowConfig => {
-  const shadow = Shadows[elevation];
-  if (!shadow) {
-    throw new Error(
-      `Elevation ${elevation} is not defined. Available elevations: ${Object.keys(
-        Shadows,
-      ).join(', ')}`,
-    );
-  }
-  return useSecondary ? shadow.secondary : shadow.primary;
-};
-
-// Helper function to get both primary and secondary shadows for an elevation
-export const getElevationShadows = (elevation: number): ElevationShadow => {
-  const shadow = Shadows[elevation];
-  if (!shadow) {
-    throw new Error(
-      `Elevation ${elevation} is not defined. Available elevations: ${Object.keys(
-        Shadows,
-      ).join(', ')}`,
-    );
-  }
-  return shadow;
+export const DarkShadows: ShadowTokens = {
+  none: 'none',
+  xs: '0 1px 2px rgba(2,4,8,0.4)',
+  sm: '0 1px 3px rgba(2,4,8,0.5), 0 1px 2px -1px rgba(2,4,8,0.4)',
+  md: '0 4px 12px -3px rgba(2,4,8,0.6), 0 2px 4px -2px rgba(2,4,8,0.4)',
+  lg: '0 12px 32px -10px rgba(2,4,8,0.7), 0 4px 10px -4px rgba(2,4,8,0.5)',
+  dialog: '0 24px 64px -20px rgba(0,0,0,0.8), 0 8px 20px -8px rgba(0,0,0,0.6)',
 };

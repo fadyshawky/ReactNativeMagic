@@ -6,9 +6,11 @@ import {
   TextInput,
   ViewStyle,
 } from 'react-native';
-import Svg, {Path} from 'react-native-svg';
+import {useTranslation} from '../localization/LocalizationProvider';
 import {useTheme} from '../../core/theme/ThemeProvider';
+import {inputTextAlign} from '../../core/theme/commonConsts';
 import {CommonSizes} from '../../core/theme/commonSizes';
+import {Icon} from './Icon';
 import {RTLAwareText} from './RTLAwareText';
 import {RTLAwareView} from './RTLAwareView';
 
@@ -24,35 +26,6 @@ interface AppTextInputProps {
   editable?: boolean;
 }
 
-function EyeIcon({open, color}: {open: boolean; color: string}): JSX.Element {
-  return (
-    <Svg width={22} height={22} viewBox="0 0 24 24" fill="none">
-      <Path
-        d="M2 12C3.7 7.6 7.5 5 12 5C16.5 5 20.3 7.6 22 12C20.3 16.4 16.5 19 12 19C7.5 19 3.7 16.4 2 12Z"
-        stroke={color}
-        strokeWidth={1.8}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <Path
-        d="M12 15C13.66 15 15 13.66 15 12C15 10.34 13.66 9 12 9C10.34 9 9 10.34 9 12C9 13.66 10.34 15 12 15Z"
-        stroke={color}
-        strokeWidth={1.8}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {!open ? (
-        <Path
-          d="M4 4L20 20"
-          stroke={color}
-          strokeWidth={1.8}
-          strokeLinecap="round"
-        />
-      ) : null}
-    </Svg>
-  );
-}
-
 export function AppTextInput(props: AppTextInputProps): JSX.Element {
   const {
     label,
@@ -66,77 +39,79 @@ export function AppTextInput(props: AppTextInputProps): JSX.Element {
     editable = true,
   } = props;
   const {theme} = useTheme();
+  const t = useTranslation();
   const [isFocused, setFocused] = useState(false);
   const [hidden, setHidden] = useState(true);
 
+  const {colors} = theme;
   const borderColor = useMemo(() => {
     if (error) {
-      return theme.colors.error_400;
+      return colors.danger;
     }
     if (isFocused) {
-      return theme.colors.PlatinateBlue_400;
+      return colors.borderAccent;
     }
-    return theme.colors.grayScale_50;
-  }, [error, isFocused, theme.colors]);
+    return colors.borderDefault;
+  }, [error, isFocused, colors]);
 
   const rowStyle: ViewStyle = {
     flexDirection: 'row',
     alignItems: multiline ? 'flex-start' : 'center',
-    backgroundColor: theme.colors.grayScale_0,
+    backgroundColor: editable ? colors.surfaceCard : colors.surfaceInset,
     borderColor,
-    borderWidth: CommonSizes.borderWidth.medium,
-    borderRadius: CommonSizes.borderRadius.large,
-    paddingHorizontal: CommonSizes.spacing.xLarge,
-    paddingVertical: multiline
-      ? CommonSizes.spacing.large
-      : CommonSizes.spacing.medium,
+    borderWidth: CommonSizes.borderWidth.hairline,
+    borderRadius: CommonSizes.borderRadius.sm,
+    paddingHorizontal: CommonSizes.spacing.large,
+    paddingVertical: multiline ? CommonSizes.spacing.large : 0,
+    height: multiline ? undefined : CommonSizes.control.lg,
     minHeight: multiline ? 96 : undefined,
     opacity: editable ? 1 : 0.6,
+    boxShadow: isFocused ? `0 0 0 3px ${colors.accentRing}` : theme.shadows.xs,
   };
 
   const inputDynamicStyle = {
-    color: theme.colors.grayScale_700,
     textAlignVertical: multiline ? ('top' as const) : ('center' as const),
     minHeight: multiline ? 72 : undefined,
+    // Single-line TextInput + lineHeight mis-aligns text on iOS.
+    lineHeight: multiline ? theme.text.body.lineHeight : undefined,
   };
 
   return (
     <RTLAwareView style={styles.container}>
       {label ? (
-        <RTLAwareText
-          style={[theme.text.bodyMediumBold, {color: theme.colors.grayScale_700}]}>
-          {label}
-        </RTLAwareText>
+        <RTLAwareText style={theme.text.label}>{label}</RTLAwareText>
       ) : null}
       <RTLAwareView style={rowStyle}>
         <TextInput
-          style={[styles.input, theme.text.bodyLargeRegular, inputDynamicStyle]}
+          style={[styles.input, theme.text.body, inputDynamicStyle]}
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
-          placeholderTextColor={theme.colors.grayScale_200}
+          placeholderTextColor={colors.textTertiary}
           secureTextEntry={secureTextEntry ? hidden : false}
           multiline={multiline}
           keyboardType={keyboardType}
           editable={editable}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
-          selectionColor={theme.colors.PlatinateBlue_400}
+          selectionColor={colors.accent}
         />
         {secureTextEntry ? (
           <Pressable
             onPress={() => setHidden(prev => !prev)}
             hitSlop={8}
             accessibilityRole="button"
-            accessibilityLabel={hidden ? 'Show password' : 'Hide password'}
+            accessibilityLabel={t(hidden ? 'showPassword' : 'hidePassword')}
             style={styles.eyeButton}>
-            <EyeIcon open={!hidden} color={theme.colors.grayScale_200} />
+            <Icon
+              name={hidden ? 'eye' : 'eye-off'}
+              color={colors.textTertiary}
+            />
           </Pressable>
         ) : null}
       </RTLAwareView>
       {error ? (
-        <RTLAwareText
-          style={[theme.text.bodySmallRegular, {color: theme.colors.error_400}]}>
+        <RTLAwareText style={[theme.text.bodySm, {color: colors.dangerFg}]}>
           {error}
         </RTLAwareText>
       ) : null}
@@ -148,11 +123,12 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     flexDirection: 'column',
-    gap: CommonSizes.spacing.medium,
+    gap: CommonSizes.layout.field,
   } as ViewStyle,
   input: {
     flex: 1,
     padding: 0,
+    textAlign: inputTextAlign,
   },
   eyeButton: {
     paddingStart: CommonSizes.spacing.medium,

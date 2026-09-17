@@ -1,17 +1,20 @@
 import React from 'react';
-import {Image, StyleSheet, View} from 'react-native';
-import {CommonStyles} from '../../core/theme/commonStyles';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
+import {useTheme} from '../../core/theme/ThemeProvider';
 
 export const LoadingComponent = () => {
+  const {theme} = useTheme();
   return (
-    <View style={CommonStyles.flexCenter}>
-      <Image resizeMode="cover" style={styles.image} source={0} />
+    <View style={styles.container}>
+      <ActivityIndicator color={theme.colors.accent} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  image: {
+  container: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

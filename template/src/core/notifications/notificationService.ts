@@ -1,14 +1,21 @@
-import messaging, {
-  FirebaseMessagingTypes,
+import {
+  getInitialNotification,
+  getMessaging,
+  getToken,
+  onMessage,
+  onNotificationOpenedApp,
+  onTokenRefresh,
+  requestPermission,
+  type RemoteMessage,
 } from '@react-native-firebase/messaging';
 import {AppState, AppStateStatus, Platform} from 'react-native';
-import Snackbar from 'react-native-snackbar';
+import {Snackbar} from 'react-native-snackbar';
 import {store} from '../store/store';
 import {updateFcmToken} from '../store/user/userSlice';
 import {isUserLoggedIn} from './notificationAuth';
 import {routeFromNotificationData} from './routeFromNotificationData';
 
-type Data = FirebaseMessagingTypes.RemoteMessage['data'];
+type Data = RemoteMessage['data'];
 
 let pendingBackgroundNotificationData: Data | null = null;
 let appStateSubscription: {remove: () => void} | null = null;
@@ -30,7 +37,10 @@ function tryFlushPending() {
 async function requestPermissionIfNeeded() {
   try {
     if (Platform.OS === 'ios') {
-      await messaging().requestPermission();
+      // Deprecated since RNFirebase v25 in favour of react-native-permissions
+      // (`requestNotifications`), which needs the Notifications handler enabled
+      // in ios/Podfile `setup_permissions`. Still functional in v26.
+      await requestPermission(getMessaging());
     }
   } catch (e) {
     if (__DEV__) console.warn('[push] permission request failed', e);
@@ -39,7 +49,7 @@ async function requestPermissionIfNeeded() {
 
 async function syncToken() {
   try {
-    const token = await messaging().getToken();
+    const token = await getToken(getMessaging());
     if (token) {
       store.dispatch(updateFcmToken(token));
     }
@@ -63,37 +73,54 @@ export function startPushNotificationListeners() {
   requestPermissionIfNeeded();
   syncToken();
 
-  const unsubOnMessage = messaging().onMessage(remoteMessage => {
-    const title =
-      remoteMessage.notification?.title ?? remoteMessage.data?.title;
-    const body =
-      remoteMessage.notification?.body ?? remoteMessage.data?.body;
-    const text = [title, body].filter(Boolean).join(' — ');
-    if (text) {
-      Snackbar.show({text, duration: Snackbar.LENGTH_SHORT});
-    }
-  });
+  let unsubOnMessage: () => void = () => {};
+  let unsubOnOpenedApp: () => void = () => {};
+  let unsubOnTokenRefresh: () => void = () => {};
 
-  const unsubOnOpenedApp = messaging().onNotificationOpenedApp(remoteMessage => {
-    if (!remoteMessage?.data) return;
-    if (isUserLoggedIn()) {
-      routeFromNotificationData(remoteMessage.data as Record<string, string>);
-    } else {
-      pendingBackgroundNotificationData = remoteMessage.data;
-    }
-  });
+  try {
+    const messaging = getMessaging();
 
-  messaging()
-    .getInitialNotification()
-    .then(remoteMessage => {
-      if (!remoteMessage?.data) return;
-      pendingBackgroundNotificationData = remoteMessage.data;
-      tryFlushPending();
+    unsubOnMessage = onMessage(messaging, remoteMessage => {
+      const title =
+        remoteMessage.notification?.title ?? remoteMessage.data?.title;
+      const body = remoteMessage.notification?.body ?? remoteMessage.data?.body;
+      const text = [title, body].filter(Boolean).join(' — ');
+      if (text) {
+        Snackbar.show({text, duration: Snackbar.LENGTH_SHORT});
+      }
     });
 
-  const unsubOnTokenRefresh = messaging().onTokenRefresh(token => {
-    store.dispatch(updateFcmToken(token));
-  });
+    unsubOnOpenedApp = onNotificationOpenedApp(messaging, remoteMessage => {
+      if (!remoteMessage?.data) return;
+      if (isUserLoggedIn()) {
+        routeFromNotificationData(remoteMessage.data as Record<string, string>);
+      } else {
+        pendingBackgroundNotificationData = remoteMessage.data;
+      }
+    });
+
+    getInitialNotification(messaging)
+      .then(remoteMessage => {
+        if (!remoteMessage?.data) return;
+        pendingBackgroundNotificationData = remoteMessage.data;
+        tryFlushPending();
+      })
+      .catch(() => {});
+
+    unsubOnTokenRefresh = onTokenRefresh(messaging, token => {
+      store.dispatch(updateFcmToken(token));
+    });
+  } catch (e) {
+    // Firebase isn't configured yet (no google-services.json /
+    // GoogleService-Info.plist). The app still boots; push stays inert until
+    // you add your Firebase config — see docs/CUSTOMIZATION.md.
+    if (__DEV__) {
+      console.warn(
+        '[push] Firebase Messaging unavailable — skipping push listeners. Add your Firebase config to enable notifications.',
+        e,
+      );
+    }
+  }
 
   appStateSubscription = AppState.addEventListener(
     'change',

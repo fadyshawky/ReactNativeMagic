@@ -1,19 +1,18 @@
 /**
- * Customize for your brand – this is the only place to change app fonts.
+ * Fonts — Geist for everything, Geist Mono for eyebrows, data, code and
+ * amounts. No third face. Weights in use: 400 body, 500 labels/UI,
+ * 600 headings/display.
+ *
+ * Values are the static TTF PostScript names. Geist v1.7.2 (SIL OFL) ships in
+ * `resources/fonts/`, linked into iOS (`UIAppFonts` + Copy Bundle Resources)
+ * and Android (`android/app/src/main/assets/fonts/`) — see
+ * docs/CUSTOMIZATION.md → Fonts. Geist has no Arabic glyphs; Arabic text falls
+ * back to the platform font.
  */
 export const Fonts = {
-  // Almarai Font Family
-  light: 'Almarai-Light',
-  regular: 'Almarai-Regular',
-  bold: 'Almarai-Bold',
-  extraBold: 'Almarai-ExtraBold',
-
-  // Legacy support - keeping these for backward compatibility
-  // but they now map to Almarai equivalents
-  thin: 'Almarai-Light',
-  normal: 'Almarai-Regular',
-  medium: 'Almarai-Regular',
-  semiBold: 'Almarai-Bold',
-  black: 'Almarai-ExtraBold',
-  italic: 'Almarai-Regular', // Almarai doesn't have italic variant
-};
+  regular: 'Geist-Regular',
+  medium: 'Geist-Medium',
+  semiBold: 'Geist-SemiBold',
+  mono: 'GeistMono-Regular',
+  monoMedium: 'GeistMono-Medium',
+} as const;

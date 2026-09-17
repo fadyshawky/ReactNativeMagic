@@ -7,10 +7,9 @@ import {
   ViewStyle,
 } from 'react-native';
 import {CommonSizes} from '../../core/theme/commonSizes';
-import {createThemedStyles} from '../../core/theme/commonStyles';
 import {scaleHeight, scaleWidth} from '../../core/theme/scaling';
 import {useTheme} from '../../core/theme/ThemeProvider';
-import FastImage from '@d11/react-native-fast-image';
+import FastImage, {FastImageProps} from '@d11/react-native-fast-image';
 
 interface CardProps {
   icon: {uri: string};
@@ -32,8 +31,11 @@ export const Card = ({
     <TouchableOpacity
       style={[
         styles.card,
-        {backgroundColor: theme.colors.surface},
-        createThemedStyles(theme).dropShadow,
+        {
+          backgroundColor: theme.colors.surfaceCard,
+          borderColor: theme.colors.borderDefault,
+          boxShadow: theme.shadows.sm,
+        },
         {marginRight: marginRight},
         styles.cardOverflowHidden,
         cardStyle,
@@ -45,23 +47,26 @@ export const Card = ({
         {icon && icon.uri && (
           <FastImage
             source={{uri: icon.uri, cache: FastImage.cacheControl.immutable}}
-            style={styles.fastImage}
+            // FastImage 8.13 types build ImageStyle on `FlexStyle`, which RN 0.87
+            // no longer exports, so width/height are missing from its typings.
+            style={styles.fastImage as FastImageProps['style']}
             resizeMode={FastImage.resizeMode.contain}
           />
         )}
       </View>
-      <Text style={[theme.text.cards, styles.titleCentered]}>{title}</Text>
+      <Text style={[theme.text.h4, styles.titleCentered]}>{title}</Text>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    padding: CommonSizes.spacing.medium,
-    borderRadius: CommonSizes.borderRadius.large,
+    padding: CommonSizes.layout.cardPadding.sm,
+    borderRadius: CommonSizes.borderRadius.lg,
+    borderWidth: CommonSizes.borderWidth.hairline,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    gap: scaleHeight(10),
+    gap: CommonSizes.layout.related,
     width: scaleWidth(187),
     height: scaleHeight(280),
   },
@@ -75,44 +80,9 @@ const styles = StyleSheet.create({
   titleCentered: {
     textAlign: 'center',
   },
-  blurContainer: {
-    flex: 1,
-    padding: CommonSizes.spacing.medium,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   iconContainer: {
     width: '100%',
     height: scaleHeight(100),
-  },
-  title: {
-    fontSize: CommonSizes.font.bodyMedium,
-    textAlign: 'center',
-    marginBottom: CommonSizes.spacing.small,
-  },
-  dotsContainer: {
-    flexDirection: 'row',
-    gap: 4,
-  },
-  dot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-  },
-  whiteDropShadow: {
-    // iOS shadow
-    shadowColor: '#FFF',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    // Android shadow
-    elevation: 5,
-    // Add a very subtle border to enhance the white shadow effect
-    borderWidth: 0.5,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   favoriteContainer: {
     position: 'absolute',

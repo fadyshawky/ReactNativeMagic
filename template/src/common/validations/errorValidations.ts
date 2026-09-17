@@ -2,7 +2,7 @@ import {localization} from '../localization/localization';
 import {unwrapResult} from '@reduxjs/toolkit';
 import {Alert} from 'react-native';
 import {IErrorResult, ErrorRepresentationType} from '../../../types';
-import Snackbar from 'react-native-snackbar';
+import {Snackbar} from 'react-native-snackbar';
 
 export function handlePromiseResult(
   promiseAction: Promise<any>,

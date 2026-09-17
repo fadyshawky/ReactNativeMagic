@@ -1,6 +1,7 @@
 import React from 'react';
 import {Pressable, StyleSheet, View} from 'react-native';
 import {CommonSizes} from '../../core/theme/commonSizes';
+import {Fonts} from '../../core/theme/fonts';
 import {useTheme} from '../../core/theme/ThemeProvider';
 import {RTLAwareText} from './RTLAwareText';
 
@@ -11,9 +12,9 @@ interface SegmentedControlProps {
 }
 
 /**
- * A rounded, pill-shaped segmented control. The active segment fills with
- * primary blue + white label; inactive labels are muted. Segments share equal
- * width via flex.
+ * Design-system segmented Tabs: an inset track with a hairline border; the
+ * active segment lifts onto a card surface with an xs shadow. Selection is
+ * colour and surface, not weight. Segments share equal width.
  */
 export function SegmentedControl({
   segments,
@@ -21,36 +22,43 @@ export function SegmentedControl({
   onChange,
 }: SegmentedControlProps): JSX.Element {
   const {theme} = useTheme();
+  const {colors} = theme;
 
   return (
     <View
+      accessibilityRole="tablist"
       style={[
-        styles.container,
+        styles.track,
         {
-          backgroundColor: theme.colors.grayScale_0,
-          borderColor: theme.colors.grayScale_50,
-          borderWidth: CommonSizes.borderWidth.small,
+          backgroundColor: colors.surfaceInset,
+          borderColor: colors.borderDefault,
         },
       ]}>
       {segments.map((segment, segmentIndex) => {
         const isActive = segmentIndex === index;
-        const segLabel = {
-          textAlign: 'center' as const,
-          color: isActive ? '#FFFFFF' : theme.colors.grayScale_200,
-        };
         return (
           <Pressable
             key={`segment-${segmentIndex}`}
             onPress={() => onChange(segmentIndex)}
-            style={[
+            accessibilityRole="tab"
+            accessibilityState={{selected: isActive}}
+            style={({pressed}) => [
               styles.segment,
               isActive
-                ? {backgroundColor: theme.colors.PlatinateBlue_400}
-                : null,
+                ? {
+                    backgroundColor: colors.surfaceCard,
+                    boxShadow: theme.shadows.xs,
+                  }
+                : pressed
+                  ? {backgroundColor: colors.hoverVeil}
+                  : null,
             ]}>
             <RTLAwareText
               numberOfLines={1}
-              style={[theme.text.bodyMediumBold, segLabel]}>
+              style={[
+                styles.label,
+                {color: isActive ? colors.textPrimary : colors.textTertiary},
+              ]}>
               {segment}
             </RTLAwareText>
           </Pressable>
@@ -61,17 +69,26 @@ export function SegmentedControl({
 }
 
 const styles = StyleSheet.create({
-  container: {
+  track: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: CommonSizes.borderRadius.full,
-    padding: 4,
+    gap: 2,
+    padding: 3,
+    borderRadius: CommonSizes.borderRadius.md,
+    borderWidth: CommonSizes.borderWidth.hairline,
   },
   segment: {
     flex: 1,
+    height: CommonSizes.control.lg - 8, // 48px track: mobile hit targets stay ≥ 44px
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: CommonSizes.spacing.medium,
-    borderRadius: CommonSizes.borderRadius.full,
+    paddingHorizontal: CommonSizes.spacing.large,
+    borderRadius: CommonSizes.borderRadius.sm,
+  },
+  label: {
+    fontFamily: Fonts.medium,
+    fontSize: 14,
+    letterSpacing: 14 * -0.006,
+    textAlign: 'center',
   },
 });

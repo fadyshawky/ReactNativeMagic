@@ -4,10 +4,11 @@ import axios, {
   AxiosRequestConfig,
   AxiosResponse,
 } from 'axios';
-import {API_BASE_URL} from '../config';
+import {API_BASE_URL, USE_MOCK_API} from '../config';
 import {store} from '../store/store';
 import {refreshUserToken} from '../store/user/userActions';
 import {setLogout} from '../store/user/userSlice';
+import {mockAdapter} from './mockAdapter';
 
 export const defaultHeaders: Record<string, string> = {
   Connection: 'keep-alive',
@@ -24,6 +25,7 @@ const instance = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000,
   headers: {...defaultHeaders},
+  ...(USE_MOCK_API ? {adapter: mockAdapter} : {}),
 });
 
 instance.interceptors.request.use(

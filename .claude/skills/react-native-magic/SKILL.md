@@ -10,8 +10,8 @@ description: >-
   thunk, language, or notification route; or theming. Trigger even for a sub-task ("add a profile
   screen", "new endpoint thunk", "why is the 401 refresh looping") or when the user doesn't say
   "react-native-magic" but is clearly in a repo with src/core/api/serverHeaders.ts or the
-  newState/LoadState Redux pattern. Prefer these patterns over the stale CLAUDE.md (which claims
-  @-aliases and an ENVIRONMENT export the code doesn't use).
+  newState/LoadState Redux pattern. CLAUDE.md at the repo root is the quick-start companion; this
+  skill is the deep dive — if they ever disagree, verify against the code.
 ---
 
 # React Native Magic
@@ -39,9 +39,9 @@ bootstrapped app contains**? Most work is the latter.
 | **Template package** | repo root | The published npm package. `package.json` (name `@fadyshawky/react-native-magic`, `scripts.test` is a no-op `exit 0` — do **not** add a build step), `template.config.js`, and `scripts/askPackageName.js` (the post-init hook). |
 | **The app** | `template/` | The actual RN app users receive. All app development, testing, and 95% of changes happen here. |
 
-Default RN/runtime: **React Native 0.85.2, React 19.2.3, Node ≥ 20, TypeScript.** Key libs: Redux
+Default RN/runtime: **React Native 0.87.1 (New Architecture only), React 19.2.3, Node ≥ 22.13, TypeScript 6.** Key libs: Redux
 Toolkit 2 + redux-persist, React Navigation 7 (native-stack + bottom-tabs), `@react-native-firebase`
-24 (app/messaging/analytics), axios, `react-native-config`, `react-native-localization`,
+26 (app/messaging/analytics — modular API only, New Architecture required), axios, `react-native-config`, `react-native-localization`,
 `@shopify/flash-list`, `react-native-actions-sheet` + `@gorhom/bottom-sheet`, Reanimated 4 (worklets).
 
 ## App architecture (`template/src/`)
@@ -154,7 +154,7 @@ Screens are named-function components (`export function Login(): JSX.Element`) r
 `hooks/useXData.ts`. Build UI from the shared components (`Container`, `PrimaryTextInput`,
 `PrimaryButton` with `ButtonType`, `RTLAwareText/View`). Style with `StyleSheet.create`, pulling
 spacing/sizes from `CommonSizes.spacing.*` / `CommonSizes.font.*`, colors from `theme.colors.*`, and
-text styles from `theme.text.*` (e.g. `theme.text.header1`). Strings come from `t('key', 'namespace')`
+text styles from `theme.text.*` (e.g. `theme.text.h1`, `.body`, `.label`, `.eyebrow`). Strings come from `t('key', 'namespace')`
 — never hardcode user-facing copy.
 
 ### Lists, theming, notifications, i18n
@@ -174,7 +174,7 @@ text styles from `theme.text.*` (e.g. `theme.text.header1`). Strings come from `
 - **i18n/RTL:** `react-native-localization` with one namespaced file per area under
   `localization/translations/`, registered in `localization.ts`; the `Languages` enum is `en | ar`.
   `setLanguage()` also flips `I18nManager` RTL and the date locale. Access via `useTranslation()` →
-  `t(key, namespace)` and `useRTL()`; wrap RTL-sensitive text/views in `RTLAwareText`/`RTLAwareView`.
+  `t(key, namespace)`. RTL is native (`I18nManager`, forced by `RTLInitializer`): React Native mirrors `row`, start/end, left/right and `textAlign`, so write layouts for LTR and never flip manually — `RTLAwareView`/`RTLAwareText` are plain `View`/`Text` now. Only mirror what native can't: directional icons (`Icon`'s `DIRECTIONAL` set) and `translateX` (negate under `I18nManager.isRTL`, see `AppSwitch`). Under RTL the theme's text roles set `writingDirection: 'rtl'` (needed for iOS right alignment — always style text with a `theme.text` role), drop tracking/uppercase, and the eyebrow uses Geist; keep Arabic words out of `mono`/`amount`.
 
 ## Gotchas — where the code disagrees with the docs (read before trusting CLAUDE.md)
 
@@ -186,7 +186,10 @@ These are the live realities. Each has bitten or will bite someone who follows t
    `@design-system`; the actual convention is relative paths. **Match the file you're editing**
    (relative today). If you ever switch to aliases, do it repo-wide, and remember all three configs
    must stay in sync.
-2. **Fonts are Almarai** (an Arabic-friendly family), defined in `core/theme/fonts.ts`. The app is
+2. **Fonts are Geist + Geist Mono**, defined in `core/theme/fonts.ts`. TTFs live in `resources/fonts/` and are
+   linked by hand on both platforms (iOS *Fonts* group + `UIAppFonts` in **both** Info.plists — the
+   `-Development` target uses `reactnativemagic copy-Info.plist`; Android `assets/fonts/`). Adding a
+   weight means touching all of those. Geist has no Arabic glyphs. The app is
    built RTL-capable; don't assume a Latin-only design.
 3. **The app boots dark, and the i18n module default is Arabic — but the store default is English.**
    `App.tsx` sets `ThemeProvider initialTheme="dark"`; `localization.ts` sets
@@ -208,14 +211,13 @@ These are the live realities. Each has bitten or will bite someone who follows t
    interceptor recursion. Adding instances breaks the refresh/logout contract.
 9. **Reanimated 4 uses `react-native-worklets/plugin`** in `babel.config.js` — do **not** also add
    `react-native-reanimated/plugin`; they're mutually exclusive.
-10. **`theme.colors` holds only the raw color-scale keys — semantic names are undefined.**
-    `theme.colors` is `{...PrimaryColors, ...NaturalColors, ...AlertColors}`, so valid keys are scale
-    names like `theme.colors.background_2`, `theme.colors.grayScale_0`, `theme.colors.PlatinateBlue_400`,
-    `theme.colors.error_400`. The *semantic* names (`white`, `black`, `primary`, `tintColor`, `surface`,
-    `card`, `background`, `red`, `shadow`) live in the internal `lightThemeColors`/`darkThemeColors`
-    maps that are applied **only** to `theme.text.*` styles — they are **not** on `theme.colors`. So
-    `theme.colors.primary` / `.white` / `.text` are `undefined` at runtime. Use a scale key, or pull a
-    ready-made colored text style from `theme.text.*`.
+10. **`theme.colors` is semantic-only and typed (`ColorTokens`).** Valid keys are design-system
+    names — `bgCanvas`, `surfaceCard`, `surfaceInset`, `borderDefault`, `textPrimary`, `textSecondary`,
+    `textAccent`, `accent`, `accentSubtle`, `danger`, `dangerFg`, `pressVeil`, … — resolved per mode
+    (`LightColors` / `DarkColors`). There are no scale keys on `theme.colors` (the old
+    `PlatinateBlue_*` / `grayScale_*` / `background_2` names are gone); raw ramps (`Slate`, `Blue`, …)
+    are importable from `core/theme/colors.ts` for fixed values only. Shadows are `theme.shadows.*`
+    `boxShadow` strings; spacing/radii/control heights come from `CommonSizes`, not the theme.
 11. **Firebase native config is not shipped.** `GoogleService-Info.plist` / `google-services.json`
     are added per project; see `docs/CUSTOMIZATION.md`.
 
@@ -227,6 +229,8 @@ These are the live realities. Each has bitten or will bite someone who follows t
 - **Add a Redux slice:** create `core/store/<domain>/{<domain>State.ts, <domain>Slice.ts,
   <domain>Actions.ts}` following the `newState`/named-handler/`LoadState` pattern; register it in
   `rootReducer.ts`; if it must persist, add a `createWhitelistFilter` entry in `store.tsx`.
+- **Mock an API call:** add a `"METHOD /path"` entry to `core/api/mocks/mockApi.json` (happy path with `when` first, catch-all error last). It's served while `USE_MOCK_API` is on (placeholder `API_BASE_URL`). Demo login: `011111111111` / `testpass` / OTP `111111`.
+- **Space a screen:** gaps on the parent from `CommonSizes.layout` (`section` between blocks, `stack` in forms, `list` between cards, `related` inside a block, `titleToBody`, `field`); no outer margins on components. `Container` applies `gutter` + `section` to its children — override via `style`.
 - **Add an API call:** write a thunk in the domain's `*Actions.ts` using `get/post/put/deleteApi`,
   wrap in try/catch with `extractServerError` + `ensureString`, and handle lifecycle in the slice's
   `extraReducers`.

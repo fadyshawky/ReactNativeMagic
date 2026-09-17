@@ -1,10 +1,9 @@
 import dayjs from 'dayjs';
 import {
   Dimensions,
+  I18nManager,
   PixelRatio,
   Platform,
-  PlatformAndroidStatic,
-  PlatformIOSStatic,
   StatusBar,
   StyleSheet,
 } from 'react-native';
@@ -12,14 +11,18 @@ import DeviceInfo from 'react-native-device-info';
 import {createPerfectSize} from '../../common/utils/createPerfectSize';
 
 const windowDimensions = Dimensions.get('window');
+
+// React Native swaps textAlign left/right under RTL for Text, not TextInput, so
+// inputs name the physical side (otherwise Arabic placeholders sit on the left).
+export const inputTextAlign = I18nManager.isRTL ? 'right' : 'left';
 export const isIos = Platform.OS === 'ios';
 export const isAndroid = Platform.OS === 'android';
 export const hasDynamicIsland = DeviceInfo.hasDynamicIsland();
 export const hasNotch = DeviceInfo.hasNotch() || hasDynamicIsland;
-export const isIpad = isIos && (Platform as PlatformIOSStatic).isPad;
+export const isIpad = Platform.OS === 'ios' && Platform.isPad;
 export const isTablet = DeviceInfo.isTablet();
 export const isAndroid11AndHigher =
-  isAndroid && (Platform as PlatformAndroidStatic).Version >= 30;
+  Platform.OS === 'android' && Platform.Version >= 30;
 
 export const windowWidth = windowDimensions.width;
 export const windowHeight =

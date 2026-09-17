@@ -1,6 +1,7 @@
 import React from 'react';
 import {Pressable, StyleSheet} from 'react-native';
 import {CommonSizes} from '../../core/theme/commonSizes';
+import {Fonts} from '../../core/theme/fonts';
 import {useTheme} from '../../core/theme/ThemeProvider';
 import {RTLAwareText} from './RTLAwareText';
 
@@ -11,31 +12,36 @@ interface ChipProps {
 }
 
 /**
- * A pill-shaped, tappable chip. Selected → solid primary blue with white
- * label; unselected → white surface with a subtle border and default label.
+ * Design-system Tag: a 28px, 6px-radius filter chip with a hairline border.
+ * Selected → accent-subtle fill + accent border + accent label. Never a pill.
  */
 export function Chip({label, selected, onPress}: ChipProps): JSX.Element {
   const {theme} = useTheme();
+  const {colors} = theme;
 
   return (
     <Pressable
       onPress={onPress}
-      style={[
+      disabled={!onPress}
+      hitSlop={8}
+      accessibilityRole={onPress ? 'button' : undefined}
+      accessibilityState={{selected: !!selected}}
+      style={({pressed}) => [
         styles.chip,
-        selected
-          ? {backgroundColor: theme.colors.PlatinateBlue_400}
-          : {
-              backgroundColor: theme.colors.grayScale_0,
-              borderColor: theme.colors.grayScale_50,
-              borderWidth: CommonSizes.borderWidth.small,
-            },
+        {
+          backgroundColor: selected
+            ? colors.accentSubtle
+            : pressed
+              ? colors.bgSubtle
+              : colors.surfaceCard,
+          borderColor: selected ? colors.accentBorder : colors.borderDefault,
+        },
       ]}>
       <RTLAwareText
-        style={
-          selected
-            ? [theme.text.bodyMediumBold, styles.labelSelected]
-            : theme.text.bodyMediumBold
-        }>
+        style={[
+          styles.label,
+          {color: selected ? colors.textAccent : colors.textSecondary},
+        ]}>
         {label}
       </RTLAwareText>
     </Pressable>
@@ -45,11 +51,15 @@ export function Chip({label, selected, onPress}: ChipProps): JSX.Element {
 const styles = StyleSheet.create({
   chip: {
     alignSelf: 'flex-start',
-    borderRadius: CommonSizes.borderRadius.full,
-    paddingHorizontal: CommonSizes.spacing.large,
-    paddingVertical: CommonSizes.spacing.small,
+    justifyContent: 'center',
+    height: 28,
+    paddingHorizontal: 10,
+    borderRadius: CommonSizes.borderRadius.sm,
+    borderWidth: CommonSizes.borderWidth.hairline,
   },
-  labelSelected: {
-    color: '#FFFFFF',
+  label: {
+    fontFamily: Fonts.medium,
+    fontSize: 13,
+    letterSpacing: 13 * -0.006,
   },
 });

@@ -1,24 +1,15 @@
 /**
- * StatusBar wrapper that avoids deprecated Android APIs when using edge-to-edge.
- * On Android 15+ with edge-to-edge, Window.setStatusBarColor/setNavigationBarColor
- * are deprecated. Passing backgroundColor on Android triggers those APIs, so we
- * only pass it on iOS.
+ * Status bar wrapper.
+ * - iOS: status bar appearance is view-controller based (Info.plist). The
+ *   `UIApplication` status bar APIs React Native's `StatusBar` calls are no-ops
+ *   on iOS 27 and log deprecations, so nothing renders here: the style follows
+ *   the window's light/dark appearance, which `ThemeProvider` keeps in step
+ *   with the app theme.
+ * - Android: edge-to-edge (no background colour); `barStyle` picks icon colour.
  */
 import React from 'react';
 import {Platform, StatusBar, StatusBarProps} from 'react-native';
 
-type AppStatusBarProps = Omit<StatusBarProps, 'backgroundColor'> & {
-  backgroundColor?: string;
-};
-
-export function AppStatusBar({
-  backgroundColor,
-  ...rest
-}: AppStatusBarProps): React.JSX.Element {
-  return (
-    <StatusBar
-      {...rest}
-      backgroundColor={Platform.OS === 'ios' ? backgroundColor : undefined}
-    />
-  );
+export function AppStatusBar(props: StatusBarProps): React.JSX.Element | null {
+  return Platform.OS === 'android' ? <StatusBar {...props} /> : null;
 }

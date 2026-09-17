@@ -4,7 +4,7 @@ export const homeLocalization = {
     title: 'Home',
     greeting: 'Hi,',
     there: 'there',
-    heroEyebrow: 'GET STARTED',
+    heroEyebrow: 'Get started',
     heroTitle: 'Build something great',
     heroSubtitle: 'Your starter is wired and ready to ship.',
     explore: 'Explore',

@@ -7,7 +7,8 @@ import {EmptyView} from './EmptyView';
 import {LoadingComponent} from './LoadingComponent';
 import {localization} from '../localization/localization';
 import {defaultKeyIdExtractor} from '../helpers/defaultKeyIdExtractor';
-import {CommonStyles} from '../../core/theme/commonStyles';
+import {CommonSizes} from '../../core/theme/commonSizes';
+import {StyleSheet} from 'react-native';
 
 interface IProps extends FlashListProps<any> {
   loadState: LoadState;
@@ -56,7 +57,7 @@ export function FlatListWrapper({
   } else {
     return (
       <FlashList
-        contentContainerStyle={CommonStyles.listContentContainer}
+        contentContainerStyle={styles.content}
         {...FlatListWrapperProps}
         {...props}
         refreshing={refreshing}
@@ -65,3 +66,10 @@ export function FlatListWrapper({
     );
   }
 }
+
+const styles = StyleSheet.create({
+  content: {
+    paddingHorizontal: CommonSizes.layout.gutter,
+    paddingVertical: CommonSizes.spacing.medium,
+  },
+});

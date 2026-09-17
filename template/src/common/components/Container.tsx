@@ -1,6 +1,6 @@
 import React, {forwardRef} from 'react';
 import {
-  ImageBackground,
+  Image,
   ImageSourcePropType,
   KeyboardAvoidingView,
   StyleSheet,
@@ -11,7 +11,8 @@ import {
   KeyboardAwareScrollView,
   KeyboardAwareScrollViewProps,
 } from 'react-native-keyboard-aware-scroll-view';
-import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {CommonSizes} from '../../core/theme/commonSizes';
 import {useTheme} from '../../core/theme/ThemeProvider';
 
 interface ContainerProps extends Partial<KeyboardAwareScrollViewProps> {
@@ -24,7 +25,6 @@ interface ContainerProps extends Partial<KeyboardAwareScrollViewProps> {
   backgroundColor?: string;
   withoutBackgroundImage?: boolean;
   backgroundImage?: ImageSourcePropType;
-  extendedBackground?: boolean;
 }
 
 export const Container = forwardRef<KeyboardAwareScrollView, ContainerProps>(
@@ -39,59 +39,43 @@ export const Container = forwardRef<KeyboardAwareScrollView, ContainerProps>(
       backgroundColor,
       withoutBackgroundImage = false,
       backgroundImage = 0,
-      extendedBackground = false,
       ...scrollViewProps
     },
     ref,
   ) => {
     const {theme} = useTheme();
-    const insets = useSafeAreaInsets();
     const Wrapper = useSafeArea ? SafeAreaView : View;
-    const bgColor = backgroundColor || theme.colors.background_2;
+    const bgColor = backgroundColor || theme.colors.bgCanvas;
 
     const content = (
       <Wrapper
         style={[
           styles.container,
+          styles.gap,
           !withoutPadding && styles.padding,
           style,
-          extendedBackground && {
-            marginTop: -insets.top,
-            paddingTop: insets.top,
-          },
         ]}>
         {children}
       </Wrapper>
     );
 
-    const wrappedContent = withoutBackgroundImage ? (
+    const wrappedContent = (
       <View style={[styles.container, {backgroundColor: bgColor}]}>
+        {!withoutBackgroundImage && backgroundImage ? (
+          <Image
+            source={backgroundImage}
+            style={StyleSheet.absoluteFill}
+            resizeMode="cover"
+          />
+        ) : null}
         {content}
       </View>
-    ) : (
-      <ImageBackground
-        source={backgroundImage}
-        style={[
-          styles.container,
-          extendedBackground && {
-            marginTop: -insets.top,
-          },
-        ]}
-        resizeMode="cover">
-        {content}
-      </ImageBackground>
     );
 
     if (withoutScroll) {
       return (
         <KeyboardAvoidingView
-          style={[
-            styles.container,
-            {backgroundColor: bgColor},
-            extendedBackground && {
-              marginTop: -insets.top,
-            },
-          ]}
+          style={[styles.container, {backgroundColor: bgColor}]}
           behavior={undefined}
           enabled>
           {wrappedContent}
@@ -102,18 +86,8 @@ export const Container = forwardRef<KeyboardAwareScrollView, ContainerProps>(
     return (
       <KeyboardAwareScrollView
         ref={ref}
-        style={[
-          styles.container,
-          {backgroundColor: bgColor},
-          extendedBackground && {
-            marginTop: -insets.top,
-          },
-        ]}
-        contentContainerStyle={[
-          styles.contentContainer,
-          !withoutPadding && styles.padding,
-          contentContainerStyle,
-        ]}
+        style={[styles.container, {backgroundColor: bgColor}]}
+        contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
         enableOnAndroid
@@ -136,7 +110,12 @@ const styles = StyleSheet.create({
   contentContainer: {
     flexGrow: 1,
   },
+  // Screen rhythm: children are the top-level blocks, `section` apart. Pass
+  // `style` to change the gutter or gap for a whole screen.
   padding: {
-    padding: 16, // Using a fixed value here as theme isn't available in StyleSheet
+    paddingHorizontal: CommonSizes.layout.gutter,
+    paddingTop: CommonSizes.layout.gutter,
+    paddingBottom: CommonSizes.layout.screenBottom,
   },
+  gap: {gap: CommonSizes.layout.section},
 });

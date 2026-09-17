@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import type {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React, {useRef, useState} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {ButtonType} from '../../../types';
 import {AppTextInput} from '../../common/components/AppTextInput';
@@ -69,18 +69,15 @@ export function Login(): JSX.Element {
       currentLanguage === Languages.ar ? Languages.en : Languages.ar,
     );
 
-  const descriptionColor = {color: theme.colors.grayScale_200};
+  const descriptionColor = {color: theme.colors.textSecondary};
 
   return (
     <Container
       ref={scroll}
       testID={'LoginScreenID'}
-      contentContainerStyle={styles.contentContainer}
       style={styles.container}
       backgroundImage={0}
-      withoutPadding
-      extendedBackground
-      backgroundColor={theme.colors.background_2}>
+      backgroundColor={theme.colors.bgCanvas}>
       <RTLAwareView style={styles.topRow}>
         <Chip
           label={currentLanguage === Languages.ar ? 'العربية' : 'English'}
@@ -88,59 +85,57 @@ export function Login(): JSX.Element {
         />
       </RTLAwareView>
       <RTLAwareView style={styles.logoWrap}>
-        <Logo size={72} variant="gradient" />
+        <Logo size={56} variant="mark" />
       </RTLAwareView>
-      <RTLAwareText style={[theme.text.header3, styles.center]}>
-        {t('welcome', 'login')}
-      </RTLAwareText>
-      <RTLAwareText
-        style={[theme.text.bodyMediumRegular, styles.center, descriptionColor]}>
-        {t('welcome_description', 'login')}
-      </RTLAwareText>
-      <AppTextInput
-        label={t('phoneOrEmail', 'login')}
-        value={phone}
-        onChangeText={setPhone}
-        error={phoneError}
-        keyboardType="numeric"
-        placeholder={t('EnterPhone', 'login')}
-      />
-      <AppTextInput
-        label={t('Password', 'login')}
-        value={password}
-        onChangeText={setPassword}
-        error={passwordError}
-        secureTextEntry
-        placeholder={t('EnterPassword', 'login')}
-      />
-      <PrimaryButton
-        label={t('signIn', 'login')}
-        onPressIn={loginUser}
-        isLoading={loading}
-        disabled={loading}
-        type={ButtonType.solid}
-      />
-      <RTLAwareView style={styles.helpWrap}>
-        <PrimaryButton
-          label={t('needHelp', 'login')}
-          type={ButtonType.borderless}
-          onPressIn={() => {}}
+      <View style={styles.titleBlock}>
+        <RTLAwareText style={[theme.text.h1, styles.center]}>
+          {t('welcome', 'login')}
+        </RTLAwareText>
+        <RTLAwareText
+          style={[theme.text.body, styles.center, descriptionColor]}>
+          {t('welcome_description', 'login')}
+        </RTLAwareText>
+      </View>
+      <View style={styles.form}>
+        <AppTextInput
+          label={t('phoneOrEmail', 'login')}
+          value={phone}
+          onChangeText={setPhone}
+          error={phoneError}
+          keyboardType="numeric"
+          placeholder={t('EnterPhone', 'login')}
         />
-      </RTLAwareView>
+        <AppTextInput
+          label={t('Password', 'login')}
+          value={password}
+          onChangeText={setPassword}
+          error={passwordError}
+          secureTextEntry
+          placeholder={t('EnterPassword', 'login')}
+        />
+        <PrimaryButton
+          label={t('signIn', 'login')}
+          onPressIn={loginUser}
+          isLoading={loading}
+          disabled={loading}
+          type={ButtonType.solid}
+        />
+        <RTLAwareView style={styles.helpWrap}>
+          <PrimaryButton
+            label={t('needHelp', 'login')}
+            type={ButtonType.borderless}
+            onPressIn={() => {}}
+          />
+        </RTLAwareView>
+      </View>
     </Container>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    borderTopRightRadius: CommonSizes.spacing.large,
-    borderTopLeftRadius: CommonSizes.spacing.large,
-    paddingHorizontal: CommonSizes.spacing.large,
-    gap: CommonSizes.spacing.xl,
-    justifyContent: 'flex-start',
-  },
-  contentContainer: {flexGrow: 1},
+  container: {paddingHorizontal: CommonSizes.layout.gutterAuth},
+  titleBlock: {gap: CommonSizes.layout.titleToBody},
+  form: {gap: CommonSizes.layout.stack},
   center: {textAlign: 'center'},
   topRow: {flexDirection: 'row', justifyContent: 'flex-end'},
   logoWrap: {alignItems: 'center'},

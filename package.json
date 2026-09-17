@@ -1,6 +1,6 @@
 {
   "name": "@fadyshawky/react-native-magic",
-  "version": "2.3.0",
+  "version": "2.3.2",
   "description": "Plug-and-play React Native template: TypeScript, Redux Toolkit, React Navigation, scalable architecture. Init and start developing without hassle.",
   "keywords": [
     "react-native-magic",
@@ -30,10 +30,10 @@
   },
   "peerDependencies": {
     "react": "^19.2.0",
-    "react-native": ">=0.84.0"
+    "react-native": ">=0.87.0"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">= 22.13.0"
   },
   "repository": {
     "type": "git",

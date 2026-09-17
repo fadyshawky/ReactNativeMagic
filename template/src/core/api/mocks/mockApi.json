@@ -1,0 +1,50 @@
+{
+  "POST /login": [
+    {
+      "when": {"mobile_number": "011111111111", "mpin": "testpass"},
+      "status": 200,
+      "body": {"message": "Code sent to 011111111111"}
+    },
+    {
+      "status": 401,
+      "body": {"error": "Wrong phone number or password"}
+    }
+  ],
+  "POST /verify-otp": [
+    {
+      "when": {"mobile_number": "011111111111", "verification_code": "111111"},
+      "status": 200,
+      "body": {
+        "accessToken": "mock-access-token",
+        "refreshToken": "mock-refresh-token",
+        "user": {
+          "type": "customer",
+          "mobile_number": "011111111111",
+          "full_name": "Nour Hassan",
+          "status": "Active"
+        }
+      }
+    },
+    {
+      "status": 422,
+      "body": {"error": "That code is wrong or has expired"}
+    }
+  ],
+  "GET /categories": [
+    {
+      "status": 200,
+      "body": {
+        "data": [
+          {"id": "cat-01", "name": "New in"},
+          {"id": "cat-02", "name": "Jackets"},
+          {"id": "cat-03", "name": "Tees"},
+          {"id": "cat-04", "name": "Trousers"},
+          {"id": "cat-05", "name": "Caps"},
+          {"id": "cat-06", "name": "Bags"},
+          {"id": "cat-07", "name": "Shoes"},
+          {"id": "cat-08", "name": "Sale"}
+        ]
+      }
+    }
+  ]
+}

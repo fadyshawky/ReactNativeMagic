@@ -1,16 +1,17 @@
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import React from 'react';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {useRTL} from '../common/localization/LocalizationProvider';
+import {Pressable, StyleSheet, View} from 'react-native';
+import {Icon} from '../common/components/Icon';
+import {Logo} from '../common/components/Logo';
 import {CommonSizes} from '../core/theme/commonSizes';
-import {screenWidth} from '../core/theme/commonStyles';
-import {scaleWidth} from '../core/theme/scaling';
 import {useTheme} from '../core/theme/ThemeProvider';
 import {RootStackParamList} from './types';
+import {useTranslation} from '../common/localization/LocalizationProvider';
+
 export function Header() {
   return (
     <View style={styles.headerBase}>
-      <Image source={0} style={styles.logo} />
+      <Logo size={30} variant="mark" />
     </View>
   );
 }
@@ -19,7 +20,7 @@ export function HeaderBack({onPress}: {onPress: () => void}) {
   return (
     <View style={styles.headerWithBack}>
       <BackButton onPress={onPress} />
-      <Image source={0} style={styles.logo} />
+      <Logo size={30} variant="mark" />
       <View style={styles.spacer} />
     </View>
   );
@@ -29,7 +30,6 @@ export function HeaderButton({onPress}: {onPress: () => void}) {
   return (
     <View style={styles.headerWithBack}>
       <BackButton onPress={onPress} />
-      <View style={styles.logo} />
       <View style={styles.spacer} />
     </View>
   );
@@ -40,27 +40,23 @@ export function WebViewHeader({
 }: {
   navigation: NativeStackNavigationProp<RootStackParamList>;
 }) {
-  return (
-    <View style={styles.webViewHeader}>
-      {/* <BackButton navigation={navigation} /> */}
-    </View>
-  );
+  return <View style={styles.webViewHeader} />;
 }
 
 function BackButton({onPress}: {onPress: () => void}) {
   const {theme} = useTheme();
-  const isRTL = useRTL();
+  const t = useTranslation();
   return (
-    <TouchableOpacity style={styles.backButton} onPressIn={onPress}>
-      <Image
-        tintColor={theme.colors.PlatinateBlue_100}
-        style={{
-          ...styles.backIcon,
-          transform: [{rotate: isRTL ? '180deg' : '0deg'}],
-        }}
-        source={0}
-      />
-    </TouchableOpacity>
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={t('back')}
+      style={({pressed}) => [
+        styles.backButton,
+        pressed && {backgroundColor: theme.colors.pressVeil},
+      ]}>
+      <Icon name="arrow-left" color={theme.colors.textSecondary} />
+    </Pressable>
   );
 }
 
@@ -68,49 +64,29 @@ const styles = StyleSheet.create({
   headerBase: {
     width: '100%',
     backgroundColor: 'transparent',
-    justifyContent: 'flex-end',
     alignItems: 'center',
+    paddingVertical: CommonSizes.spacing.medium,
   },
   headerWithBack: {
-    width: screenWidth,
-    height: 80,
+    alignSelf: 'stretch',
+    height: 52,
     backgroundColor: 'transparent',
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
-    paddingHorizontal: scaleWidth(16),
   },
   webViewHeader: {
     width: '100%',
-    height: 120,
-    backgroundColor: 'white',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    paddingHorizontal: CommonSizes.spacing.large,
-    flexDirection: 'row',
-  },
-  titleContainer: {
-    width: screenWidth,
-    alignItems: 'center',
-    position: 'absolute',
-    zIndex: 0,
+    height: 60,
   },
   spacer: {
-    width: 40,
+    width: CommonSizes.control.lg,
   },
   backButton: {
-    width: 40,
-    height: 40,
-  },
-  backIcon: {
-    width: 40,
-    height: 40,
-    resizeMode: 'contain',
-    alignSelf: 'flex-start',
-  },
-  logo: {
-    width: '50%',
-    // height: 66,
-    resizeMode: 'center',
+    width: CommonSizes.control.lg,
+    height: CommonSizes.control.lg,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: CommonSizes.borderRadius.sm,
   },
 });

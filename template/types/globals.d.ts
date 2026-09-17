@@ -28,16 +28,3 @@ declare global {
 // NOTE: bare `declare module 'x';` ambient shims for untyped packages live in
 // `modules.d.ts` (a script file with no imports) — they don't work here because
 // this file is a module (it has a top-level import).
-
-// react-native-snackbar ships a default export at runtime but its bundled
-// types omit it — add the default so `import Snackbar from ...` type-checks.
-declare module 'react-native-snackbar' {
-  const Snackbar: {
-    LENGTH_SHORT: number;
-    LENGTH_LONG: number;
-    LENGTH_INDEFINITE: number;
-    show(options: {text: string; duration?: number; [key: string]: any}): void;
-    dismiss(): void;
-  };
-  export default Snackbar;
-}

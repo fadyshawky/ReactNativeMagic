@@ -1,6 +1,4 @@
 import React, {createContext, useContext, useState, useEffect} from 'react';
-import {I18nManager, Platform, NativeModules} from 'react-native';
-import RNRestart from 'react-native-restart';
 import {
   localization,
   Languages,
@@ -62,36 +60,12 @@ export const LocalizationProvider: React.FC<LocalizationProviderProps> = ({
     }
   }, [currentLanguage]);
 
+  // Switching between an LTR and an RTL language restarts the app: the persisted
+  // `isRTL` changes and RTLInitializer applies it natively.
   const changeLanguage = (language: Languages) => {
     if (language !== currentLanguage) {
-      console.log('Changing language from', currentLanguage, 'to', language);
-
       setCurrentLanguage(language);
       dispatch(setLanguageAction(language));
-
-      // Set RTL configuration before restart
-      const shouldBeRTL = language === Languages.ar;
-      if (I18nManager.isRTL !== shouldBeRTL) {
-        console.log('Language change requires RTL update:', shouldBeRTL);
-        I18nManager.allowRTL(shouldBeRTL);
-        I18nManager.forceRTL(shouldBeRTL);
-
-        // Restart the app to apply RTL/LTR changes properly
-        setTimeout(() => {
-          try {
-            if (RNRestart && typeof RNRestart.restart === 'function') {
-              RNRestart.restart();
-            } else if (Platform.OS === 'android') {
-              const DevSettings = NativeModules.DevSettings;
-              if (DevSettings && DevSettings.reload) {
-                DevSettings.reload();
-              }
-            }
-          } catch (error) {
-            console.error('Failed to restart the app:', error);
-          }
-        }, 100);
-      }
     }
   };
 

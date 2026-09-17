@@ -28,7 +28,9 @@
 ## Theming
 
 - Change brand colors, fonts, and sizes only in `src/core/theme/` — keep the token keys stable so the rest of the app keeps working.
-- Reuse the gradient and glow tokens from `src/core/theme/brand.ts` (`BrandGradients`, `Glow`) for the futuristic surfaces rather than hardcoding shadows or gradient stops.
+- Style with semantic tokens (`theme.colors.surfaceCard`, `borderDefault`, `textSecondary`, …), `theme.text.*` roles, `theme.shadows.*` and `CommonSizes` — never raw hex or ad-hoc font sizes.
+- Follow the system's rules: a 1px border on every surface, one accent per screen, 6px-radius controls (no pill buttons), no gradients or glow, 48px touch targets on mobile, Geist Mono for numbers/IDs/amounts.
+- Copy is sentence case and verb-first (“Delete item”, not “OK” / “Submit”); the mono `eyebrow` role is the only uppercase.
 - The app follows the system color scheme by default; verify new screens in both light and dark.
 
 ## Security
@@ -38,5 +40,5 @@
 
 ## LTS / upgrades
 
-- The template targets **Node >= 20** and **React Native 0.85.x** (React 19.2.x).
+- The template targets **Node >= 22.13** and **React Native 0.87.x** (React 19.2.x, TypeScript 6).
 - To upgrade React Native, use [React Native Upgrade Helper](https://react-native-community.github.io/upgrade-helper/): select your current version and the target version, then apply the suggested changes to `package.json`, `android/`, `ios/`, and config files.

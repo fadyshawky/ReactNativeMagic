@@ -6,6 +6,7 @@ import {pagesLocalization} from './translations/pagesLocalization';
 import {onboardingLocalization} from './translations/onboardingLocalization';
 import {setDateLocale} from './dateFormatter';
 import {loginLocalization} from './translations/loginLocalization';
+import {componentsLocalization} from './translations/componentsLocalization';
 import {homeLocalization} from './translations/homeLocalization';
 import {profileLocalization} from './translations/profileLocalization';
 import {I18nManager} from 'react-native';
@@ -27,6 +28,7 @@ export const localization = {
   onboarding: new LocalizedStrings(onboardingLocalization),
   login: new LocalizedStrings(loginLocalization),
   home: new LocalizedStrings(homeLocalization),
+  components: new LocalizedStrings(componentsLocalization),
   profile: new LocalizedStrings(profileLocalization),
   otp: new LocalizedStrings(otpLocalization),
   password: new LocalizedStrings(passwordLocalization),

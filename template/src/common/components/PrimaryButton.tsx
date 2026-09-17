@@ -1,305 +1,204 @@
-import React, {FC, memo, useMemo} from 'react';
+import React, {FC, memo} from 'react';
 import {
   ActivityIndicator,
   Image,
   ImageStyle,
   ImageURISource,
+  Pressable,
   StyleProp,
   StyleSheet,
   Text,
   TextStyle,
   ViewStyle,
 } from 'react-native';
-import {
-  ButtonType,
-  IIconPlatformProps,
-  TouchablePlatformProps,
-} from '../../../types';
-import {useTheme} from '../../core/theme/ThemeProvider';
+import {ButtonType, TouchablePlatformProps} from '../../../types';
+import {ColorTokens} from '../../core/theme/colors';
 import {CommonSizes} from '../../core/theme/commonSizes';
-import {createThemedStyles} from '../../core/theme/commonStyles';
-import {Theme} from '../../core/theme/types';
-import {IconPlatform} from './IconPlatform';
-import {TouchablePlatform} from './TouchablePlatform';
-import {scaleHeight, scaleSpacing} from '../../core/theme/scaling';
+import {Fonts} from '../../core/theme/fonts';
+import {Motion} from '../../core/theme/motion';
+import {useTheme} from '../../core/theme/ThemeProvider';
+import {Icon, IconName} from './Icon';
+
+export type ButtonSize = 'sm' | 'md' | 'lg';
 
 interface IProps extends TouchablePlatformProps {
   label: string;
   type: ButtonType;
-  rounded?: boolean;
+  /** Control height 32 / 40 / 48. Mobile default is `lg`. */
+  size?: ButtonSize;
+  /**
+   * Stretch to the container. Defaults to true except for link buttons; when
+   * false the button's cross-axis placement follows the parent's `alignItems`.
+   */
+  fullWidth?: boolean;
+  /** Leading Lucide glyph (see `Icon`), tinted with the label colour. */
+  iconName?: IconName;
+  /** Leading bitmap icon, used when `iconName` isn't set. */
   icon?: ImageURISource;
   iconStyle?: StyleProp<ImageStyle>;
-  platformIconProps?: IIconPlatformProps;
   labelStyle?: TextStyle;
   isLoading?: boolean;
+}
+
+const SIZES = {
+  sm: {
+    height: CommonSizes.control.sm,
+    paddingHorizontal: 10,
+    fontSize: 13,
+    gap: 6,
+    icon: 16,
+  },
+  md: {
+    height: CommonSizes.control.md,
+    paddingHorizontal: 14,
+    fontSize: 14,
+    gap: 8,
+    icon: 16,
+  },
+  lg: {
+    height: CommonSizes.control.lg,
+    paddingHorizontal: 20,
+    fontSize: 15,
+    gap: 8,
+    icon: 20,
+  },
+};
+
+function skin(
+  c: ColorTokens,
+  type: ButtonType,
+  pressed: boolean,
+): {container: ViewStyle; color: string} {
+  switch (type) {
+    case ButtonType.outline:
+      return {
+        container: {
+          backgroundColor: pressed ? c.bgSubtle : c.surfaceCard,
+          borderColor: pressed ? c.borderStrong : c.borderDefault,
+        },
+        color: c.textPrimary,
+      };
+    case ButtonType.ghost:
+      return {
+        container: {backgroundColor: pressed ? c.pressVeil : 'transparent'},
+        color: c.textSecondary,
+      };
+    case ButtonType.danger:
+      return {
+        container: {backgroundColor: pressed ? c.dangerHover : c.danger},
+        color: '#FFFFFF',
+      };
+    case ButtonType.borderless:
+      return {
+        container: {height: undefined, paddingHorizontal: 0},
+        color: pressed ? c.accentActive : c.textAccent,
+      };
+    case ButtonType.solid:
+    default:
+      return {
+        container: {backgroundColor: pressed ? c.accentActive : c.accent},
+        color: c.textOnAccent,
+      };
+  }
 }
 
 export const PrimaryButton: FC<IProps> = memo(
   ({
     label,
+    type,
+    size = 'lg',
+    fullWidth,
+    iconName,
     icon,
     iconStyle,
-    type,
-    rounded,
     labelStyle,
-    style,
     isLoading,
-    platformIconProps,
+    style,
+    disabled,
     ...props
   }) => {
     const {theme} = useTheme();
-    const styles = useMemo(() => {
-      return getStyles(theme, type, rounded, props.disabled);
-    }, [theme, type, rounded, props.disabled]);
-
-    const content = useMemo(() => {
-      if (isLoading) {
-        return (
-          <ActivityIndicator
-            animating={true}
-            color={theme.colors.backgroundOpacity}
-            size={'small'}
-          />
-        );
-      } else {
-        return (
-          <>
-            <ButtonIcon
-              icon={icon}
-              iconStyle={[styles.icon, iconStyle]}
-              platformIconProps={platformIconProps}
-            />
-            <Text style={[styles.label, labelStyle]} numberOfLines={1}>
-              {label}
-            </Text>
-          </>
-        );
-      }
-    }, [
-      icon,
-      iconStyle,
-      isLoading,
-      label,
-      labelStyle,
-      platformIconProps,
-      styles.icon,
-      styles.label,
-      theme,
-    ]);
+    const s = SIZES[size];
+    const off = !!disabled || !!isLoading;
+    const isLink = type === ButtonType.borderless;
+    const stretch = fullWidth ?? !isLink;
 
     return (
-      <TouchablePlatform
-        style={[styles.button, style] as ViewStyle[]}
-        highlightColor={theme.colors.mutedLavender30}
-        {...props}>
-        {content}
-      </TouchablePlatform>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityState={{disabled: off, busy: !!isLoading}}
+        disabled={off}
+        {...props}
+        style={({pressed}) => {
+          const k = skin(theme.colors, type, pressed && !off);
+          return [
+            styles.base,
+            {
+              height: s.height,
+              paddingHorizontal: s.paddingHorizontal,
+              gap: s.gap,
+              opacity: off ? 0.45 : 1,
+              transform: [
+                {scale: pressed && !off && !isLink ? Motion.pressScale : 1},
+              ],
+            },
+            stretch ? styles.fullWidth : undefined,
+            k.container,
+            style,
+          ];
+        }}>
+        {({pressed}) => {
+          const color = skin(theme.colors, type, pressed && !off).color;
+          if (isLoading) {
+            return <ActivityIndicator color={color} size="small" />;
+          }
+          return (
+            <>
+              {iconName != null ? (
+                <Icon name={iconName} size={s.icon} color={color} />
+              ) : icon != null ? (
+                <Image
+                  source={icon}
+                  style={[
+                    {width: s.icon, height: s.icon, tintColor: color},
+                    styles.icon,
+                    iconStyle,
+                  ]}
+                />
+              ) : null}
+              <Text
+                numberOfLines={1}
+                style={[
+                  styles.label,
+                  {
+                    fontSize: s.fontSize,
+                    letterSpacing: s.fontSize * -0.006,
+                    color,
+                  },
+                  isLink && pressed ? styles.underline : undefined,
+                  labelStyle,
+                ]}>
+                {label}
+              </Text>
+            </>
+          );
+        }}
+      </Pressable>
     );
   },
 );
 
-const ButtonIcon: FC<Pick<IProps, 'icon' | 'iconStyle' | 'platformIconProps'>> =
-  memo(props => {
-    if (props.icon != null) {
-      return <Image source={props.icon} style={props.iconStyle} />;
-    } else if (props.platformIconProps != null) {
-      return <IconPlatform {...props.platformIconProps} />;
-    } else {
-      return null;
-    }
-  });
-
-function getStyles(
-  theme: Theme,
-  type: ButtonType,
-  rounded?: boolean,
-  disabled?: boolean | null,
-): IStyles {
-  const baseStyles = createButtonStyles(theme);
-
-  switch (type) {
-    case ButtonType.solid:
-      return mergeStylesWithDisabled(
-        theme,
-        rounded ? createSmallSolidStyles(theme) : baseStyles.solid,
-        disabled,
-      );
-    case ButtonType.outline:
-      return mergeStylesWithDisabled(
-        theme,
-        rounded ? createSmallOutlineStyles(theme) : baseStyles.outline,
-        disabled,
-        true,
-      );
-    case ButtonType.outlineNegative:
-      return mergeStylesWithDisabled(
-        theme,
-        rounded ? createSmallOutlineStyles(theme) : baseStyles.outlineNegative,
-        disabled,
-        true,
-      );
-    case ButtonType.borderless:
-      return baseStyles.borderless;
-    default:
-      throw new Error('Unknown button type: ' + type);
-  }
-}
-
-function mergeStylesWithDisabled(
-  theme: Theme,
-  styles: IStyles,
-  disabled?: boolean | null,
-  outline?: boolean,
-): IStyles {
-  if (!disabled) return styles;
-
-  return {
-    ...styles,
-    button: {
-      ...styles.button,
-      backgroundColor: theme.colors.mutedLavender30,
-      borderColor: outline
-        ? theme.colors.mutedLavender
-        : styles.button.borderColor,
-      elevation: 0,
-    } as ViewStyle,
-    icon: {
-      ...styles.icon,
-      tintColor: theme.colors.mutedLavender,
-    } as ImageStyle,
-    label: {
-      ...styles.label,
-      color: theme.colors.backgroundOpacity,
-    } as TextStyle,
-  };
-}
-
-interface IStyles {
-  button: ViewStyle;
-  icon: ImageStyle;
-  label: TextStyle;
-}
-
-function createButtonStyles(theme: Theme) {
-  const commonButtonStyle: ViewStyle = {
-    height: scaleHeight(97),
+const styles = StyleSheet.create({
+  base: {
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 12,
-    flexDirection: 'row',
-    backgroundColor: 'transparent',
-    width: '100%',
-  };
-
-  const commonIcon: ImageStyle = {
-    width: 22,
-    height: 22,
-    marginHorizontal: scaleSpacing(12),
-    resizeMode: 'contain',
-    tintColor: theme.colors.indigoBlue,
-  };
-
-  return {
-    solid: StyleSheet.create({
-      button: {
-        ...commonButtonStyle,
-        backgroundColor: theme.colors.indigoBlue,
-      } as ViewStyle,
-      label: theme.text.button,
-      icon: {
-        ...commonIcon,
-        tintColor: theme.colors.white,
-      },
-    }),
-
-    outline: StyleSheet.create({
-      button: {
-        ...commonButtonStyle,
-        borderColor: theme.colors.indigoBlue,
-        borderWidth: 2,
-      } as ViewStyle,
-      label: {
-        ...theme.text.button,
-      } as TextStyle,
-      icon: commonIcon,
-    }),
-
-    outlineNegative: StyleSheet.create({
-      button: {
-        ...commonButtonStyle,
-        borderColor: theme.colors.mutedLavender,
-        borderWidth: 2,
-      } as ViewStyle,
-      label: {
-        ...theme.text.button,
-      } as TextStyle,
-      icon: {
-        ...commonIcon,
-        tintColor: theme.colors.mutedLavender,
-      },
-    }),
-
-    borderless: StyleSheet.create({
-      button: {
-        ...commonButtonStyle,
-        borderRadius: undefined,
-        width: undefined,
-        padding: undefined,
-      } as ViewStyle,
-      label: {
-        ...theme.text.hyperlink,
-      } as TextStyle,
-      icon: commonIcon,
-    }),
-  };
-}
-
-function createSmallSolidStyles(theme: Theme): IStyles {
-  return StyleSheet.create({
-    button: {
-      padding: CommonSizes.spacing.medium,
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: CommonSizes.borderRadius.xLarge,
-      flexDirection: 'row',
-      backgroundColor: theme.colors.indigoBlue,
-      // width: 175,
-    } as ViewStyle,
-    label: {
-      ...theme.text.button,
-    } as TextStyle,
-    icon: {
-      width: 22,
-      height: 22,
-      resizeMode: 'contain',
-      tintColor: theme.colors.white,
-    } as ImageStyle,
-  });
-}
-
-function createSmallOutlineStyles(theme: Theme): IStyles {
-  const commonStyles = createThemedStyles(theme);
-  return StyleSheet.create({
-    button: {
-      padding: CommonSizes.spacing.medium,
-      alignItems: 'center',
-      justifyContent: 'center',
-      borderRadius: CommonSizes.borderRadius.xLarge,
-      flexDirection: 'row',
-      backgroundColor: 'transparent',
-      width: 175,
-      borderColor: theme.colors.indigoBlue,
-      borderWidth: 1,
-    } as ViewStyle,
-    label: {
-      ...commonStyles.normalText,
-      color: theme.colors.indigoBlue,
-    } as TextStyle,
-    icon: {
-      width: 22,
-      height: 22,
-      resizeMode: 'contain',
-      tintColor: theme.colors.indigoBlue,
-    } as ImageStyle,
-  });
-}
+    borderRadius: CommonSizes.borderRadius.sm,
+    borderWidth: CommonSizes.borderWidth.hairline,
+    borderColor: 'transparent',
+  },
+  fullWidth: {alignSelf: 'stretch'},
+  icon: {resizeMode: 'contain'},
+  label: {fontFamily: Fonts.medium},
+  underline: {textDecorationLine: 'underline'},
+});

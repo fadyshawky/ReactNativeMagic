@@ -1,6 +1,7 @@
 import React, {useEffect, useRef} from 'react';
 import {Animated, DimensionValue, ViewStyle} from 'react-native';
 import {useTheme} from '../../core/theme/ThemeProvider';
+import {useReducedMotion} from 'react-native-reanimated';
 import {CommonSizes} from '../../core/theme/commonSizes';
 
 interface SkeletonProps {
@@ -15,9 +16,14 @@ interface SkeletonProps {
  */
 export function Skeleton({width, height, radius}: SkeletonProps): JSX.Element {
   const {theme} = useTheme();
+  const reduceMotion = useReducedMotion();
   const opacity = useRef(new Animated.Value(0.4)).current;
 
   useEffect(() => {
+    if (reduceMotion) {
+      opacity.setValue(0.7);
+      return;
+    }
     const animation = Animated.loop(
       Animated.sequence([
         Animated.timing(opacity, {
@@ -34,13 +40,13 @@ export function Skeleton({width, height, radius}: SkeletonProps): JSX.Element {
     );
     animation.start();
     return () => animation.stop();
-  }, [opacity]);
+  }, [opacity, reduceMotion]);
 
   const blockStyle: ViewStyle = {
     width: (width ?? '100%') as DimensionValue,
     height: height ?? 16,
-    borderRadius: radius ?? CommonSizes.borderRadius.medium,
-    backgroundColor: theme.colors.grayScale_50,
+    borderRadius: radius ?? CommonSizes.borderRadius.md,
+    backgroundColor: theme.colors.surfaceInset,
   };
 
   return <Animated.View style={[blockStyle, {opacity}]} />;

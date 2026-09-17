@@ -20,19 +20,24 @@ jest.mock('react-native-config', () => ({
   STORYBOOK: 'false',
 }));
 
-jest.mock('@react-native-firebase/messaging', () => {
-  const messaging = () => ({
-    requestPermission: jest.fn().mockResolvedValue(1),
-    getToken: jest.fn().mockResolvedValue('test-fcm-token'),
-    onMessage: jest.fn().mockReturnValue(() => {}),
-    onNotificationOpenedApp: jest.fn().mockReturnValue(() => {}),
-    getInitialNotification: jest.fn().mockResolvedValue(null),
-    onTokenRefresh: jest.fn().mockReturnValue(() => {}),
-    setBackgroundMessageHandler: jest.fn(),
-  });
-  messaging.setBackgroundMessageHandler = jest.fn();
-  return {__esModule: true, default: messaging};
-});
+// RNFirebase v26+ is modular-only: free functions that take the Messaging instance.
+jest.mock('@react-native-firebase/messaging', () => ({
+  __esModule: true,
+  getMessaging: jest.fn(() => ({})),
+  requestPermission: jest.fn().mockResolvedValue(1),
+  getToken: jest.fn().mockResolvedValue('test-fcm-token'),
+  onMessage: jest.fn().mockReturnValue(() => {}),
+  onNotificationOpenedApp: jest.fn().mockReturnValue(() => {}),
+  getInitialNotification: jest.fn().mockResolvedValue(null),
+  onTokenRefresh: jest.fn().mockReturnValue(() => {}),
+  setBackgroundMessageHandler: jest.fn(),
+  AuthorizationStatus: {
+    NOT_DETERMINED: -1,
+    DENIED: 0,
+    AUTHORIZED: 1,
+    PROVISIONAL: 2,
+  },
+}));
 
 jest.mock('@react-native-community/netinfo', () => ({
   __esModule: true,
@@ -46,8 +51,7 @@ jest.mock('@react-native-community/netinfo', () => ({
 }));
 
 jest.mock('react-native-snackbar', () => ({
-  __esModule: true,
-  default: {
+  Snackbar: {
     show: jest.fn(),
     dismiss: jest.fn(),
     LENGTH_SHORT: 1,

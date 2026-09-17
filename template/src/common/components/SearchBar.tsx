@@ -2,6 +2,7 @@ import React from 'react';
 import {
   StyleSheet,
   TextInput,
+  TextInputInstance,
   ViewStyle,
   TextStyle,
   TouchableOpacity,
@@ -9,18 +10,17 @@ import {
   Platform,
   KeyboardTypeOptions,
   TextInputProps,
-  I18nManager,
+  View,
 } from 'react-native';
 import {useTheme} from '../../core/theme/ThemeProvider';
 import {
-  useRTL,
   useTranslation,
   useLocalization,
 } from '../localization/LocalizationProvider';
+import {inputTextAlign} from '../../core/theme/commonConsts';
 import {CommonSizes} from '../../core/theme/commonSizes';
+import {Icon} from './Icon';
 import {RTLAwareView} from './RTLAwareView';
-import Icon from 'react-native-vector-icons/Ionicons';
-import {createThemedStyles} from '../../core/theme/commonStyles';
 import {Languages} from '../localization/localization';
 
 interface SearchBarProps {
@@ -44,12 +44,11 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 }) => {
   const {theme} = useTheme();
   const t = useTranslation();
-  const isRTL = useRTL();
   const {currentLanguage} = useLocalization();
   const isArabic = currentLanguage === Languages.ar;
 
   // Create a ref to the TextInput to control it programmatically if needed
-  const inputRef = React.useRef<TextInput>(null);
+  const inputRef = React.useRef<TextInputInstance>(null);
 
   const handleClear = () => {
     onChangeText('');
@@ -59,12 +58,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   const containerStyle: ViewStyle = {
-    backgroundColor: `${theme.colors.white}20`,
-    borderColor: theme.colors.mutedLavender30,
-  };
-
-  const textAlignStyle: TextStyle = {
-    textAlign: isRTL ? 'right' : 'left',
+    backgroundColor: theme.colors.surfaceCard,
+    borderColor: theme.colors.borderDefault,
+    boxShadow: theme.shadows.xs,
   };
 
   // Set keyboard language specific properties
@@ -88,14 +84,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   // Switch to appropriate keyboard when language changes
   React.useEffect(() => {
-    if (Platform.OS === 'android') {
-      // On Android, the keyboard language is managed system-wide
-      // We can only ensure our TextInput respects RTL settings
-      const shouldBeRTL = isArabic;
-      if (I18nManager.isRTL !== shouldBeRTL) {
-      }
-    }
-
     // Reset input when language changes to ensure keyboard updates
     if (inputRef.current && value.length > 0) {
       // Force the keyboard to reload with new language by blurring/focusing
@@ -112,32 +100,26 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   return (
     <RTLAwareView
-      style={[
-        styles.container,
-        containerStyle,
-        style as ViewStyle,
-        {
-          backgroundColor: theme.colors.surface,
-          ...createThemedStyles(theme).dropShadow,
-        },
-      ]}>
-      <Icon
-        name="search"
-        size={20}
-        color={theme.colors.mutedLavender}
-        style={styles.searchIcon}
-      />
+      style={[styles.container, containerStyle, style as ViewStyle]}>
+      <View style={styles.searchIcon}>
+        <Icon
+          name="search"
+          size={CommonSizes.icon.sm}
+          color={theme.colors.textTertiary}
+        />
+      </View>
       <TextInput
         ref={inputRef}
         {...getKeyboardProps()}
         style={[
           styles.input,
-          theme.text.SearchBar,
-          textAlignStyle,
+          theme.text.body,
+          styles.inputText,
           inputStyle as TextStyle,
         ]}
         placeholder={placeholder || t('search', 'common')}
-        placeholderTextColor={`${theme.colors.mutedLavender}80`}
+        placeholderTextColor={theme.colors.textTertiary}
+        selectionColor={theme.colors.accent}
         value={value}
         onChangeText={onChangeText}
         autoCapitalize="none"
@@ -148,9 +130,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       {value.length > 0 && (
         <TouchableOpacity onPressIn={handleClear} style={styles.clearButton}>
           <Icon
-            name="close-circle"
-            size={20}
-            color={theme.colors.mutedLavender}
+            name="circle-x"
+            size={CommonSizes.icon.sm}
+            color={theme.colors.textTertiary}
           />
         </TouchableOpacity>
       )}
@@ -162,17 +144,19 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 48,
-    borderRadius: 16,
-    borderWidth: 1,
+    height: CommonSizes.control.lg,
+    borderRadius: CommonSizes.borderRadius.sm,
+    borderWidth: CommonSizes.borderWidth.hairline,
     paddingHorizontal: CommonSizes.spacing.medium,
-    marginHorizontal: CommonSizes.spacing.large,
-    marginBottom: CommonSizes.spacing.large,
   },
   input: {
     flex: 1,
+    textAlign: inputTextAlign,
     paddingVertical: CommonSizes.spacing.medium,
     paddingHorizontal: CommonSizes.spacing.small,
+  },
+  inputText: {
+    lineHeight: undefined,
   },
   searchIcon: {
     marginHorizontal: CommonSizes.spacing.small,

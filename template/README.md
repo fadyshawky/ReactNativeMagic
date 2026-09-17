@@ -1,110 +1,95 @@
-# ReactNativeMagic
+# reactnativemagic
 
-**Plug and play** – create your app and start developing without hassle.
+Created from [React Native Magic](https://github.com/fadyshawky/ReactNativeMagic) and styled with the **Fady Shawky design system**.
 
-A production-ready React Native template with TypeScript, Redux, React Navigation, and a scalable architecture (Uprise-style). Use it to bootstrap new apps with one command.
-
-## Requirements
-
-- **Node.js >= 20** ([Download](https://nodejs.org/en/download/))
-- JDK >= 11 ([Download](https://www.oracle.com/java/technologies/downloads/))
-- Ruby >= 2.7.5 (for iOS)
-- Xcode (for iOS) / Android Studio (for Android)
-
-## Quick start
+## Run it
 
 ```bash
-npx @react-native-community/cli init YourAppName --template @fadyshawky/react-native-magic
-cd YourAppName
-```
-
-Optional: set your bundle ID at creation:
-
-```bash
-npx @react-native-community/cli init YourAppName --template @fadyshawky/react-native-magic --package-name com.yourcompany.yourapp
-```
-
-For iOS, install pods:
-
-```bash
+npm install
 cd ios && pod install && cd ..
-```
 
-Then run:
-
-```bash
 npm start
-npm run ios    # or an Android variant below
+npm run ios                          # or: npm run android:development:debug
 ```
 
-## First steps after creating your app
+Sign in with the built-in mock API: phone `011111111111`, password `testpass`, OTP `111111`.
 
-1. **App name & bundle ID** – Set at init (or you’ll be prompted for package name if you didn’t pass `--package-name`). See [CUSTOMIZATION.md](template/docs/CUSTOMIZATION.md#app-name-and-bundle-id).
-2. **API** – Copy `.env.example` to `.env` and set `API_BASE_URL` (and other vars) for your backend.
-3. **Theme** – Edit `src/core/theme/colors.ts` (and `fonts.ts`, `commonSizes.ts` if needed) for your brand.
-4. **Config** – Optional: adjust `src/core/config/index.ts` for feature toggles or app-level constants.
+## Connect your backend
 
-## Documentation
+1. Copy `.env.example` to `.env`.
+2. Set `API_BASE_URL`.
 
-In your generated project you’ll have:
+While the URL is still a `*.example.com` placeholder, requests are answered from `src/core/api/mocks/mockApi.json`. Add a route there whenever you add an API call and have no backend yet:
 
-- **[docs/ARCHITECTURE.md](template/docs/ARCHITECTURE.md)** – Layers, folder map, data flow, SOLID.
-- **[docs/CUSTOMIZATION.md](template/docs/CUSTOMIZATION.md)** – App name, bundle ID, API, theme, adding a screen/slice/language.
-- **[docs/BEST_PRACTICES.md](template/docs/BEST_PRACTICES.md)** – Code style, structure, testing, security, upgrades.
-
-## Project structure (in your app)
-
+```json
+"GET /orders": [{"status": 200, "body": {"data": []}}]
 ```
-src/
-├── common/          # Shared components, localization, helpers, validations, utils
-├── core/            # Store (Redux), API, theme, config
-├── navigation/      # Auth stack, main stack, tabs
-├── screens/         # Feature screens
-└── sheetManager/    # Action sheets
+
+For a route with several outcomes, list the success response first, with a `when` condition that must match the request body. Put the error response last.
+
+## The theme in one minute
+
+- **Read tokens, never hex values.** Get colours from `useTheme()`, as in `theme.colors.accent` and `theme.text.h1`.
+- **One blue accent per screen**, cool slate neutrals, and a 1px border on every surface.
+- **Corners:** 6px for buttons and inputs, 12px for cards, 16px for sheets. No pill shapes, no gradients.
+- **Geist for text, Geist Mono for numbers.** Sentence case everywhere.
+- **Space between components with `CommonSizes.layout`**, putting the gap on the parent:
+  - `section` 20 between the blocks of a screen
+  - `stack` 16 in forms
+  - `list` 12 between cards
+  - `related` 10 inside a block
+  - `titleToBody` 8
+  - `field` 6
+- **Screen gutters:** `gutter` 16, or `gutterAuth` 24 on sign-in. `Container` applies both the gutter and the `section` gap for you.
+
+```tsx
+const {theme} = useTheme();
+
+<View style={{gap: CommonSizes.layout.stack}}>
+  <RTLAwareText style={theme.text.h2}>{t('title', 'orders')}</RTLAwareText>
+  <PrimaryButton label={t('refresh', 'orders')} type={ButtonType.solid} onPress={reload} />
+</View>
 ```
+
+Open `docs/design-system.html` in a browser to see every token and component.
+
+## Where things live
+
+| To change…                   | Edit                                                                      |
+| ---------------------------- | ------------------------------------------------------------------------- |
+| Colours                      | `src/core/theme/colors.ts`                                                |
+| Fonts and text roles         | `src/core/theme/fonts.ts`, `src/core/theme/themes.ts`                     |
+| Spacing, radii, sizes        | `src/core/theme/commonSizes.ts`                                           |
+| Mock API responses           | `src/core/api/mocks/mockApi.json`                                         |
+| Translations (EN / AR)       | `src/common/localization/translations/`                                   |
+| Screens                      | `src/screens/`, registered in `src/navigation/AuthStack.tsx` / `MainStack.tsx` |
+| Where a notification opens   | `src/core/notifications/routeFromNotificationData.ts`                     |
+| App icon and launch screen   | [docs/CUSTOMIZATION.md](docs/CUSTOMIZATION.md#app-icon-and-launch-screen) |
 
 ## Scripts
 
-| Command | Description |
-|---------|-------------|
-| `npm start` | Start Metro bundler |
-| `npm run ios` | Run on iOS |
-| `npm run android:prod:debug` | Run Android (production, debug) |
-| `npm run android:prod:release` | Run Android (production, release) |
-| `npm run android:staging:debug` | Run Android (staging, debug) |
-| `npm run android:staging:release` | Run Android (staging, release) |
-| `npm run android:development:debug` | Run Android (development, debug) |
-| `npm run android:development:release` | Run Android (development, release) |
-| `npm test` | Run tests |
-| `npm run lint` | Lint code |
+| Command                        | What it does                                                            |
+| ------------------------------ | ----------------------------------------------------------------------- |
+| `npm start`                    | Start Metro                                                             |
+| `npm run ios`                  | Run on iOS                                                              |
+| `npm run android:<env>:<type>` | Run on Android; `env` is `development`, `staging` or `prod`, `type` is `debug` or `release` |
+| `npm test`                     | Jest                                                                    |
+| `npm run typecheck`            | TypeScript                                                              |
+| `npm run lint`                 | ESLint                                                                  |
 
-## Versioning
+## Guides
 
-- **React Native**: ^0.84.x (current stable at release).
-- **React**: ^19.2.x.
-- **Node**: >= 24 (LTS).
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): layers, data flow, provider order
+- [docs/CUSTOMIZATION.md](docs/CUSTOMIZATION.md): bundle ID, API, theme, new screen, slice or language, Firebase
+- [docs/BEST_PRACTICES.md](docs/BEST_PRACTICES.md): code style, testing, security, upgrades
 
-## Common issues
+## Troubleshooting
 
-**iOS – Pod install fails**
+| Problem                                        | Fix                                                                               |
+| ---------------------------------------------- | --------------------------------------------------------------------------------- |
+| `pod install` fails                            | `cd ios && pod deintegrate && pod install`                                        |
+| `undefined method '[]' for nil` in the Podfile | `node_modules` is incomplete: `rm -rf node_modules && npm ci`, then `pod install` |
+| Android: "SDK location not found"              | Set `ANDROID_HOME`, or add `sdk.dir` to `android/local.properties`                |
+| iOS still shows the old launch screen          | Delete the app from the simulator or device and run again                         |
 
-```bash
-cd ios && pod deintegrate && pod install && cd ..
-```
-
-**Android – Gradle / SDK**
-
-- Run `./gradlew clean` in `android/`.
-- Ensure `android/local.properties` has `sdk.dir` set to your Android SDK path.
-
-**Upgrading React Native**
-
-Use [React Native Upgrade Helper](https://react-native-community.github.io/upgrade-helper/) (select current → target version) and apply the suggested changes.
-
-## License
-
-MIT – see [LICENSE.md](LICENSE.md).
-
-## Author
-
-Fady Shawky – [GitHub](https://github.com/fadyshawky)
+Requirements: Node 22.13+, JDK 17+, Xcode 26+, Android SDK 37. Built on React Native 0.87 (New Architecture) and React 19.2.

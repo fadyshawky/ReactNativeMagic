@@ -18,7 +18,6 @@ import {RTLInitializer} from './src/common/localization/RTLInitializer';
 import {startPushNotificationListeners} from './src/core/notifications/notificationService';
 import {useAppSelector} from './src/core/store/reduxHelpers';
 import {persistor, store} from './src/core/store/store';
-import {NaturalColors} from './src/core/theme/colors';
 import {ThemeProvider, useTheme} from './src/core/theme/ThemeProvider';
 import AppNavigator from './src/navigation/MainNavigation';
 
@@ -37,19 +36,11 @@ const ThemedApp = () => {
     <RTLInitializer>
       <LocalizationProvider initialLanguage={language}>
         <SafeAreaProvider>
-          <View
-            style={[
-              styles.flex,
-              {
-                backgroundColor:
-                  theme?.colors?.background_2 ?? NaturalColors.background_2,
-              },
-            ]}>
+          <View style={[styles.flex, {backgroundColor: theme.colors.bgCanvas}]}>
             <SafeAreaView style={styles.absolute} />
             <AppStatusBar
-              barStyle={theme?.mode === 'dark' ? 'light-content' : 'dark-content'}
-              backgroundColor={
-                theme?.colors?.background_2 ?? NaturalColors.background_2
+              barStyle={
+                theme?.mode === 'dark' ? 'light-content' : 'dark-content'
               }
             />
             <SheetProvider>

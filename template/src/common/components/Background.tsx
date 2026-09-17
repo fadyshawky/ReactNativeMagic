@@ -1,11 +1,13 @@
 import React, {FC, memo} from 'react';
-import {ImageBackground, StyleSheet, View, ViewStyle} from 'react-native';
+import {StyleSheet, View, ViewStyle} from 'react-native';
 import {KeyboardAwareScrollViewProps} from 'react-native-keyboard-aware-scroll-view';
 import {useTheme} from '../../core/theme/ThemeProvider';
 import {Container} from './Container';
 
-interface BackgroundProps
-  extends Omit<KeyboardAwareScrollViewProps, 'contentContainerStyle'> {
+interface BackgroundProps extends Omit<
+  KeyboardAwareScrollViewProps,
+  'contentContainerStyle'
+> {
   children: React.ReactNode;
   useSafeArea?: boolean;
   style?: ViewStyle;
@@ -23,7 +25,6 @@ export const Background: FC<BackgroundProps> = memo(
     contentContainerStyle,
     withoutPadding = false,
     withoutScroll = false,
-    withoutBackgroundImage = false,
     ...scrollViewProps
   }) => {
     const {theme} = useTheme();
@@ -40,27 +41,10 @@ export const Background: FC<BackgroundProps> = memo(
       </Container>
     );
 
-    if (withoutBackgroundImage) {
-      return (
-        <View
-          style={[
-            styles.container,
-            {backgroundColor: theme.colors.background_2},
-          ]}>
-          {content}
-        </View>
-      );
-    }
-
     return (
       <View
-        style={[
-          styles.container,
-          {backgroundColor: theme.colors.background_2},
-        ]}>
-        <ImageBackground source={0} style={styles.container}>
-          {content}
-        </ImageBackground>
+        style={[styles.container, {backgroundColor: theme.colors.bgCanvas}]}>
+        {content}
       </View>
     );
   },

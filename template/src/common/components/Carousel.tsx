@@ -2,15 +2,17 @@ import React, {useCallback, useRef, useState} from 'react';
 import {
   Dimensions,
   FlatList,
+  I18nManager,
   NativeScrollEvent,
   NativeSyntheticEvent,
   Pressable,
   StyleSheet,
   View,
 } from 'react-native';
-import Svg, {Path} from 'react-native-svg';
 import {CommonSizes} from '../../core/theme/commonSizes';
+import {Icon} from './Icon';
 import {useTheme} from '../../core/theme/ThemeProvider';
+import {useTranslation} from '../localization/LocalizationProvider';
 
 interface CarouselProps<T> {
   data: T[];
@@ -26,20 +28,15 @@ const CONTENT_WIDTH =
 // card (in the side gutters), never overlapping it.
 const ITEM_WIDTH = CONTENT_WIDTH - 2 * (ARROW + GAP);
 
-function Chevron({dir, color}: {dir: 'left' | 'right'; color: string}) {
-  const d = dir === 'left' ? 'M15 5 L8 12 L15 19' : 'M9 5 L16 12 L9 19';
-  return (
-    <Svg width={18} height={22} viewBox="0 0 24 24" fill="none">
-      <Path
-        d={d}
-        stroke={color}
-        strokeWidth={2.5}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </Svg>
-  );
-}
+// Horizontal scroll offsets are measured from the physical left edge on both
+// platforms, but under RTL the list is laid out right to left (item 0 on the
+// right), so the logical index runs the other way.
+const toOffset = (index: number, count: number) =>
+  (I18nManager.isRTL ? count - 1 - index : index) * ITEM_WIDTH;
+const toIndex = (offset: number, count: number) => {
+  const page = Math.round(offset / ITEM_WIDTH);
+  return I18nManager.isRTL ? count - 1 - page : page;
+};
 
 /**
  * Horizontal paging carousel with the card flanked by prev/next arrow buttons
@@ -52,6 +49,7 @@ export function Carousel<T>({
   height,
 }: CarouselProps<T>): JSX.Element {
   const {theme} = useTheme();
+  const t = useTranslation();
   const listRef = useRef<FlatList<T>>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const lastIndex = data.length - 1;
@@ -60,7 +58,7 @@ export function Carousel<T>({
     (index: number) => {
       const next = Math.max(0, Math.min(index, data.length - 1));
       listRef.current?.scrollToOffset({
-        offset: next * ITEM_WIDTH,
+        offset: toOffset(next, data.length),
         animated: true,
       });
       setActiveIndex(next);
@@ -71,9 +69,9 @@ export function Carousel<T>({
   const onMomentumScrollEnd = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
       const offsetX = event.nativeEvent.contentOffset.x;
-      setActiveIndex(Math.round(offsetX / ITEM_WIDTH));
+      setActiveIndex(toIndex(offsetX, data.length));
     },
-    [],
+    [data.length],
   );
 
   const renderCarouselItem = useCallback(
@@ -87,18 +85,18 @@ export function Carousel<T>({
 
   const prevDisabled = activeIndex <= 0;
   const nextDisabled = activeIndex >= lastIndex;
-  const arrowColor = theme.colors.PlatinateBlue_400;
-  const disabledColor = theme.colors.grayScale_100;
+  const arrowColor = theme.colors.textSecondary;
+  const disabledColor = theme.colors.textDisabled;
 
   const prevArrowStyle = {
-    backgroundColor: theme.colors.grayScale_0,
-    borderColor: theme.colors.grayScale_50,
-    opacity: prevDisabled ? 0.4 : 1,
+    backgroundColor: theme.colors.surfaceCard,
+    borderColor: theme.colors.borderDefault,
+    opacity: prevDisabled ? 0.45 : 1,
   };
   const nextArrowStyle = {
-    backgroundColor: theme.colors.grayScale_0,
-    borderColor: theme.colors.grayScale_50,
-    opacity: nextDisabled ? 0.4 : 1,
+    backgroundColor: theme.colors.surfaceCard,
+    borderColor: theme.colors.borderDefault,
+    opacity: nextDisabled ? 0.45 : 1,
   };
 
   return (
@@ -109,9 +107,13 @@ export function Carousel<T>({
           disabled={prevDisabled}
           hitSlop={8}
           accessibilityRole="button"
-          accessibilityLabel="Previous"
+          accessibilityLabel={t('previous')}
           style={[styles.arrow, prevArrowStyle]}>
-          <Chevron dir="left" color={prevDisabled ? disabledColor : arrowColor} />
+          <Icon
+            name="chevron-left"
+            size={CommonSizes.icon.sm}
+            color={prevDisabled ? disabledColor : arrowColor}
+          />
         </Pressable>
 
         <FlatList
@@ -135,10 +137,11 @@ export function Carousel<T>({
           disabled={nextDisabled}
           hitSlop={8}
           accessibilityRole="button"
-          accessibilityLabel="Next"
+          accessibilityLabel={t('next')}
           style={[styles.arrow, nextArrowStyle]}>
-          <Chevron
-            dir="right"
+          <Icon
+            name="chevron-right"
+            size={CommonSizes.icon.sm}
             color={nextDisabled ? disabledColor : arrowColor}
           />
         </Pressable>
@@ -155,8 +158,8 @@ export function Carousel<T>({
                 isActive ? styles.dotActive : styles.dotInactive,
                 {
                   backgroundColor: isActive
-                    ? theme.colors.PlatinateBlue_400
-                    : theme.colors.grayScale_50,
+                    ? theme.colors.accent
+                    : theme.colors.borderStrong,
                 },
               ]}
             />
@@ -174,8 +177,8 @@ const styles = StyleSheet.create({
   arrow: {
     width: ARROW,
     height: ARROW,
-    borderRadius: CommonSizes.borderRadius.full,
-    borderWidth: CommonSizes.borderWidth.small,
+    borderRadius: CommonSizes.borderRadius.sm,
+    borderWidth: CommonSizes.borderWidth.hairline,
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: GAP / 2,
