@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-09-17
+
+**Breaking.** Apps built on 2.x need changes to update:
+
+- **New theme API.** Theme tokens, text roles, `CommonSizes` keys, and the `ButtonType` and `Badge` variants are renamed (see "Changed").
+- **Newer requirements.** React Native `>=0.87.0` is required (peer dependency), along with Node `>= 22.13`.
+- **RTL is native now.** `RTLAwareView` and `RTLAwareText` no longer flip styles, and `rtlStyles` is removed. Remove any manual `row-reverse`/alignment swaps you added for RTL.
+- **iOS app delegate.** It is Swift, with a `SceneDelegate` (UIScene life cycle) and view-controller-based status bar appearance.
+
 ### Changed
 - **Adopted the Fady Shawky design system** (imported from Claude Design). Breaking for code built on the previous tokens:
   - `core/theme/colors.ts`: the `PrimaryColors` / `NaturalColors` / `AlertColors` / `BaseColors` enums are replaced by raw ramps (`Slate`, `Blue`, `Green`, `Amber`, `Red`, `Silver`) and semantic `LightColors` / `DarkColors` (`ColorTokens`). `theme.colors` is now the typed semantic set (`bgCanvas`, `surfaceCard`, `borderDefault`, `textPrimary`, `accent`, `dangerFg`, …).
